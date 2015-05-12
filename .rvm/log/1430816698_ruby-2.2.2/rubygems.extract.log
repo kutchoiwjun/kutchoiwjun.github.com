@@ -1,0 +1,65 @@
+[2015-05-05 18:10:04] __rvm_package_extract
+__rvm_package_extract () 
+{ 
+    rvm_debug __rvm_package_extract:$#: "$@";
+    \typeset __tempdir __path __file __return;
+    __return=0;
+    __tempdir="$( TMPDIR="${rvm_tmp_path}" mktemp -d -t rvm-tmp.XXXXXXXXX )";
+    __rvm_package_extract_run "$1" "$__tempdir" || __return=$?;
+    if (( __return == 0 )); then
+        for __path in "$__tempdir"/*;
+        do
+            __file="${__path##*/}";
+            if [[ -n "${__file}" && -e "$2/${__file}" ]]; then
+                \command \rm -rf "$2/${__file}" || __return=$?;
+            fi;
+            \command \mv -f "${__path}" "$2/" || __return=$?;
+        done;
+    fi;
+    if [[ -n "$__tempdir" ]]; then
+        \command \rm -rf "$__tempdir";
+    fi;
+    return $__return
+}
+current path: /home/cwj/.rvm/src/ruby-2.2.2
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/cwj/.rvm/bin:/home/cwj/.rvm/bin
+command(3): __rvm_package_extract /home/cwj/.rvm/archives/rubygems-2.4.6.tgz /home/cwj/.rvm/src
+++ rvm_debug __rvm_package_extract:2: /home/cwj/.rvm/archives/rubygems-2.4.6.tgz /home/cwj/.rvm/src
+++ ((  0  ))
+++ return 0
+++ typeset __tempdir __path __file __return
+++ __return=0
++++ TMPDIR=/home/cwj/.rvm/tmp
++++ mktemp -d -t rvm-tmp.XXXXXXXXX
+++ __tempdir=/home/cwj/.rvm/tmp/rvm-tmp.IShDev2J1
+++ __rvm_package_extract_run /home/cwj/.rvm/archives/rubygems-2.4.6.tgz /home/cwj/.rvm/tmp/rvm-tmp.IShDev2J1
+++ [[    != *\ \-\-\n\o\-\s\a\m\e\-\o\w\n\e\r\ * ]]
+++ __rvm_grep -- --no-same-owner
+++ GREP_OPTIONS=
+++ command grep -- --no-same-owner
+++ grep -- --no-same-owner
+++ __rvm_tar --help
+++ rvm_tar_options=--no-same-owner
+++ [[ -d /home/cwj/.rvm/tmp/rvm-tmp.IShDev2J1 ]]
+++ case "$1" in
+++ [[ -n '' ]]
+++ __rvm_tar xzf /home/cwj/.rvm/archives/rubygems-2.4.6.tgz -C /home/cwj/.rvm/tmp/rvm-tmp.IShDev2J1 --no-same-owner
+++ tar xzf /home/cwj/.rvm/archives/rubygems-2.4.6.tgz -C /home/cwj/.rvm/tmp/rvm-tmp.IShDev2J1 --no-same-owner
+++ __rvm_fix_group_permissions /home/cwj/.rvm/tmp/rvm-tmp.IShDev2J1/rubygems-2.4.6
+++ __rvm_grep g=rw
+++ GREP_OPTIONS=
+++ command grep g=rw
+++ grep g=rw
+++ umask -S
+++ chmod -R g+rwX /home/cwj/.rvm/tmp/rvm-tmp.IShDev2J1/rubygems-2.4.6
+++ ((  __return == 0  ))
+++ for __path in '"$__tempdir"/*'
+++ __file=rubygems-2.4.6
+++ [[ -n rubygems-2.4.6 ]]
+++ [[ -e /home/cwj/.rvm/src/rubygems-2.4.6 ]]
+++ command mv -f /home/cwj/.rvm/tmp/rvm-tmp.IShDev2J1/rubygems-2.4.6 /home/cwj/.rvm/src/
+++ mv -f /home/cwj/.rvm/tmp/rvm-tmp.IShDev2J1/rubygems-2.4.6 /home/cwj/.rvm/src/
+++ [[ -n /home/cwj/.rvm/tmp/rvm-tmp.IShDev2J1 ]]
+++ command rm -rf /home/cwj/.rvm/tmp/rvm-tmp.IShDev2J1
+++ rm -rf /home/cwj/.rvm/tmp/rvm-tmp.IShDev2J1
+++ return 0

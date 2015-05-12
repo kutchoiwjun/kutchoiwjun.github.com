@@ -1,0 +1,247 @@
+Activating service name='com.canonical.Unity.Scope.Home'
+
+(unity-scope-home:2610): libunity-protocol-private-WARNING **: protocol-scope-discovery.vala:542: Number of elements of OptionIDs doesn't match OptionNames (14 vs 28)
+Successfully activated service 'com.canonical.Unity.Scope.Home'
+
+(unity-scope-home:2610): unity-scope-home-WARNING **: platform-info.vala:112: Unable to read SIM properties: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.ofono was not provided by any .service files
+
+(unity-scope-home:2610): libunity-protocol-private-WARNING **: protocol-scope-discovery.vala:542: Number of elements of OptionIDs doesn't match OptionNames (14 vs 28)
+
+(unity-scope-home:2610): libunity-protocol-private-WARNING **: protocol-scope-discovery.vala:542: Number of elements of OptionIDs doesn't match OptionNames (14 vs 28)
+
+(unity-scope-home:2610): libunity-protocol-private-WARNING **: protocol-scope-discovery.vala:542: Number of elements of OptionIDs doesn't match OptionNames (14 vs 28)
+Activating service name='com.canonical.Unity.Scope.Applications'
+Activating service name='com.canonical.Unity.Scope.File.Gdrive'
+Activating service name='com.canonical.Unity.Scope.LocalFiles'
+
+(process:2625): unity-files-daemon-WARNING **: folder.vala:65: Failed to read favorites: 파일 '/home/cwj/.gtk-bookmarks' 열기 실패: 그런 파일이나 디렉터리가 없습니다
+Successfully activated service 'com.canonical.Unity.Scope.LocalFiles'
+Successfully activated service 'com.canonical.Unity.Scope.File.Gdrive'
+Activating service name='com.canonical.Unity.Scope.Music'
+Successfully activated service 'com.canonical.Unity.Scope.Music'
+
+(unity-music-daemon:2648): unity-music-daemon-WARNING **: rhythmbox-collection.vala:510: Unable to open album-art DB!
+
+(unity-music-daemon:2648): unity-music-daemon-WARNING **: rhythmbox-collection.vala:574: Error while parsing rhythmbox DB: 파일 열기 오류: 그런 파일이나 디렉터리가 없습니다
+Successfully activated service 'com.canonical.Unity.Scope.Applications'
+
+(unity-scope-loader:2624): libunity-protocol-private-WARNING **: protocol-scope-discovery.vala:542: Number of elements of OptionIDs doesn't match OptionNames (14 vs 28)
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+Activating service name='com.canonical.Unity.Scope.Academic.Zotero'
+Successfully activated service 'com.canonical.Unity.Scope.Academic.Zotero'
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+Activating service name='com.canonical.Unity.Webapps.Service'
+Successfully activated service 'com.canonical.Unity.Webapps.Service'
+** Message: Investigating webapp: unity-webapps-common 
+
+
+** (process:3273): WARNING **: Found newline before all of metadata, skipping app
+** Message: Investigating webapp: unity-webapps-qml 
+
+
+** (process:3273): WARNING **: Found newline before all of metadata, skipping app
+** Message: Investigating webapp: unity-webapps-qml-doc 
+
+
+** (process:3273): WARNING **: Found newline before all of metadata, skipping app
+** Message: Investigating webapp: unity-webapps-qml-examples 
+
+
+** (process:3273): WARNING **: Found newline before all of metadata, skipping app
+** Message: Investigating webapp: unity-webapps-service 
+
+
+** (process:3273): WARNING **: Found newline before all of metadata, skipping app
+** Message: Investigating webapp: unity-webapps-amazoncloudreader 
+
+** Message: Investigating webapp: unity-webapps-bbcnews 
+
+** Message: Investigating webapp: unity-webapps-cnn-news 
+
+** Message: Investigating webapp: unity-webapps-deezer 
+
+** Message: Investigating webapp: unity-webapps-dev 
+
+
+** (process:3273): WARNING **: Found newline before all of metadata, skipping app
+** Message: Investigating webapp: unity-webapps-deviantart 
+
+** Message: Investigating webapp: unity-webapps-facebookmessenger 
+
+** Message: Investigating webapp: unity-webapps-googlenews 
+
+** Message: Investigating webapp: unity-webapps-googleplusgames 
+
+
+** (process:3273): WARNING **: Found newline before all of metadata, skipping app
+** Message: Investigating webapp: unity-webapps-grooveshark 
+
+** Message: Investigating webapp: unity-webapps-hulu-player 
+
+** Message: Investigating webapp: unity-webapps-lastfm-radio 
+
+** Message: Investigating webapp: unity-webapps-launchpad 
+
+** Message: Investigating webapp: unity-webapps-librefm 
+
+** Message: Investigating webapp: unity-webapps-linkedin 
+
+** Message: Investigating webapp: unity-webapps-mail-ru 
+
+** Message: Investigating webapp: unity-webapps-newsblur 
+
+** Message: Investigating webapp: unity-webapps-pandora 
+
+** Message: Investigating webapp: unity-webapps-pandora-com 
+
+** Message: Investigating webapp: unity-webapps-qml-autopilot 
+
+
+** (process:3273): WARNING **: Found newline before all of metadata, skipping app
+** Message: Investigating webapp: unity-webapps-qq-mail 
+
+** Message: Investigating webapp: unity-webapps-reddit 
+
+** Message: Investigating webapp: unity-webapps-tumblr 
+
+** Message: Investigating webapp: unity-webapps-twitter 
+
+** Message: Investigating webapp: unity-webapps-vkcom 
+
+** Message: Investigating webapp: unity-webapps-wordpress 
+
+** Message: Investigating webapp: unity-webapps-wordpress-com 
+
+** Message: Investigating webapp: unity-webapps-yahoonews 
+
+** Message: Investigating webapp: unity-webapps-yandex-music 
+
+** Message: Investigating webapp: unity-webapps-yandexmail 
+
+** Message: Investigating webapp: unity-webapps-yandexmusic 
+
+** Message: Investigating webapp: unity-webapps-yandexnews 
+
+** Message: Investigating webapp: unity-webapps-gmail 
+
+** Message: Investigating webapp: unity-webapps-googlecalendar 
+
+** Message: Investigating webapp: unity-webapps-googledocs 
+
+** Message: Investigating webapp: unity-webapps-googleplus 
+
+** Message: Investigating webapp: unity-webapps-livemail 
+
+** Message: Investigating webapp: unity-webapps-yahoomail 
+
+** Message: Investigating webapp: unity-webapps-youtube 
+
+Activating service name='com.ubuntu.OneConf'
+Successfully activated service 'com.ubuntu.OneConf'
+WARNING:oneconf.hosts:Error in loading other_hosts file: [Errno 2] No such file or directory: '/home/cwj/.cache/oneconf/4c78e2e48b14e7be1bcdf5ed55487b42/other_hosts'
+Activating service name='com.ubuntu.sso'
+Successfully activated service 'com.ubuntu.sso'
+Activating service name='com.ubuntu.sso'
+Successfully activated service 'com.ubuntu.sso'
+module-cache-reaper-Message: Reaping abandoned data directories
+module-cache-reaper-Message: Reaping abandoned cache directories
+Activating service name='com.canonical.Unity.Scope.Academic.Zotero'
+Successfully activated service 'com.canonical.Unity.Scope.Academic.Zotero'
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed
+
+(unity-scope-home:2610): Json-CRITICAL **: json_object_get_object_member: assertion 'node != NULL' failed

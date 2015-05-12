@@ -1,0 +1,42 @@
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 60817587 with path /com/canonical/menu/3A000B3 from :1.88, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 60817587 with path /com/canonical/menu/3A000B3 from :1.88, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 60817587 with path /com/canonical/menu/3A000B3 from :1.97, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 60817587 with path /com/canonical/menu/3A000B3 from :1.103, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 60817587 with path /com/canonical/menu/3A000B3 from :1.108, unregistering that one
+
+(unity-panel-service:2082): LIBDBUSMENU-GLIB-WARNING **: Unable to get menu proxy: 동작이 취소되었습니다
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58720435 with path /com/canonical/menu/38000B3 from :1.111, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58720435 with path /com/canonical/menu/38000B3 from :1.114, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58720435 with path /com/canonical/menu/38000B3 from :1.114, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58720435 with path /com/canonical/menu/38000B3 from :1.117, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58720435 with path /com/canonical/menu/38000B3 from :1.121, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58742675 with path /com/canonical/menu/3805793 from :1.121, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58720435 with path /com/canonical/menu/38000B3 from :1.126, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58720435 with path /com/canonical/menu/38000B3 from :1.129, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58720435 with path /com/canonical/menu/38000B3 from :1.138, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58720435 with path /com/canonical/menu/38000B3 from :1.141, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58720435 with path /com/canonical/menu/38000B3 from :1.144, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-CRITICAL **: menus_destroyed: assertion 'wm != NULL' failed
+
+(unity-panel-service:2082): Indicator-Appmenu-CRITICAL **: menus_destroyed: assertion 'wm != NULL' failed
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58720435 with path /com/canonical/menu/38000B3 from :1.156, unregistering that one
+
+(unity-panel-service:2082): Indicator-Appmenu-WARNING **: Already have a menu for window ID 58720435 with path /com/canonical/menu/38000B3 from :1.159, unregistering that one

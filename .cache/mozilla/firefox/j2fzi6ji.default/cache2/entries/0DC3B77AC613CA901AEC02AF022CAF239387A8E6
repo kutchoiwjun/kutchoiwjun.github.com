@@ -1,0 +1,1101 @@
+var LOCK_FLAG = "0";
+var winMsg = "";
+var OBJ_POPUP = null;
+var OBJ_STATUS = null;
+var FIND_STR_INDEX = 0;
+//var oPopup = window.createPopup();
+
+document.onmousedown = new Function("if (LOCK_FLAG == \'1\'){showWindowStatus(winMsg);return false;}");
+document.onclick = new Function("if (LOCK_FLAG == \'1\'){showWindowStatus(winMsg);return false;}");
+//window.onblur = new Function("if(OBJ_POPUP){OBJ_POPUP.hide();return true;}");
+window.onfocus = new Function("if (LOCK_FLAG == \'1\'){showWindowStatus(winMsg);return false;}");
+
+//----Handle to enter Key
+function handleEnterKey(){
+	if (window.event.keyCode == 13) {
+		if(event.srcElement.rows != null)return true;
+		else {
+			window.event.keyCode = 0;
+			return false;
+		}
+	}
+}
+
+//----- Add select's option object
+function addOption(object, addText, addValue) {
+	if(isDuplicateOption(object, addText)) return true;
+	var defaultSelected = false;
+	var selected = true;
+	var optionName = new Option(addText, addValue, defaultSelected, selected);
+	var length = object.length;
+
+	object.options[length] = optionName;
+	return true;
+}
+//---- 이미 존재하는 value인지?
+function isDuplicateOption(object, addText) {
+	for(var i=0; i < object.options.length; i++) {
+		if(object.options[i].text == addText) return true;
+	}
+	return false;
+}
+//---- Delete select's option object
+function deleteOption(object) {
+	var optlen = object.options.length;
+	for(var i=optlen-1;i >= 0 ;i--)object.options[i] = null;
+}
+//---- Delete selected item of select's option object
+function deleteSelectedOption(object) {
+	var optlen = object.options.length;
+	for(var i=optlen-1;i >= 0 ;i--) {
+		if(object.options[i].selected) object.options[i] = null;
+	}
+}
+//---- Set the selectedIndex of obj which window object
+function setSelectedIndex(object, selectedValue) {
+	object.selectedIndex = 0;
+	for(var i=0; i < object.options.length; i++) {
+		if(object.options[i].value == selectedValue){object.selectedIndex = i; break;}
+	}
+}
+
+//-- Get the selectedvalue of obj which window object
+function getSelectedValue(object) {
+	for(var i=0; i < object.options.length; i++) {
+		if(object.options[i].selected){
+			return object.options[i].value;
+		}
+	}
+}
+
+// Option의 Selected Value Return
+function getOptValue(Obj){
+	if (Obj!=null && Obj.selectedIndex >= 0 ){
+		return Obj[Obj.selectedIndex].value;
+	}
+}
+// Option의 Selected text Return
+function getOptText(Obj){
+	if (Obj!=null && Obj.selectedIndex >= 0 ){
+		return Obj[Obj.selectedIndex].text;
+	}
+}
+// 지정된 index의 text return
+function getIndexText(Obj, index){
+	if (Obj!=null){
+		return Obj[index].text;
+	}
+}
+// 지정된 index의 value return
+function getIndexValue(Obj, index){
+	if (Obj!=null){
+		return Obj[index].value;
+	}
+}
+//----------------------------------------------------------------------------------
+// Date Functions
+//----------------------------------------------------------------------------------
+function y2k(number) { return (number < 1000) ? number + 1900 : number; }
+function Calendar(field){
+	OBJ_POPUP = null;
+
+	var txtObj = document.forms[0].elements[field];
+	var val = Trim(txtObj.value.replace(/-/gi, "/"));
+	var today = new Date();
+	var year = today.getFullYear();
+	var month = today.getMonth();
+
+	if (val != "") {
+		if (isValidDate(val)) {
+			var date1 = new Date(val);
+			year = date1.getFullYear();
+			month = date1.getMonth();
+		}
+	}
+	var winLeft = txtObj.getBoundingClientRect().left;
+	var winTop = txtObj.getBoundingClientRect().top+ 19;
+	var winWidth = 161;
+	var winHeight = 185;
+
+	CALENDAR.EGC_initialize(year,month,field,winLeft,winTop,winWidth,winHeight);
+	var htmlstr = CALENDAR.EGC_makeCalendar();
+	CALENDAR.EGC_showCalendar(htmlstr);
+}
+function isValidDate(it) {
+	var dt = it.replace(/-/gi, "/");
+	dt = dt.replace(/\./gi, "/");
+	var date1 = new Date(dt);
+	if (date1.toString() == "NaN") return false;
+	dt = dt.replace(/:/gi, "/");
+	dt = dt.replace(/ /gi, "/");
+	var dt_list = dt.split("/");
+	var Y = dt_list[0];
+	var M = makeTwoDigit(dt_list[1]);
+	var D = makeTwoDigit(dt_list[2]);
+	if (dt_list.length == 3) {
+		var h = "00";
+		var m = "00";
+		var s = "00";
+	} else {
+		var h = makeTwoDigit(dt_list[3]);
+		var m = makeTwoDigit(dt_list[4]);
+		var s = makeTwoDigit(dt_list[5]);
+	}
+	var Y2 = date1.getFullYear();
+	var M2 = date1.getMonth()+1;
+	var D2 = date1.getDate();
+	var h2 = date1.getHours();
+	var m2 = date1.getMinutes();
+	var s2 = date1.getSeconds();
+	M2 = makeTwoDigit(M2);
+	D2 = makeTwoDigit(D2);
+	h2 = makeTwoDigit(h2);
+	m2 = makeTwoDigit(m2);
+	s2 = makeTwoDigit(s2);
+	if (Y == Y2 && M == M2 && D == D2 && h == h2 && m == m2 && s == s2)
+		return true;
+	else
+		return false;
+}
+//날짜 스트링으로 리턴
+function makeDateTime(DateTime){
+	return DateTime.getFullYear()+"-"+ makeTwoDigit(DateTime.getMonth() +1) + "-"+ makeTwoDigit(DateTime.getDate())
+}
+//---Make one digit to two digit
+function makeTwoDigit(x) {
+	if (x.toString().length == 1) return "0"+x; else return x;
+}
+//--Clock
+function Clock(){
+	var NOW_TIME ="";
+	var timeOBJ = document.getElementById("Time");
+	var TODAY = new Date();
+	var HOUR = TODAY.getHours();
+	var MIN = TODAY.getMinutes();
+	var SEC = TODAY.getSeconds();
+	if (HOUR > 12) HOUR = HOUR;
+	if (HOUR <= 9) HOUR = "0" + HOUR;
+	if (MIN <= 9) MIN = "0" + MIN;
+	if (SEC <= 9) SEC = "0" + SEC;
+	NOW_TIME = HOUR+":"+MIN+":"+SEC
+	timer= setTimeout("Clock()", 1000);
+	timeOBJ.innerText = NOW_TIME;
+}
+//--------------------------------------------------------------------------------
+// String Functions
+//--------------------------------------------------------------------------------
+//---- Extract value that posted on parameterName
+function getParameter (strValue, parameterName, sep) {
+	strValue = RTrim(LTrim(strValue));
+	var lists = strValue.split(sep);
+
+	for (var i=0; i < lists.length; i++) {
+		if (Left(lists[i], "=").toLowerCase() == parameterName.toLowerCase()) {
+			return (Right(lists[i], "="));
+		}
+	}
+	return "";
+}
+//---Replace value that posted on parameterName with modifyValue.
+function modifyParameter(strValue, parameterName, sep, modifyValue) {
+	if(strValue.indexOf(parameterName+"=") < 0) {
+		//parameter가 없으면 추가
+		var retValue = strValue+sep+parameterName+"="+modifyValue;
+		return retValue;
+	}
+
+	var lists = strValue.split(sep);
+	for (var i=0; i < lists.length; i++) {
+		if (Left(lists[i], "=").toLowerCase() == parameterName.toLowerCase()) {
+			lists[i] = parameterName + "=" + modifyValue;
+			break;
+		}
+	}
+	return lists.join(sep);
+}
+//---delete Parameter
+function removeParameter(strValue, parameterName, sep) {
+	if(strValue.indexOf(parameterName+"=") < 0) {
+		//parameter가 없으면 그대로 리턴
+		return strValue;
+	}
+
+	var lists = strValue.split(sep); var lists2 = new Array();
+	for (var i=0; i < lists.length; i++) {
+		if (Left(lists[i], "=").toLowerCase() != parameterName.toLowerCase()) {
+			lists2[lists2.length] = lists[i];
+		}
+	}
+	return lists2.join(sep);
+}
+//----Is contained by substr
+function Contains(str,substr) {
+	var sepStr = str.split(";");
+	for(var i=0 ; i < sepStr.length ; i++){
+		if(sepStr[i] == substr)return true;
+	}
+	return false;
+}
+//-- Is Member by Array
+function IsMember(ArrayString, Str){
+	for(var i = 0; i < ArrayString.length; i++){
+		if(ArrayString[i] == Str){
+			return true;
+		}
+	}
+	return false;
+}
+
+//----return index dimension element
+function Elements(Str) {
+	var DelimeterIndex = Str.indexOf(";");
+	var TrimStr = Trim(Str);
+	if(TrimStr =='' || (TrimStr.Length < 1 && DelimeterIndex < 1)) return (0);
+	return (1 + Elements(Right(TrimStr,";")));
+}
+//----Extraction left string
+function Left(SourceStr, FindStr) {
+	Index = SourceStr.indexOf(FindStr);
+	if(Index < 0) {
+		return ("");
+	}else{
+		return (SourceStr.substring(0, Index));
+	}
+}
+function LeftIndex(SourceStr, idx){
+	if (idx <= 0)
+		return "";
+	else if (idx > String(SourceStr).length)
+		return SourceStr;
+	else
+		return String(SourceStr).substring(0,idx);
+}
+//-----Extraction right string
+function Right(SourceStr, FindStr) {
+	Index = SourceStr.indexOf(FindStr);
+	if(Index < 0) {
+		return ("");
+	}else{
+		Len = SourceStr.length;
+		return(SourceStr.substring(Index+FindStr.length, Len));
+	}
+}
+function RightBack(SourceStr, FindStr){
+	var index = SourceStr.lastIndexOf(FindStr);
+	if (index < 0)return "";
+	else return (SourceStr.substring(index+FindStr.length,SourceStr.length));
+}
+function RightIndex(SourceStr, idx){
+    if (idx <= 0)
+       return "";
+    else if (idx > String(SourceStr).length)
+       return SourceStr;
+    else {
+       var Len = String(SourceStr).length;
+       return String(SourceStr).substring(Len, Len - idx);
+    }
+}
+//--- Extraction middle string
+function Middle(SourceStr, ParamStr, Sap){
+	var stridx = SourceStr.indexOf(ParamStr);
+	var SapSourceStr = SourceStr.substring(parseInt(stridx)+parseInt(ParamStr.length), SourceStr.length);
+	var sapidx = SapSourceStr.indexOf(Sap);
+	var returnStr = SapSourceStr.substring(0, sapidx);
+	return returnStr;
+}
+//----Elimination empty string value
+function Trim(SourceStr) {
+	newStr = SourceStr.replace(/ /gi, "");
+	return (newStr);
+}
+//----Elimination left empty string value
+function LTrim(value) {
+	var pos = 0;
+	for(var i=0; i < value.length; i++) {
+		if(value.substr(i,1) != " ") { pos = i; break; }
+	}
+	return (value.substring(pos, value.length));
+}
+//----Elimination right empty string value
+function RTrim(value) {
+	//alert(value);
+	var pos = 0;
+	for(var i=value.length-1; i >= 0; i--) {
+		if(value.substr(i,1) != " ") { pos = i; break; }
+	}
+	return (value.substring(0, pos+1));
+}
+//----특정문자열로 split한 값중 특정번째 값
+
+function Word(value, sep, index) {
+	if(value == "" || value == null) return "";
+
+	var lists = value.split(sep);
+
+	if(index == -1) {
+		return (lists[lists.length-1]);
+	} else {
+		if (lists.length-1 < index) return "";
+		return (lists[index]);
+	}
+}
+//----Is Korean Character?
+function isKorean(it) {
+	if (it.substring(0, 2) == "%u")
+		if (it.substring(2,4) == "00") return false; else return true;
+	else if (it.substring(0,1) == "%")
+		if (parseInt(it.substring(1,3), 16) > 127) return true; else return false;
+	else
+		return false;
+}
+//----String Length
+function getLength(str) {
+	var len=0;
+	for(var i=0; i < str.length; i++) {
+		if (isKorean(escape(str.substr(i,1))) == true) len += 2; else len += 1;
+	}
+	return len;
+}
+//----Return index
+function getIndex(param, key) {
+	for (var i=0; i < param.length; i++) {
+		if (param[i] == key) return i;
+	}
+	return -1;
+}
+//----Return Index that key is contained by param[i]
+function get_contains_index(param, key) {
+	for (var i=0; i < param.length; i++) {
+		if (param[i].indexOf(key) >= 0) return i;
+	}
+}
+//----Extract string by limit character
+function fixIt(str, limit) {
+	var len=0; var new_str="";
+	var max = 0;
+	switch(limit) {
+		case "name":	max = 12; break;
+		case "post":	max = 10; break;
+		case "date":	max = 12; break;
+		case "percent":	max = 5; break;
+		default:max=limit; break;
+	}
+	for(var i=0; i < str.length; i++) {
+		if (len > max) return new_str+"..";
+		if (isKorean(escape(str.substr(i,1))) == true) len += 2; else len += 1;
+		new_str += str.substr(i,1);
+	}
+	return new_str;
+}
+//----Check the validation of email format
+function isValidEmail(email) {
+	if (email.length <= 6 || email.indexOf ('@', 0) == -1 || email.indexOf ('.', 0) == -1 || email.indexOf(".") == email.length-1) return false;
+	else return true;
+}
+function isValidPwd(password){
+	var IsChar = false;
+	var IsNum = false;
+	for (var i=0; i < password.length; i++ ){
+		var xchr = password.charAt(i);
+		if(isNaN(xchr))IsChar = true;
+		else IsNum = true;
+	}
+	return (IsChar && IsNum ? true : false);
+}
+//--특정문자열을 검색하는 모듈
+function findString(r,str){
+	var found;
+	for (i = 0; i <= FIND_STR_INDEX && (found = r.findText(str)) != false; i++) {
+      r.moveStart("character", 1);
+	  r.moveEnd("textedit");
+    }
+	if(found){
+      r.moveStart("character", -1);
+      r.findText(str);
+      r.select();
+      r.scrollIntoView();
+      FIND_STR_INDEX++;
+	}else{
+	    if (FIND_STR_INDEX > 0) {
+			FIND_STR_INDEX = 0;
+			findString(r,str);
+		}else alert("문자열 '"+str+"'이 없습니다.");
+	}
+	return false;
+}
+function findAllString(r,str,flag){
+	var r,i
+	if(str){
+		for(i=0;r.findText(str);i++){
+			if(flag)r.execCommand('BackColor','','yellow');
+			else r.execCommand('BackColor','','white');
+			r.collapse(false);
+		}
+	}
+}
+//----Insert comma at Number
+function insertComma(srcNumber) {
+	var txtNumber = '' + srcNumber;
+	if (isNaN(txtNumber) || txtNumber == "") {
+		return txtNumber;
+	} else {
+		var rxSplit = new RegExp('([0-9])([0-9][0-9][0-9][,.])');
+		var arrNumber = txtNumber.split('.');
+		arrNumber[0] += '.';
+		do {
+			arrNumber[0] = arrNumber[0].replace(rxSplit, '$1,$2');
+		} while (rxSplit.test(arrNumber[0]));
+		if (arrNumber.length > 1) {
+			return arrNumber.join('');
+		} else {
+			return arrNumber[0].split('.')[0];
+		}
+	}
+}
+
+//--------------------- 문자열의 hexa값 encoding&decoding 함수 ----------------
+var chex = "0123456789ABCDEF";
+
+function decTohex(x) {
+	hexval = new Array();
+	var i=0;
+	tmpval = x;
+	for ( i=0 ; i  < hexval.length ; i++ ) hexval[i] = "";
+	if ( tmpval >= 16 ) {
+		while ( tmpval >= 16 ) {
+			tmpRem = tmpval%16;
+			tmpmok = (tmpval-tmpRem)/16;
+			hexval[i] = chex.charAt(tmpRem);
+			if (tmpmok < 16) {
+				hexval[i+1] = chex.charAt(tmpmok );
+				tmpval = tmpmok;
+			}
+			else {
+				tmpval = tmpmok;
+			}
+			i = i +1;
+	}
+	} else {
+    		hexval = chex.charAt(tmpval);
+	}
+	converthex = "";
+	hexval.reverse();
+	for ( k = 0 ; k < hexval.length ; k++)
+		converthex = converthex + hexval[k];
+	return converthex ;
+}
+function strConvert(strbuf, flag) {
+	source = new String();
+	buf1 =  new String();
+	buf = new String();
+	source = strbuf;
+
+	if (flag == 1) {
+		slen = source.length;
+		for (var ss= 0 ; ss < slen ; ss++) {
+			buf1 = source.substring(ss, ss+1);
+			if (buf1 == null) return false;
+			k= decTohex( buf1.charCodeAt(0)) ;
+			t = "0000" + k;
+			o = t.substring(t.length - 4 , t.length);
+			buf  = buf + o;
+		}
+	}
+	else { //----Decoding -----------------------------------
+		buf1 = "";
+		var k = new String();
+		for ( i=0 ; i < strbuf.length; ) {
+			buf1 =strbuf.substring(i, i+4);
+			k = "";
+			Test = String.fromCharCode(parseInt(buf1, '16'));
+			buf = buf + Test;
+			i = i +4;
+		}
+	}
+	return buf;
+}
+//------------------------------------------------------------
+//20050511 임주란 EUGP에서 사용
+function isNotesID(Key) {
+	if(Key.toUpperCase().indexOf("CN=") >= 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
+//Key값을 이용한 CN추출
+function getEntryCN(Key) {
+	if(Key.toUpperCase().indexOf("CN=") >= 0) {
+		var CN = Left(Right(Key, "CN="), "/");
+		return CN;
+	} else {
+		return Key;
+	}
+}
+//Key값을 이용한 Abbreviated추출
+function getEntryAbbreviated(Key) {
+	if(Key.toUpperCase().indexOf("CN=") >= 0) {
+		var lists = (Key.indexOf("@") >= 0?Left(Key,"@").split("/"):Key.split("/"));
+		var retList = new Array();
+		for(var i=0; i < lists.length; i++) {
+			retList[retList.length] = Right(lists[i],"=");
+		}
+		return retList.join("/");
+	} else {
+		return Key;
+	}
+}
+//----Make new list
+function makeNewList(lists, param, sep) {
+	var new_lists = new Array();
+	var inc = 0;
+	var i=0; var j=0;
+	var param_value = "";
+	for (i=0; i < lists.length ; i++) {
+		new_lists[inc]="";
+		for (j=0; j < param.length; j++) {
+			param_value = getParameter(lists[i], param[j], sep);
+			new_lists[inc] = new_lists[inc]+sep+param_value;
+		}
+		new_lists[inc] = new_lists[inc].substr(1, new_lists[inc].length);
+		inc++;
+	}
+	return new_lists;
+}
+//----Sort lists by sort_type
+function sortIt(lists, sep, index, sort_type) {
+	if ( lists == null || lists.length == 0 )return lists;
+	var new_lists = new Array();
+	if (index == 0)new_lists = lists;
+	else new_lists = replaceOrder(lists, sep, index);
+	new_lists.sort();
+	if (sort_type=="ascending")return new_lists;
+	else return new_lists.reverse();
+}
+//-----Replace Order
+function replaceOrder(lists, sep, index) {
+	var new_lists = new Array();
+	var each_new_list = new Array();
+	var each_list = new Array();
+	var tmpstr="";
+	for (var i=0; i < lists.length; i++) {
+		each_list = lists[i].split(sep);
+		each_new_list = each_list;
+		tmpstr = each_new_list[0];
+		each_new_list[0] = each_list[index];
+		each_new_list[index] = tmpstr;
+		new_lists[i] = each_new_list.join(sep);
+	}
+	return new_lists;
+}
+//----일단 보류
+function addCategory(){/* 필드명, 윈도우 타이틀 */
+	if(arguments[2] == null){
+		document.forms[0].elements[arguments[0]].value = arguments[1];
+		hidePopup();
+	}else{
+		var obj = document.forms[0].elements[arguments[0]]
+		var list = obj.value.split(";")
+		var newArr = new Array();
+		for(var i=0 ; i < list.length ; i++){
+			if(list[i] != arguments[1] && list[i] != "")newArr[newArr.length++] = list[i]
+		}
+		if(arguments[2])newArr[newArr.length++] =  arguments[1];
+		obj.value = newArr.join(";");
+	}
+}
+//------------------------------------------------------------------------------
+// OPEN
+//------------------------------------------------------------------------------
+//----Open popup window with scrollbar options
+function openSubwin(url, width, height, scrollbars, win_name, resizable) {
+	var opt_scrollbars = (scrollbars == null)?"auto":scrollbars;
+	var window_name = (win_name == null)?"subwin":win_name;
+	var winFeature = setWinCenter(width, height) + ",menubar=no,resizable="+(resizable==null?"no":resizable)+",scrollbars="+opt_scrollbars;
+	var subwin = window.open(url, window_name, winFeature);
+	return subwin;
+}
+//----Open popup window with scrollbars
+function openWin(url, width, height, win_name){
+	var window_name = (win_name == null)?"subwin":win_name;
+	var winFeature = setWinCenter(width, height) + ",menubar=no,resizable=yes,scrollbars=yes";
+	var subwin = window.open(url, "", winFeature);
+	return subwin;
+}
+
+//----Open Window with menubar and scrollbars
+function openMenuWin(url, width, height, win_name){
+	var window_name = (win_name == null)?"subwin":win_name;
+	var winFeature = setWinCenter(width, height) + ",toolbar=yes,location=yes,menubar=yes,resizable=yes,scrollbars=yes";
+	var subwin = window.open(url, "", winFeature);
+	return subwin;
+}
+
+//----Open Modal Popup window
+function openModalSubwin(url, args, win_width, win_height, scrollflag) {
+	var dt = new Date();
+	var winFeature = "dialogWidth:"+win_width+"px; dialogHeight:"+win_height+"px; center:yes; help:no; status:no; scroll:"+(scrollflag == null ? "no" : scrollflag)+"; resizable:no";
+	//var strurl = url+"&"+dt.toUTCString().replace(/ /gi,"");
+	var strurl = url;
+	var retValue = window.showModalDialog(strurl, args, winFeature);
+
+	return retValue;
+}
+//----Open Calendar Window
+function openCalendar(url, args, win_width, win_height,win_left,win_top) {
+	var winFeature = "dialogWidth:"+win_width+"px; dialogHeight:"+win_height+"px; dialogLeft:"+win_left+"; dialogTop:"+win_top+"; center:no; help:no; status:no; scroll:no; resizable:no";
+	var retValue = window.showModalDialog(url, args, winFeature);
+	return retValue;
+}
+//----Open Doc
+function openDoc(dbpath, view, id,mode){
+	var doc_url = "/"+ dbpath + "/"+view+"/"+id+"?"+(mode=="R"?"opendocument":"editdocument");
+	try{
+		doc_url += "&is_popup="+IS_POPUP+
+			"&is_preview="+IS_PREVIEW;
+	}catch(e){}
+	location.href = doc_url
+}
+//----openForm
+function openForm(dbpath,formname,query){
+	var url = "/"+ dbpath + "/"+formname+"?openform&"+query
+	location.href = url;
+}
+//--Local File Dialog Box
+function openFileDiaglog(field_name,mode){
+	var objDoc = document.all.DocControl2;
+	var obj = null; var lists = new Array(); var filename="";
+	var filepath = objDoc.getSelectedFilename("", "파일 첨부", true, (mode==null|!mode?false:true));
+	if(filepath == "")return;
+	eval("document.forms[0]."+field_name).value = filepath;
+}
+//--서버선택
+function getPublicServer(field_name,ismulti){
+	var url = "/"+LIBRARY_PATH + "/win_select_server?readform"+
+			"&db=names.nsf"+
+			"&kind=server"+
+			"&view=($Servers)"+
+			"&title=서버 선택"+
+			"&multi="+ismulti
+
+	var args = null;
+
+	var retValue = openModalSubwin(url, args, 300, 470, "no", "no");
+	if (retValue == null) return;
+	var fieldObj = eval("f."+field_name);
+	if(ismulti == "1")fieldObj.value = retValue;
+	else fieldObj.value = retValue;
+}
+//---CreatePopup
+function openPopup(winLeft, winTop, winWidth, winHeight, htmlstr, onloadFun) {
+	//var oPopup = window.createPopup();
+	var oPopBody = oPopup.document.body;
+
+	oPopBody.onload = new Function((onloadFun == null) ? "" : onloadFun);
+	oPopBody.onblur = new Function("");
+	oPopBody.style.backgroundColor = "#FFFFFF";
+	oPopBody.style.border = "1px solid #D2D2D2";
+	oPopBody.scroll = "yes";
+	oPopBody.style.scrollbarFaceColor = "#ECECEC";
+	oPopBody.style.scrollbarShadowColor = "#F5F4F4";
+	oPopBody.style.scrollbarHighlightColor = "#F5F4F4";
+	oPopBody.style.scrollbar3dLightColor = "#F5F4F4";
+	oPopBody.style.scrollbarDarkShadowColor = "#FFFFFF";
+	oPopBody.style.scrollbarTrackColor = "#F5F4F4";
+	oPopBody.style.scrollbarArrowColor = "#808080";
+	oPopBody.innerHTML = htmlstr;
+
+	//x,y,width,height
+	oPopup.show(winLeft, winTop, winWidth, winHeight, document.body);
+	OBJ_POPUP = oPopup;
+}
+function hidePopup(){
+	if (OBJ_POPUP){OBJ_POPUP.hide();}
+}
+//---CreatePopup :: roundTable
+//---tableId :: 기존테이블을 모서리가 둥근 테이블로 자동변환할 Table id
+function openPopupRoundTable(tableId, winLeft, winTop, winWidth, winHeight, htmlstr) {
+	//var oPopup = window.createPopup();
+	var oPopBody = oPopup.document.body;
+	oPopBody.onblur = new Function("");
+	oPopBody.innerHTML = htmlstr;
+	oPopup.show(winLeft, winTop, winWidth, winHeight, document.body);
+
+	roundTableMake(oPopup, tableId);
+}
+//---기존테이블을 모서리가 둥근 테이블로 자동변환
+
+
+function roundTableMake(objID, tableId) {
+       var obj = objID.document.getElementById(tableId);
+
+       var Parent, objTmp, Table, TBody, TR, TD;
+       var bdcolor, bgcolor, Space;
+       var trIDX, tdIDX, MAX;
+       var styleWidth, styleHeight;
+
+       // get parent node
+       Parent = obj.parentNode;
+       objTmp = objID.document.createElement('SPAN');
+       Parent.insertBefore(objTmp, obj);
+       Parent.removeChild(obj);
+
+       // get attribute
+       bdcolor = obj.getAttribute('rborder');
+       bgcolor = obj.getAttribute('rbgcolor');
+       radius = parseInt(obj.getAttribute('radius'));
+
+       if (radius == null || radius < 1) radius = 1;
+       else if (radius > 6) radius = 6;
+
+       MAX = radius * 2 + 1;
+
+        //-- create table {{
+       Table = objID.document.createElement('TABLE');
+       TBody = objID.document.createElement('TBODY');
+
+       Table.cellSpacing = 0;
+       Table.cellPadding = 0;
+
+       for (trIDX=0; trIDX < MAX; trIDX++) {
+              TR = objID.document.createElement('TR');
+              Space = Math.abs(trIDX - parseInt(radius));
+              for (tdIDX=0; tdIDX < MAX; tdIDX++) {
+                     TD = objID.document.createElement('TD');
+
+                     styleWidth = '1px'; styleHeight = '1px';
+                     if (tdIDX == 0 || tdIDX == MAX - 1) styleHeight = null;
+                     else if (trIDX == 0 || trIDX == MAX - 1) styleWidth = null;
+                     else if (radius > 2) {
+                            if (Math.abs(tdIDX - radius) == 1) styleWidth = '2px';
+                            if (Math.abs(trIDX - radius) == 1) styleHeight = '2px';
+                     }
+
+                     if (styleWidth != null) TD.style.width = styleWidth;
+                     if (styleHeight != null) TD.style.height = styleHeight;
+
+                     if (Space == tdIDX || Space == MAX - tdIDX - 1) TD.style.backgroundColor = bdcolor;
+                     else if (tdIDX > Space && Space < MAX - tdIDX - 1)  TD.style.backgroundColor = bgcolor;
+
+                     if (Space == 0 && tdIDX == radius) TD.appendChild(obj);
+                     TR.appendChild(TD);
+              }
+              TBody.appendChild(TR);
+       }
+
+       //--  create table
+       Table.appendChild(TBody);
+       // insert table and remove original table
+       Parent.insertBefore(Table, objTmp);
+}
+// -- 우편번호 검색 및 선택
+function selectZipCode(ZipCode,Address, DetailAddress,kind){
+	var url =	"/" + ZIP_CODE_PATH + "/f_searchDialog?openform" +
+				"&kind="+(kind==null?"":"1")+
+				"&zipcode=" + ZipCode +
+				"&address=" + Address +
+				"&focus=" + DetailAddress;
+	var subwin = openSubwin(url, 420, 300, "no", "ZipCode", "no");
+	subwin.focus();
+
+}
+/* 문서가 팝업으로 열릴때, 문서 내용에 따라 세로 스크롤바 표시 */
+function initScroll(){
+	document.body.scrollHeight>document.body.clientHeight?document.body.scroll="yes":"";
+}
+//----------------------------------------------------------------------------------------------
+// ETC Functions
+//----------------------------------------------------------------------------------------------
+//-----window open시 중앙에 위치
+
+function setWinCenter(winwidth, winheight) {
+	winx = Math.ceil((screen.availWidth - winwidth) / 2);
+	winy = Math.ceil((screen.availHeight - winheight) / 2);
+	if (winwidth == screen.availWidth) winwidth = screen.availWidth - 10;
+	if (winheight == screen.availHeight) winheight = screen.availHeight - 30;
+	return "left=" + winx + ",top=" + winy + ",width=" + winwidth + ",height=" + winheight;
+}
+
+function setModelessCenter(winwidth, winheight) {
+	winx = Math.ceil((screen.availWidth - winwidth) / 2);
+	winy = Math.ceil((screen.availHeight - winheight) / 2);
+	if (winwidth == screen.availWidth) winwidth = screen.availWidth - 10;
+	if (winheight == screen.availHeight) winheight = screen.availHeight - 30;
+	return "dialotgLeft:" + winx + "px;dialogTop:" + winy + "px;dialogWidth:" + winwidth + "px;dialogHeight:" + winheight + "px";
+}
+//----Diplay action button's event status
+function toggleActionBtn(BtnObj,Flag){
+	switch(Flag){
+		case "0" : //moveout
+			BtnObj.style.backgroundColor = "#ECECEC";
+			BtnObj.style.borderWidth = "1px";
+			BtnObj.style.borderStyle ="solid";
+			BtnObj.style.borderColor = "#CFCFCF";
+			BtnObj.style.color = "#000000";
+			break;
+		case "1" : //mouseover
+			BtnObj.style.backgroundColor = "#DCDCDC";
+			BtnObj.style.borderTopColor = "#EBEBEB";
+			BtnObj.style.borderRightColor = "#ACACAC";
+			BtnObj.style.borderBottomColor = "#8F8F8F";
+			BtnObj.style.borderLeftColor = "#E3E3E3";
+			BtnObj.style.color = "#000000";
+			break;
+		case "2" : //mousedown
+			BtnObj.style.backgroundColor = "#ACACAC";
+			BtnObj.style.borderTopColor = "#707070";
+			BtnObj.style.borderRightColor = "#BDBDBD";
+			BtnObj.style.borderBottomColor = "#CFCFCF";
+			BtnObj.style.borderLeftColor = "#868686";
+			BtnObj.style.color = "#FFFFFF";
+			break;
+	}
+}
+//하부 수행버튼 보이기
+
+
+function showSubAction(DivName) {
+	var obj = document.getElementById(DivName);
+	var targetObj = event.srcElement.getBoundingClientRect();
+	obj.style.left = targetObj.left+20;
+	obj.style.top = targetObj.top;
+	obj.style.display="";
+	document.body.onmouseover=new Function("hideSubActionControl('"+DivName+"')");
+}
+
+function hideSubAction(DivName) {
+	var obj = document.getElementById(DivName);
+	obj.style.display = "none";
+	document.body.onmouseover="";
+}
+function hideSubActionControl(DivName) {
+	var obj = event.srcElement; var TmpObj = obj;
+	var flag = false;
+	while(TmpObj != null) {
+		obj = TmpObj;
+		TmpObj = TmpObj.parentElement;
+		if (obj.id==DivName || obj.value==Right(DivName,"Div")) flag = true;
+	}
+	if(!flag) hideSubAction(DivName);
+}
+function setClipBoard(StrData){
+	window.clipboardData.setData("Text",(StrData==null?location.href:StrData));
+}
+function getClipBoard(){
+	return window.clipboardData.getData("Text");
+}
+function showUserInfo(LoginID){
+	var ViewName=(LoginID.indexOf("CN=")>=0?"user_by_notesid":"user_by_name");
+	var url =	"/"+LIBRARY_PATH + "/win_show_user?openform" +
+				"&user=" + LoginID +
+				"&view=" + ViewName +
+				"&is_popup=1";
+	var subwin = openSubwin(url, 600,450, "no","subwin","no")
+	subwin.focus();
+}
+function showEmpNoInfo(LoginID){
+	var ViewName="user_by_empno";
+	var url =	"/"+LIBRARY_PATH + "/win_show_user?openform" +
+				"&user=" + LoginID +
+				"&view=" + ViewName +
+				"&is_popup=1";
+	var subwin = openSubwin(url, 600,450, "no","subwin","no")
+	subwin.focus();
+}
+function toggleImage(obj,mode){
+	obj.src = IMG_DIR + "/btn/btn_pop_"+ obj.id +(mode?"_r.gif":".gif");
+}
+function swapImageButton(imgid, flag){
+	var obj = document.getElementById(imgid);
+	if(obj!=null) {
+		var strtmp = IMG_DIR+"/btn/"+imgid;
+		obj.src = (flag?strtmp+"_r.gif":strtmp+".gif");
+	}
+}
+function getToday() {
+	var dt = new Date();
+	var d  = makeTwoDigit(dt.getDate());
+	var m = makeTwoDigit(dt.getMonth()+1);
+	var y  = makeTwoDigit(dt.getFullYear());
+
+	return y+"-"+m+"-"+d;
+}
+//-------- html로 생성한 checkbox를 문서저장시 에러가 안나게 하기 위해 모두 uncheck 함
+
+
+function unCheckAll() {
+	//---- 저장시 필드없이, javascript로 생성한 체크박스들을 모두 check를 해제시켜 저장시 에러가 안나게 함
+	var inputTags = document.all.tags("INPUT");
+	for(var i=0 ; i < inputTags.length; i++) {
+		if(inputTags[i].type.toUpperCase() == "CHECKBOX" && inputTags[i].name != "%%Detach" && inputTags[i].name != "IsUseDrm") {
+			inputTags[i].checked = false;
+		}
+	}
+}
+// checkbox에서 선택된 값 리턴
+function getCheckedValue(object) {
+	var lists = new Array();
+	var inc = 0;
+
+	for(var i=0; i < object.length; i++) {
+		if(object[i].checked) {
+			lists[inc++] = object[i].value;
+		}
+	}
+	return lists;
+}
+//--한개의 CheckBox 값 ,radio 에서 선택되어진값 가져오기
+
+
+function getCRValue(FieldName){
+	var cObj = eval("document.forms[0]."+FieldName);
+	for(var i=0 ; i < cObj.length ; i++){
+		if(cObj[i].checked)return cObj[i].value;
+	}
+	return "";
+}
+//반올림함수
+
+
+function round(num, pos) {
+	var posV = Math.pow(10,pos);
+	return Math.round(num*posV)/posV;
+}
+//EMail의 <,>를 변환
+
+
+function fixEMail(email) {
+	return email.replace(/</gi,"&lt;").replace(/>/gi,"&gt;");
+}
+/* --------- 접기/펼치기 ----------- */
+function toggleProcess(DIV_TOGGLE, IMG_TOGGLE){
+	var obj = document.getElementById(DIV_TOGGLE);
+	var imgObj = document.getElementById(IMG_TOGGLE);
+	if(obj.style.display == "none"){
+		obj.style.display = "inline";
+		imgObj.src = IMG_DIR + "/"+ IMG_COLLAPSE;
+	}else {
+		obj.style.display = "none";
+		imgObj.src = IMG_DIR + "/"+ IMG_EXPAND;
+	}
+}
+/* ======================== XMLHttp(JavaScript) ==================== */
+function xmlhttp(url){
+	var htmlstr = "";
+
+	var objHTTP=new ActiveXObject("MSXML2.XMLHTTP");
+	objHTTP.Open('GET', url, false);
+	objHTTP.Send();
+
+	if (objHTTP.statustext == "OK" ) {
+		htmlstr=objHTTP.responseText;
+	} else {
+		htmlstr = XMLERROR;
+	}
+	return htmlstr;
+}
+
+//-- 다중부서, 다중보직 선택한 추가처리
+//-- 필요한 경우 각 시스템에서 재정의 사용
+function setSelectMultiUserInfo(retValue, multiDept, multiFunc) {
+}
+//20050511 임주란. EUGP에서 사용하기 위해 추가
+function IsUserName(entryName, entryKorName){
+	try{
+		if (entryName.toLowerCase().indexOf("cn=") >= 0){
+			return true;
+
+		//한글명과 다르면(LoginID니까) 회원
+		}else if (entryName.toLowerCase()!=entryKorName.toLowerCase()){
+			return true;
+
+		}else{
+			return false;
+		}
+	}catch (e){
+		return false;
+	}
+}
+
+//-- ActiveX를 로딩하기 위한 것 --
+//-- 0428일 추가
+function writeObject(strValue){
+	document.write(strValue);
+}
+
+/* code에 해당하는 시스템으로 이동 */
+function openGWSystem(code){
+	var url;
+	try { var path = LIBRARY_PATH; } catch(e) { var path = "comn/library.nsf"; }
+
+	url = "/" + path + "/sys_linker?readform&system="+code+"&add_param="+ADD_PARAM;
+	parent.location.href = url;
+}
+
+function MM_swapImgRestore() { //v3.0
+	var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_preloadImages() { //v3.0
+	var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+		var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+		if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+	var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+		d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+	if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+	for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+	if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+	var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+	 if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+
+function getHostName(ou){
+	switch (ou.toLowerCase()){
+	case "tyun": var hostname = "topzone.tongyang.co.kr"; break;
+	case "tyvc": var hostname = "topzone.tongyang.co.kr"; break;
+	case "tyft": var hostname = "topzone.tongyang.co.kr"; break;
+	case "tyon": var hostname = "topzone.tongyang.co.kr"; break;
+	case "tyle": var hostname = "topzone.tongyang.co.kr"; break;
+	case "tyre": var hostname = "topzone.tongyang.co.kr"; break;
+	case "tynb": var hostname = "topzone.tongyang.co.kr"; break;
+	case "tyfb": var hostname = "topzone.tongyang.co.kr"; break;
+	case "tyhsf": var hostname = "topzone.tongyang.co.kr"; break;
+	case "tycmt": var hostname = "majorzone.tongyang.co.kr"; break;
+	case "tymaj": var hostname = "majorzone.tongyang.co.kr"; break;
+	case "tycbs": var hostname = "majorzone.tongyang.co.kr"; break;
+	case "tyfn": var hostname = "withzone.tongyang.co.kr"; break;
+	case "tyct": var hostname = "withzone.tongyang.co.kr"; break;
+	case "tymg": var hostname = "magiczone.tongyang.co.kr"; break;
+	case "tyli": var hostname = "angelgw.tongyang.co.kr"; break;
+	case "tys": var hostname = "speedzone.tongyang.co.kr"; break;
+	case "tyco": var hostname = "tyzone.tongyang.co.kr"; break;
+	case "tysec" : var hostname = "myassetdgw1.tongyang.co.kr"; break;
+	}
+	return hostname;
+}
+
+//iframe 조정
+function resizePopUp() {
+	var ptBodyHeight = "";
+	ptBodyHeight = document.documentElement.clientHeight - 135;
+	if (ptBodyHeight == "" || ptBodyHeight == undefined) {
+	} else {
+		document.getElementById("if_center").style.height  = ptBodyHeight;
+	}
+}��*?�      UH��UH��;'R�UH��   +:http://portal.koreatech.ac.kr/js/shared.js necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:47:56 GMT
+Server: IBM_HTTP_Server
+Last-Modified: Thu, 16 Feb 2012 09:30:22 GMT
+Etag: "680ed-8948-7a2a0780"
+Accept-Ranges: bytes
+Content-Length: 35144
+Cache-Control: max-age=3600
+Expires: Tue, 05 May 2015 10:47:56 GMT
+Content-Type: application/x-javascript
+ uncompressed-len 0   �H

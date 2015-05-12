@@ -1,0 +1,1397 @@
+
+
+
+
+
+
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+<title>::::: KOREATECH MAIL SYSTEM :::::</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+<meta http-equiv="Prgama" content="no-cache"/>
+<meta http-equiv="Cache-control" content="no-cache"/>
+
+<link rel="icon" href="/sens-static/custom/images/favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/css/common/base.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/css/common/actb.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/css/common/btn.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/css/common/common.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/css/common/express.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/css/language/ko.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/plugin/jquery/ui/theme/black/jquery.ui.all.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/plugin/jquery/jquery.mCustomScrollbar.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/plugin/tablefixedheader/css/theme/black.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/plugin/dynatree/skin/black/ui.dynatree.css?dummy=58413"/>
+
+
+
+
+<script type="text/javascript">
+var app = {
+	contextPath:'',
+	static_server : ''
+};
+</script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.json-2.4.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/ui/jquery-ui-1.9.1.custom.min.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/external/jquery.bgiframe.min.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/json2.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.placeholder.min.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.fileDownload.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.blockUI.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.formatdate.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/dynatree/jquery.dynatree-1.2.2.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/tablefixedheader/jquery.fixheadertable.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jspm/digitalspaghetti.password.min.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="/sens-static/plugin/jqplot/jquery.jqplot.min.css" />
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jqplot/excanvas.min.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jqplot/jquery.jqplot.min.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jqplot/plugins/jqplot.highlighter.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+
+
+<script type="text/javascript" src="/sens-static/js/common/common.fn.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/common/imoxion.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/common/imutil.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/common/browsercheck.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/messages/common_ko.js?dummy=58413"></script>
+<script src="https://s1.daumcdn.net/svc/attach/U03/cssjs/postcode/1422954926469/150204.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="/sens-static/module/quickmenu/quickmenu.css?dummy=58413"/>
+<script type="text/javascript" src="/sens-static/module/quickmenu/quickmenu.js?dummy=58413"></script>
+
+<style type="text/css">
+    .all > .wrap{top:0;}
+    .all{
+        border:solid #a0a0a0;border-width: 0 1px;
+    }
+</style>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	quickmenu.init('[{"name":"Access Log","code":"access","classz":"q05"},{"name":"Bookmark","code":"bookmark","classz":"q07"},{"name":"Schedule","code":"calendar","classz":"q04"},{"name":"Memo","code":"note","classz":"q03"},{"name":"Notice","code":"notice","classz":"q08"},{"name":"Personal Security","code":"security","classz":"q02"},{"name":"Usage Status","code":"stats","classz":"q01"}]');
+});
+</script>
+<!-- 각 기능 static : start -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<link rel="stylesheet" type="text/css" href="/sens-static/css/mail/mail.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/css/mail/mail_express.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/plugin/dynatree/skin/black/ui.dynatree.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/plugin/foldertree/foldertree.css?dummy=58413"/>
+
+<script type="text/javascript" src="/sens-static/plugin/dynatree/jquery.dynatree-1.2.2.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.formatdate.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/foldertree/foldertree.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/messages/mail_ko.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/util/shortcut.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/util/setday.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/util/NumberFormat154.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/common/downloadctrl.js?dummy=58413"></script>
+
+<!-- CSS, JS 선언 : end -->
+<!-- 각 기능 static : end -->
+</head>
+<body>
+<div class="all ko" id="container_area">
+	<div id="quickmenu" class="quick_r_area">
+		
+
+
+
+
+
+
+
+
+
+
+<div class="quick_navi" id="quick_navi">
+	<ul class="quick_navi_s">
+		<li class="q_tit" onclick="quickmenu.close();" style="cursor:pointer;_cursor:hand;"></li>
+	</ul>	
+	<ul class="quick_navi_s function_list" id="function_list">
+		
+	</ul>
+	<ul class="quick_navi_s config">
+		<li class="quick_item q06"><a href="javascript:;" onclick="quickmenu.config();"><span></span><span class="blind">Settings</span></a></li>
+	</ul>
+</div>
+<div class="quick_content">
+	<div class="quick_tit">
+		<h2 id="quick_tit">Settings</h2>
+		<p><a href="javascript:;" onclick="quickmenu.close();"><img src="/sens-static/images/common/quick_close.gif"></a></p>
+	</div>
+	<div class="quick_content_area" id="quickmenu_content">
+				
+	</div>
+</div>
+	</div>
+    
+	<div class="wrap">
+		<div id="infoMessage"></div>
+		<!-- Navigation End -->
+		<div class="left_nav">
+			<ul class="left_nav1 ko">
+				<li class="active"><a href="/mail/list.do"><span class="icon left_nav mail"></span><span class="left_nav_text">Mail</span></a></li>
+				
+				<li ><a href="/address/list.do"><span class="icon left_nav address"></span><span class="left_nav_text">Contacts</span></a></li>
+				
+				
+				<li ><a href="/webhard/main.do"><span class="icon left_nav webhard"></span><span class="left_nav_text">Webhard</span></a></li>
+				
+				
+				
+				<li ><a href="/config/baseSet.do"><span class="icon left_nav config"></span><span class="left_nav_text">Settings</span></a></li>
+			</ul>
+			<hr />
+			<ul class="left_nav2">
+				
+				
+				<li><a href="javascript:" onclick="sensmail.help()"><span class="icon left_nav help"></span><span class="left_nav_text">HELP</span></a></li>
+				<li><a href="javascript:" onclick="sensmail.oldMail()"><span class="icon left_nav oldmail"></span><span class="left_nav_text">old mail</span></a></li>
+				<li><span class="left_nav_text">going</span></li>
+			</ul>
+			
+		</div>
+		<div class="left_area">
+			
+
+
+
+
+
+
+
+
+
+
+
+<!-- left_area Start -->
+<h3 class="blind">Mail menu</h3>
+<!-- Mail_box_list Start -->
+<div class="mail_box_list">
+	<!-- 편지쓰기 / 내게쓰기 -->
+	<div class="left_top_bt">
+		<ul>
+		<li><button type="button" class="btn left write mbutton" onclick="lst.mail_write();"><span class="blind">Compose</span></button></li>
+		<li><button type="button" class="btn left write me mbutton" onclick="menu.loadReceipt();"><span class="blind">Check read</span></button></li>
+		</ul>
+	</div>
+	
+	<!-- 메일함 list start -->
+	<div class="mail_box">
+		<ul>
+			<li class="list_head"><a href="javascript:" id="mnu_TOTAL" class="mbutton" onclick="menu.loadMailbox('TOTAL');"><span class="txt title">All mails</span></a>
+				<ul class="left_list_bt1">
+					<li><a href="javascript:" id="mnu_NEWMAIL" class="mbutton" onclick="menu.loadMailbox('NEWMAIL');"><span class="txt gray">Unread</span><span class="txt strong orange left_menu_mail_ea" id="TOTAL_count"></span></a></li>
+				</ul>
+			</li>
+
+			<li class="box_title_list droppable_box first" data-folder_type="static" data-dirkey="Inbox_kutchoiwjun"><a href="javascript:" id="mnu_Inbox_kutchoiwjun" class="mbutton"  onclick="menu.loadMailbox('Inbox_kutchoiwjun');"><span class="txt">Inbox</span></a> <a href="javascript:" onclick="lst.newMailList('Inbox_kutchoiwjun');"><span class="txt strong orange left_menu_mail_ea" id="Inbox_kutchoiwjun_count"></span></a></li>
+			
+			
+			
+
+			<li class="box_title_list droppable_box" data-folder_type="static" data-dirkey="Sent_kutchoiwjun"><a href="javascript:" id="mnu_Sent_kutchoiwjun" class="mbutton" onclick="menu.loadMailbox('Sent_kutchoiwjun');"><span class="txt title">Sent</span></a></li>
+			<li class="box_title_list droppable_box" data-folder_type="static" data-dirkey="Drafts_kutchoiwjun"><a href="javascript:" id="mnu_Drafts_kutchoiwjun" class="mbutton" onclick="menu.loadMailbox('Drafts_kutchoiwjun');"><span class="txt title">Drafts</span></a></li>
+			
+			
+			
+			<li class="box_title_list droppable_box" data-folder_type="static" data-dirkey="Spam_kutchoiwjun"><a href="javascript:" id="mnu_Spam_kutchoiwjun" class="mbutton" onclick="menu.loadMailbox('Spam_kutchoiwjun');"><span class="txt title">Spam</span></a> <a href="javascript:" onclick="lst.newMailList('Spam_kutchoiwjun');"><span class="txt strong orange left_menu_mail_ea" id="Spam_kutchoiwjun_count"></span></a>
+				<ul class="left_list_bt1">
+					<li><a href="javascript:" class="mbutton" onclick="lst.empty('Spam_kutchoiwjun');"><span class="txt small gray">Empty</span></a></li>
+				</ul>
+			</li>
+			
+			<li class="box_title_list droppable_box" data-folder_type="static" data-dirkey="Trash_kutchoiwjun"><a href="javascript:" id="mnu_Trash_kutchoiwjun" class="mbutton" onclick="menu.loadMailbox('Trash_kutchoiwjun');"><span class="txt title">Trash</span></a> <a href="javascript:" onclick="lst.newMailList('Trash_kutchoiwjun');"><span class="txt strong orange left_menu_mail_ea" id="Trash_kutchoiwjun_count"></span></a>
+				<ul class="left_list_bt1">
+					<li><a href="javascript:" class="mbutton" onclick="lst.empty('Trash_kutchoiwjun');"><span class="txt small gray">Empty</span></a></li>
+				</ul>
+			</li>
+			
+			<li class="box_title_list"><a href="javascript:" id="mnu_importmail" class="mbutton" onclick="menu.loadImportmail();"><span class="txt title">Importing external mail</span></a></li>
+		</ul>
+	</div>
+	<!-- 메일함 list end -->
+	<!-- 골라보기 list start -->
+	<div class="left_box">
+		<ul>
+			<li class="left_list none"><span class="txt strong title">Filter</span>
+				<ul class="btn_left_box star">
+					
+						<li><a href="javascript:" class="mbutton" onclick="menu.loadTome();return false;" title="E-mail write to me"><span class="star me"></span><span class="blind">E-mail write to me</span></a></li>
+					
+					<li><a href="javascript:" class="mbutton" onclick="menu.loadAttachInMail();return false;" title="첨부파일이 있는 메일"><span class="star clip"></span><span class="blind">첨부파일이 있는 메일</span></a></li>
+					<li><a href="javascript:" class="mbutton" onclick="menu.loadStarBox(1);return false;"><span class="star y"></span><span class="blind">Yellow star</span></a></li>
+					<li><a href="javascript:" class="mbutton" onclick="menu.loadStarBox(2);return false;"><span class="star b"></span><span class="blind">Blue star</span></a></li>
+					<li><a href="javascript:" class="mbutton" onclick="menu.loadStarBox(3);return false;"><span class="star r"></span><span class="blind">Red star</span></a></li>
+					<li><a href="javascript:" class="mbutton" onclick="menu.loadStarBox(4);return false;"><span class="star g"></span><span class="blind">Green star</span></a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<!-- 골라보기 list end -->
+</div>
+<!-- Mail_box_list End -->
+
+<!-- Box_list Start -->
+<div class="left_box_list mail   ">
+
+	
+	
+	
+	
+	<!-- 검색메일함 -->
+	
+	
+	<!-- 개인메일함 list start -->
+	<div class="left_box myfolder">
+		<ul>
+			<li class="left_list drop"><a href="javascript:"><span class="txt strong title folder_drop open pmbox">Personal folder</span></a>
+				<ul class="btn_left_box">
+					<li><a href="javascript:" onclick="myfolder.add();"><span class="left_add"></span><span class="blind">Add</span></a></li>
+					<li><a href="/config/mailBox.do"><span class="left_config"></span><span class="blind">Settings</span></a></li>
+				</ul>
+				<ul class="drop_box">
+					<li id="menu_tree" style="padding-left:0px;">
+						<div id="p_folder">
+						<!-- 리스트 -->
+						<ul class="foldertree"></ul>
+						</div>
+					</li>					
+				</ul>				
+			</li>
+		</ul>		
+	</div>
+	<!-- 개인메일함 list end -->
+		
+	<!-- RSS list start -->
+	<div class="left_box">
+		<ul>
+			<li class="left_list drop"><a href="javascript:"><span class="txt strong title">RSS</span></a>
+				<ul class="btn_left_box">
+					<li><a href="/config/rss.do"><span class="left_config"></span><span class="blind">Settings</span></a></li>
+				</ul>
+				<!-- 리스트 -->
+				<ul class="drop_box">
+					
+						<li>등록된 RSS 가 없습니다.</li>
+					
+						
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>
+<!-- Box_list End -->
+		</div>
+		<!-- left menu Area End -->
+		
+		<div class="body">			
+			<!-- Contents area Start -->		
+			
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/sens-static/plugin/contextMenu/jquery.contextMenu.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/plugin/tablefixedheader/css/theme/mail_attach.css?dummy=58413"/>
+<link rel="stylesheet" type="text/css" href="/sens-static/plugin/jquery/ui/theme/black/jquery.ui.dialog.list.css?dummy=58413"/>
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.splitter.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.history.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.cookie.js?dummy=58413"></script>
+
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.addKeyEvent.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.DOMWindow.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/plugin/contextMenu/jquery.contextMenu.js?dummy=58413"></script>
+
+
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.autoGrowInput.js"></script>
+<script type="text/javascript" src="/sens-static/plugin/jquery/jquery.tagit.js"></script>
+<link rel="StyleSheet" href="/sens-static/plugin/jquery/css/jquery.tagit.css" type="text/css" media="all"/>
+<link rel="StyleSheet" href="/sens-static/plugin/jquery/css/tagit.ui-zendesk.css" type="text/css" media="all"/>
+
+<script type="text/javascript" src="/sens-static/js/common/actb.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/util/jsmap.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/util/page.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/mail/mail.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/mail/write.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/mail/approval.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/mail/receipt.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/mail/filtering.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/mail/rss.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/mail/write.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/mail/view.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/editor/editor.js?dummy=58413"></script>
+
+
+
+<script type="text/javascript" src="/sens-static/plugin/ckeditor/ckeditor.js?dummy=58413"></script>
+<script type="text/javascript" src="/sens-static/js/editor/ckeditor.js?dummy=58413"></script>
+<script type="text/javascript">
+	editor_cfg.font_defaultLabel = "굴림";
+	editor_cfg.fontSize_defaultLabel = "8";
+</script>
+
+
+
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/sens-static/plugin/tablefixedheader/css/theme/mail_attach.css?dummy=58413"/>
+<script type="text/javascript" src="/sens-static/plugin/plupload/plupload.full.js?dummy=58413"></script>
+<script type="text/javascript" src='/sens-static/js/mail/plupload.js?dummy=58413'></script>
+
+
+
+
+<script type="text/javascript">
+opt.viewStyle = 1;
+opt.spam_url = "";
+writeform.use_activex = false;
+sensmail.language = "ko";
+sensmail.mhost = "koreatech.ac.kr";
+sensmail.userid = "kutchoiwjun";
+var dirkey = "TOTAL";
+
+/* 기본 메일함 키 정보 */
+var mailbox = {"INBOX":"Inbox_kutchoiwjun","SENT":"Sent_kutchoiwjun","DRAFTS":"Drafts_kutchoiwjun","SPAM":"Spam_kutchoiwjun","TRASH":"Trash_kutchoiwjun","TOME":"TOME","FOREVER":"Forever_kutchoiwjun","TOTAL":"TOTAL","NEWMAIL":"NEWMAIL","STAR1":"STAR1","STAR2":"STAR2","STAR3":"STAR3","STAR4":"STAR4","ATTACH":"ATTACH"};
+var mailinfo = {"maillist":[{"ukey":"554895413fc0fe60e6feb81c","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"0","isanswered":"0","isdeliver":"0","afile":"1","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;최원준&quot;&lt;kutchoiwjun@koreatech.ac.kr&gt;","sender_text":"최원준","fromname":"최원준","fromaddr":"kutchoiwjun@koreatech.ac.kr","subject":"dadasdasd","senddate":"Today 18:47","mailsize":"387.87 KB"},{"ukey":"5548952d3feb683d6a058165","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"0","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;최원준&quot;&lt;kutchoiwjun@koreatech.ac.kr&gt;","sender_text":"최원준","fromname":"최원준","fromaddr":"kutchoiwjun@koreatech.ac.kr","subject":"dasdasd","senddate":"Today 18:47","mailsize":"1.58 KB"},{"ukey":"5548909e3fdfec5299234f66","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"0","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;GitHub &quot;&lt;support@github.com&gt;","sender_text":"GitHub ","fromname":"GitHub ","fromaddr":"support@github.com","subject":"kutchoiwjun + GitHub = <3","senddate":"Today 18:29","mailsize":"12.72 KB"},{"ukey":"5548909c3fc98a80444059ec","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"0","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;GitHub &quot;&lt;noreply@github.com&gt;","sender_text":"GitHub ","fromname":"GitHub ","fromaddr":"noreply@github.com","subject":"[GitHub] Please verify your email 'kutchoiwjun@koreatech.ac.kr'","senddate":"Today 18:29","mailsize":"1.61 KB"},{"ukey":"55481e603feaea97cb8fbc9e","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"0","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;차재영&quot;&lt;xkdl330@koreatech.ac.kr&gt;","sender_text":"차재영","fromname":"차재영","fromaddr":"xkdl330@koreatech.ac.kr","subject":"디논","senddate":"Today 10:19","mailsize":"4 KB"},{"ukey":"553f96a83fbd93f475919e48","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"1","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;최원준&quot;&lt;kutchoiwjun@koreatech.ac.kr&gt;","sender_text":"최원준","fromname":"최원준","fromaddr":"kutchoiwjun@koreatech.ac.kr","subject":"eaeqaea","senddate":"2015-04-28 23:12","mailsize":"34.21 KB"},{"ukey":"552cf91d3fd080b927de81aa","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"1","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;최원준&quot;&lt;kutchoiwjun@koreatech.ac.kr&gt;","sender_text":"최원준","fromname":"최원준","fromaddr":"kutchoiwjun@koreatech.ac.kr","subject":"gkhhkh","senddate":"2015-04-14 20:10","mailsize":"15.78 KB"},{"ukey":"5524ed903fe5a60833bad54a","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"1","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;최원준&quot;&lt;kutchoiwjun@koreatech.ac.kr&gt;","sender_text":"최원준","fromname":"최원준","fromaddr":"kutchoiwjun@koreatech.ac.kr","subject":"z","senddate":"2015-04-08 17:50","mailsize":"2.62 MB"},{"ukey":"551d70a93fea42c63d3cdae7","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"1","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;최원준&quot;&lt;kutchoiwjun@koreatech.ac.kr&gt;","sender_text":"최원준","fromname":"최원준","fromaddr":"kutchoiwjun@koreatech.ac.kr","subject":"dasdada","senddate":"2015-04-01 19:37","mailsize":"39.91 KB"},{"ukey":"551bb0823fe8f216fa059ef6","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"0","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;최원준&quot;&lt;kutchoiwjun@koreatech.ac.kr&gt;","sender_text":"최원준","fromname":"최원준","fromaddr":"kutchoiwjun@koreatech.ac.kr","subject":"a","senddate":"2015-03-31 23:15","mailsize":"1.43 KB"},{"ukey":"551aa4223fc14478f313d9fc","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"1","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;최원준&quot;&lt;kutchoiwjun@koreatech.ac.kr&gt;","sender_text":"최원준","fromname":"최원준","fromaddr":"kutchoiwjun@koreatech.ac.kr","subject":"ㅋㅋㅋ","senddate":"2015-03-30 01:33","mailsize":"25.94 KB"},{"ukey":"551aa41a3fb9cbedceae9d58","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"1","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;최원준&quot;&lt;kutchoiwjun@koreatech.ac.kr&gt;","sender_text":"최원준","fromname":"최원준","fromaddr":"kutchoiwjun@koreatech.ac.kr","subject":"z","senddate":"2015-03-26 00:31","mailsize":"13.32 MB"},{"ukey":"551aa4183fdecc21ea534cd6","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"0","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;kyeongho choi &quot;&lt;hounga13@koreatech.ac.kr&gt;","sender_text":"kyeongho choi ","fromname":"kyeongho choi ","fromaddr":"hounga13@koreatech.ac.kr","subject":"Re: ㅋ","senddate":"2015-03-24 21:50","mailsize":"4.03 KB"},{"ukey":"551aa4163fea5f5aa07744c2","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"0","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;김유준&quot;&lt;lkoreal@koreatech.ac.kr&gt;","sender_text":"김유준","fromname":"김유준","fromaddr":"lkoreal@koreatech.ac.kr","subject":"Re: 컴퓨터 시스템 기초설계 3분반 2011136130 최원준입니다.","senddate":"2015-03-24 12:35","mailsize":"4.44 KB"},{"ukey":"551aa4143fd19ef4a56849d8","dirkey":"Inbox_kutchoiwjun","important":"3","star":0,"isfilter":0,"isseen":"1","isanswered":"0","isdeliver":"0","afile":"0","reserve_date":"","issend":"1","send":"N","readnum":0,"issecure":"0","dirname":"Inbox","sender":"&quot;오동근&quot;&lt;shyawing@koreatech.ac.kr&gt;","sender_text":"오동근","fromname":"오동근","fromaddr":"shyawing@koreatech.ac.kr","subject":"RE: 컴퓨터 시스템 기초설계 3분반 2011136130 최원준입니다.","senddate":"2015-03-24 09:04","mailsize":"2.63 KB"}],"page":{"cpage":1,"end":15,"nextGroup":2,"nextStart":11,"number":0,"pageEnd":10,"pageGroupNum":1,"pageGroupSize":10,"pageSize":15,"pageStart":1,"pageSu":2,"prevGroup":0,"prevStart":-9,"start":1,"total":26},"folderInfo":{"mailboxlist":[{"folderKey":"Auth_kutchoiwjun","folderName":"Authentication mailbox","mailcount":0,"newmailcount":0,"isAlarm":0},{"folderKey":"Drafts_kutchoiwjun","folderName":"Drafts","mailcount":0,"newmailcount":0,"isAlarm":0},{"folderKey":"Inbox_kutchoiwjun","folderName":"Inbox","mailcount":26,"newmailcount":1,"isAlarm":0},{"folderKey":"Sent_kutchoiwjun","folderName":"Sent","mailcount":39,"newmailcount":9,"isAlarm":0},{"folderKey":"Spam_kutchoiwjun","folderName":"Spam","mailcount":0,"newmailcount":0,"isAlarm":0},{"folderKey":"Tome_kutchoiwjun","folderName":"Mails to me","mailcount":0,"newmailcount":0,"isAlarm":0},{"folderKey":"Trash_kutchoiwjun","folderName":"Trash","mailcount":0,"newmailcount":0,"isAlarm":0},{"folderKey":"Work_kutchoiwjun","folderName":"Work","mailcount":0,"newmailcount":0,"isAlarm":0},{"folderKey":"TOTAL","folderName":"All mails","mailcount":26,"newmailcount":1,"isAlarm":0},{"folderKey":"NEWMAIL","folderName":"Unread mails","mailcount":1,"newmailcount":1,"isAlarm":0},{"folderKey":"STAR1","folderName":"Starred mails","mailcount":0,"newmailcount":0,"isAlarm":0},{"folderKey":"STAR2","folderName":"Starred mails","mailcount":0,"newmailcount":0,"isAlarm":0},{"folderKey":"STAR3","folderName":"Starred mails","mailcount":0,"newmailcount":0,"isAlarm":0},{"folderKey":"STAR4","folderName":"Starred mails","mailcount":0,"newmailcount":0,"isAlarm":0},{"folderKey":"ATTACH","folderName":"첨부파일이 있는 메일","mailcount":0,"newmailcount":0,"isAlarm":0},{"folderKey":"TOME","folderName":"E-mail write to me","mailcount":0,"newmailcount":0,"isAlarm":0}]}};
+
+var show_warning_mailsize = false;
+var warning_mbox_fulled = 95;
+</script>
+
+<form id="DefaultListForm" name="DefaultListForm" action="/mail/list.do" method="post">
+<input id="folder" name="folder" type="hidden" value="Inbox_kutchoiwjun"/>
+<input type="hidden" name="_csrf" value="434560ec-b84a-4ada-a60a-a35a56b5a47b"></input>
+</form>
+<!-- 메일 목록 패널 : start -->
+<div id="mailListPane" class="panes">
+    <div class="body_header">
+		<h1><span id="tit_mbox_name">Inbox</span></h1>
+		<p class="left_content_head" id="count_info"></p>
+		<div class="search_top">
+			<div>	
+				<form id="search_form" name="search_form" action="/mail/list.do" method="post" onsubmit="return lst.search();">
+				<input type="text" placeholder="메일검색" name="srch_keyword" class="searchText">
+				<button class="btn_bgtxt wt pd5" type="submit"><span>Search</span></button> 		
+				<button class="btn_bgtxt wt pd5" type="button" id="btn_all_list" onclick="lst.allMailList();" style="display:none;"><span>Entire list</span></button>
+				<button class="btn_bgtxt wt pd5" type="button" onclick="detailsearch.open();"><span>Adv. Search</span></button>
+				<input type="hidden" name="_csrf" value="434560ec-b84a-4ada-a60a-a35a56b5a47b"></input>
+</form>
+			</div>
+			<div class="detail_search" id="detail_search" style="display:none;">
+				<form id="MailSearchForm" name="MailSearchForm" action="/mail/list.do" method="post" onsubmit="return detailsearch.search(1);">
+				<input type="hidden" name="act" value="SEARCH"/>
+				<input id="cpage" name="cpage" type="hidden" value="1"/>
+				<input id="sort" name="sort" type="hidden" value="recvdate"/>
+				<input id="order" name="order" type="hidden" value="desc"/>
+				<hr/>
+				<table>
+					<tbody>
+					<tr>
+						<th>Mailbox</th>
+						<td>
+							<select id="detailsearch_mbox" name="mailbox" class="hd_slt_mailbox">
+							<option value="ALL">All mails</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>From</th>
+						<td><input type="text" name="from" class="config_input search" /></td>
+					</tr>
+					<tr>
+						<th>Duration</th>
+						<td><select class="hd_slt_date select3" name="term_type" onchange="detailsearch.term(this);">
+								<option value="A">Total</option>
+								<option value="7">7D</option>
+								<option value="30">30D</option>
+								<option value="60">60D</option>
+								<option value="90">90D</option>
+								<option value="S">Direct input</option>								
+							</select><input id="sdate" name="sdate" class="config_input search_term" style="width:56px;margin-left:5px;" readonly="readonly" type="text" value=""/><input id="edate" name="edate" class="config_input search_term" style="width:56px;margin-left:5px;" readonly="readonly" type="text" value=""/>
+					</tr>
+					<tr>
+						<th><select name="to_type" class="select2" id="detailsearch_mbox">
+							<option value="1" selected="selected">To</option>
+							<option value="2">To + CC</option>							
+							</select>
+						</th>
+						<td><input type="text" name="to" class="config_input search" /></td>
+					</tr>
+					<tr>
+						<th><select class="select2" name="keyword_target">
+								<option value="SUBJECT">Title</option>
+								<option value="CONTENT">Body</option>
+								<option value="S_C">Title + Body</option>
+								<option value="ATTACH">Attachment</option>
+                                <option value="S_A">Title + attachment</option>
+							</select>
+						</th>
+						<td><input type="text" name="keyword" class="config_input search" /></td>
+					</tr>
+					</tbody>
+				</table>
+				<hr />
+				<div class="detail_search_btn">
+					<button type="submit" class="btn_bgtxt bk">Search</button>
+					<button type="button" id="btn_detail_all_list" style="display:none;" class="btn_bgtxt rd" onclick="detailsearch.alllist();">Entire list</button>
+				</div>
+				<input type="hidden" name="_csrf" value="434560ec-b84a-4ada-a60a-a35a56b5a47b"></input>
+</form>
+			</div>
+		</div>
+	</div>
+		
+	<!-- Contents Header Start -->
+	<div class="content_header" id="mail_cheader">
+		<!-- 메일 상단 메뉴 start -->
+		<h3 class="blind">Mail function menu</h3>
+		<div class="main_content_top_bt left textbtn">
+			<ul class="content_head_bt_set">
+                <li class="content_head_bt" id="btn_allcheck"><button type="button" id="buttonAllCheck" class="btn head select_bt" onclick="lst.onclick_allchk();"><span class="bt_caption select_bt">Select All</span></button>
+                    <ul id="allcheck_dropmenu" class="drop_menu">
+                        <li><a href="javascript:" onclick="lst.onclick_allchk('check');"><span>Select All</span></a></li>
+                        <li><a href="javascript:" onclick="lst.onclick_allchk('read');"><span>Read mails</span></a></li>
+                        <li><a href="javascript:" onclick="lst.onclick_allchk('unread');"><span>Unread mails</span></a></li>
+                        <li><a href="javascript:" onclick="lst.onclick_allchk('uncheck');"><span>Deselect</span></a></li>
+                    </ul>
+                </li>
+                <li class="content_head_bt" id="btn_allcheck_more"><button type="button" class="btn head drop1 d_slt" onclick="ddmenu.show(this,'allcheck_dropmenu');"><span class="blind">Selection menu</span><span class="arr"></span></button></li>
+
+                
+                <li class="content_head_bt" id="btn_del"><button type="button" class="btn head delete" onclick="lst.del();"><span class="bt_caption delete" style="font-weight:bold;">Delete</span></button></li>
+                <li class="content_head_bt" id="btn_complety_del_group"><button type="button" class="btn head shift_del" onclick="lst.completelyDelete();"><span class="bt_caption shift_del" style="font-weight:bold;">Wiping</span></button></li>
+                <li class="content_head_bt" id="btn_complety_del" style="display:none;"><button type="button" class="btn head shift_del_s" onclick="lst.completelyDelete();" ><span class="bt_caption shift_del"  style="font-weight:bold;">Wiping</span></button></li>
+
+                
+                <li class="content_head_bt" id="btn_reply"><button type="button" class="btn head re" onclick="lst.write(1);"><span class="bt_caption re">Reply</span></button></li>
+                <li class="content_head_bt" id="btn_reply_all"><button type="button" class="btn head to_re" onclick="lst.write(4);"><span class="bt_caption re">Reply all</span></button></li>
+                <li class="content_head_bt" id="btn_forward"><button type="button" class="btn head fwd" onclick="lst.write(2);"><span class="bt_caption fwd">Forward</span></button></li>
+
+                
+                <li class="content_head_bt" id="btn_forward_s" style="display:none;"><button type="button" class="btn head fwd_s" onclick="lst.write(2);"><span class="bt_caption fwd_s">Forward</span></button></li>
+
+                <li class="content_head_bt" id="btn_deny"><button type="button" class="btn head qui" onclick="lst.deny();"><span class="bt_caption qui">Block</span></button></li>
+                
+                <li class="content_head_bt" id="btn_safe" style="display:none;"><button type="button" class="btn head qui" onclick="lst.safe();"><span class="bt_caption qui">允许传入</span></button></li>
+                
+                <li class="content_head_bt" id="btn_move"><button type="button" class="btn head move" onclick="lst.move();"><span class="bt_caption move">Move</span></button></li>
+                <li class="content_head_bt" id="btn_resend" style="display:none;"><button type="button" class="btn head resend" onclick="lst.write(7);"><span class="bt_caption resend">Send again</span></button></li>
+
+                
+                <li class="content_head_bt" id="btn_read"><button type="button" class="btn head read" onclick="lst.read(1);"><span class="bt_caption read">Mark as read</span></button>
+                    <ul id="read_dropmenu" class="drop_menu">
+                        <li><a href="javascript:" onclick="lst.read(1);"><span>Read</span></a></li>
+                        <li><a href="javascript:" onclick="lst.read(0);"><span>Unread</span></a></li>
+                    </ul>
+                </li>
+			    <li class="content_head_bt" id="btn_read_more"><button type="button" class="btn head drop1" onclick="ddmenu.show(this,'read_dropmenu');"><span class="blind">Read/unread menu</span><span class="arr"></span></button></li>
+    			<li class="content_head_bt" id="btn_save"><button type="button" class="btn head save pc" onclick="lst.save();"><span class="bt_caption save pc">Save</span></button></li>
+                <li class="content_head_bt" id="btn_print"><button type="button" class="btn head print" onclick="lst.checkd_print();"><span class="bt_caption print">Print</span></button></li>
+			</ul>
+		</div>
+				
+		<div class="main_content_top_bt right">
+			<ul>
+
+				<li class="content_head_bt info_loading" id="info_loading"><span class="loading"></span></li>
+				<li class="content_head_bt"><button type="button" class="btn head f5" onclick="lst.refreshPage();" id="btn_reload"><span class="bt_caption f5">Refresh</span></button></li>
+				<li class="content_head_bt"><button type="button" class="btn head config" onclick="ddmenu.show(this,'btn_ch_cfg');"><span class="bt_caption_r config">Page setup</span></button>
+					<!-- 설정버튼 레이어 -->
+					<div class="drop_menu cfg" id="btn_ch_cfg">
+						<ul>
+							
+							<li class="drop_menu_title"><span class="txt pd_0_10">Pane split</span>
+								<ul id="layout_selector" class="float_left">
+									<li><a href="javascript:"><button type="button" onclick="layout.change(1);" class="btn head cfg1 slt"></button><span class="blind">No split</span></a></li>
+									<li><a href="javascript:"><button type="button" onclick="layout.change(2);" class="btn head cfg2"></button><span class="blind">Vertical split</span></a></li>
+									<li><a href="javascript:"><button type="button" onclick="layout.change(3);" class="btn head cfg3"></button><span class="blind">Horizontal split</span></a></li>
+								</ul>
+							</li>
+							
+							<li class="drop_menu_title"><span class="txt pd_0_10">No. of List</span>					
+								<ul id="mail_pagesize">
+									
+									<li><a href="javascript:" onclick="lst.changePagesize(this,15);"><span class="txt rt pd_0_10 orange">15s</span></a></li>
+									
+									<li><a href="javascript:" onclick="lst.changePagesize(this,20);"><span class="txt rt pd_0_10 ">20s</span></a></li>
+									
+									<li><a href="javascript:" onclick="lst.changePagesize(this,30);"><span class="txt rt pd_0_10 ">30s</span></a></li>
+									
+									<li><a href="javascript:" onclick="lst.changePagesize(this,50);"><span class="txt rt pd_0_10 ">50s</span></a></li>
+									
+									<li><a href="javascript:" onclick="lst.changePagesize(this,100);"><span class="txt rt pd_0_10 ">100s</span></a></li>
+									
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</div>		
+	</div>
+	<!--  메일 상단 메뉴 end -->		
+	<!-- Contents Header End -->
+
+	<!-- Contents area Start -->
+	<div class="content_area">	
+		<div class="view_area" id="m_content"> 			
+			<form id="MailListForm" action="/mail/list.do" method="post" onsubmit="return false;">
+			<input id="folder" name="folder" type="hidden" value="Inbox_kutchoiwjun"/>
+			<input id="sort" name="sort" type="hidden" value="recvdate"/>
+			<input id="order" name="order" type="hidden" value="desc"/>
+			<input id="viewstyle" name="viewstyle" type="hidden" value="1"/>
+			<input id="cpage" name="cpage" type="hidden" value="1"/>
+			<input id="isNewmail" name="isNewmail" type="hidden" value="0"/>
+			<input id="exchange" name="exchange" type="hidden" value="0"/>
+			<input id="srch_keyword" name="srch_keyword" type="hidden" value=""/>
+			<input type="hidden" name="_csrf" value="434560ec-b84a-4ada-a60a-a35a56b5a47b"></input>
+</form>
+			
+			<div id="mailPane" class="mailPane">
+				
+				<div id="listPane">
+					<div id="list_title">   
+						<h3>Mail sorting option</h3>
+						<ul class="m_head" id="mlist_head">
+							<li class="m_ico"><input type="checkbox" id="all_check" value="1" onclick="lst.select_all();"/><span class="blind">Select All</span></li>
+							<li id="head_star" class="m_ico"><span class="star_header"></span><span class="blind">Starred</span></li>
+							<li id="head_file" class="m_ico"><span class="ico_clip"></span><span class="blind">Attachment</span></li>
+							<li id="head_receipt" class="m_ico" style="display:none;"><span class="ico_read"></span><span class="blind">Check read</span></li>
+							<li id="head_to" class="m_to" style="display:none;"><a href="javascript:" onclick="lst.sort('toaddress');">To<span class="blind">Sort by</span></a><span id="order_toaddress" class="order"></span></li>
+							<li id="head_from" class="m_from"><a href="javascript:" onclick="lst.sort('sender');">From<span class="blind">Sort by</span></a><span id="order_sender" class="order"></span></li>
+							<li id="head_subject" class="m_subject"><a href="javascript:" onclick="lst.sort('subject');">Title<span class="blind">Sort by</span></a><span id="order_subject" class="order"></span></li>
+							<li id="head_readdate" class="m_readdate">Check read</li>
+							<li id="head_date" class="m_date"><a href="javascript:" onclick="lst.sort('recvdate');">Date<span class="blind">Sort by</span></a><span id="order_recvdate" class="order desc"></span></li>
+							<li id="head_size" class="m_size"><a href="javascript:" onclick="lst.sort('mailsize');">Size<span class="blind">Sort by</span></a><span id="order_mailsize" class="order"></span></li>
+						</ul>
+					</div>
+					<div id="mlist_area">
+						<h3 class="blind" id="caption_mboxname">Inbox list</h3>
+						<ol id="mlist" class="m_item">
+						</ol>
+					</div>
+					<div id="info_empty" class="list_empty">
+						No mails.
+					</div>
+					<!-- 페이징 : start -->
+					<div class="list_nav" id="pagenation"></div>
+					<!-- 페이징 : end -->							
+				</div>
+				
+				<div id="splitterViewPane" class="viewFrame"></div>					
+			</div>			
+		</div>
+	</div>
+</div>
+	
+
+<div id="writePane" class="panes" style="display:none;">
+</div>
+
+
+
+<div id="sendPane" class="panes send" style="display:none;">
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="body_header">
+	<h1>Sent result</h1>		
+</div>
+		
+<!-- 메인 컨텐츠 : start -->
+<div class="content_area">
+	<!-- 목록 or 내용 : start -->
+	<div class="view_area">
+		<div class="config_table_area">
+			<div class="config_left">
+				<span id="result_ico" class="ico_config_left success"></span>
+				<span class="txt gray size14 strong" id="result_txt"></span>
+			</div>
+			<div class="config_right">
+				<p>
+					<span id="send_result_txt" class="txt size16 strong title"></span><br />
+					<span id="send_result_txt_desc" class="txt small gray"></span>
+				</p>
+			</div>
+		</div>
+		
+		
+		<div id="newEmailArea" class="config_table_area" style="display:none;">
+			<div class="config_left">
+				<span class="ico_config_left add_address"></span>
+				<span class="txt gray size14 strong">Add a Contact</span>
+			</div>
+			<div class="config_right">
+				<p>
+					<span class="txt size16 strong title">New address <span id="newEmail_cnt">0</span> exist.</span><br />
+				</p>
+				<div class="btn" style="padding-top:5px;text-align:left;">
+					<button type="button" onclick="writeform.addAddress();" class="btn_bgtxt bk pd10">Add</button>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div id="failListArea" class="config_table_area">
+			<div class="config_left">
+				<span class="ico_config_left warning"></span>
+				<span class="txt gray size14 strong">Sending failure</span>
+			</div>
+			<div class="config_right">
+				<p>
+					<span class="txt size16 strong title">Failed address <span id="fail_cnt">0</span> exist.</span><br />
+				</p>
+				<ul id="failList">
+				</ul>
+			</div>
+		</div> 
+		
+		<div id="send_btn" style="display:none;">
+			<button type="button" onclick="writeform.write();">새 메일쓰기</button> <button type="button" onclick="writeform.close();">닫기</button>
+		</div>
+		
+	</div>
+</div>
+</div>
+
+
+
+<div id="framePane" class="framePane panes"></div>
+
+
+<div id="receiptPane" class="panes" style="display:none;">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="body_header">
+	<h1>Check read</h1>
+	<div class="search_top">
+		<div>	
+			<form id="receipt_search_form" name="receipt_search_form" action="/mail/list.do" method="post" onsubmit="return receiptFunc.search();">
+			<input type="text" placeholder="수신확인 검색" name="srch_keyword" class="searchText">
+			<button class="btn_bgtxt wt pd5" type="submit"><span>Search</span></button> 		
+			<button class="btn_bgtxt wt pd5" type="button" id="btn_all_rlist" style="display:none;" onclick="receiptFunc.allList();"><span>Entire list</span></button>
+			<input type="hidden" name="_csrf" value="434560ec-b84a-4ada-a60a-a35a56b5a47b"></input>
+</form>
+		</div>
+	</div>	
+</div>
+<!-- Contents Header Start -->
+<div class="content_header">
+	<!--  수신확인 상단 메뉴 start -->
+	<h3 class="blind">Check read menus</h3>
+	<!-- 버튼라인 start -->
+    <div class="main_content_top_bt left textbtn">
+        <ul class="content_head_bt_set">
+            <li class="content_head_bt"><button type="button" class="btn head select_s" onclick="receiptFunc.onclick_allchk();"><span class="bt_caption select">Select All</span></button></li>
+            <li class="content_head_bt"><button type="button" class="btn head delete_s" onclick="receiptFunc.del();"><span class="bt_caption delete">Delete</span></button></li>
+        </ul>
+    </div>
+			
+	<div class="main_content_top_bt right">
+		<ul>
+			<li class="content_head_bt info_loading" id="receipt_info_loading"><span class="loading"></span></li>
+			<li class="content_head_bt"><button type="button" class="btn head f5" onclick="receiptFunc.refreshPage();"><span class="bt_caption f5">Refresh</span></button></li>
+			<li class="content_head_bt"><button type="button" class="btn head config" onclick="ddmenu.show(this,'receipt_setting');"><span class="bt_caption_r config">Page setup</span></button>
+				<!-- 설정버튼 레이어 -->
+				<div id="receipt_setting" class="drop_menu cfg">
+					<ul>
+						<li class="drop_menu_title"><span class="txt pd_0_10">No. of List</span>					
+							<ul id="receipt_pagesize">
+								
+								<li id="receipt_pagesize_15"><a href="javascript:;" onclick="receiptFunc.changePagesize(this,15);" ><span class="txt rt pd_0_10 ">15s</span></a></li>				
+								
+								<li id="receipt_pagesize_20"><a href="javascript:;" onclick="receiptFunc.changePagesize(this,20);" ><span class="txt rt pd_0_10 ">20s</span></a></li>				
+								
+								<li id="receipt_pagesize_30"><a href="javascript:;" onclick="receiptFunc.changePagesize(this,30);" ><span class="txt rt pd_0_10 ">30s</span></a></li>				
+								
+								<li id="receipt_pagesize_50"><a href="javascript:;" onclick="receiptFunc.changePagesize(this,50);" ><span class="txt rt pd_0_10 ">50s</span></a></li>				
+								
+								<li id="receipt_pagesize_100"><a href="javascript:;" onclick="receiptFunc.changePagesize(this,100);" ><span class="txt rt pd_0_10 ">100s</span></a></li>				
+								
+							</ul>
+						</li>
+					</ul>					
+				</div>			
+			</li>
+		</ul>
+	</div>
+	<!--  수신확인 상단 메뉴 end -->
+</div>
+<!-- Contents Header End -->
+
+<div class="content_area">
+	<div class="view_area">
+		<form id="MailReceiptForm" name="MailReceiptForm" action="/mail/list.do" method="post" onsubmit="return receiptFunc.search();return false;">
+		<input type="hidden" name="act" value="RECEIPT"/>
+		<input type="hidden" name="cpage" value="1"/>
+		<input type="hidden" name="searchText"/>
+		<input type="hidden" name="_csrf" value="434560ec-b84a-4ada-a60a-a35a56b5a47b"></input>
+</form>
+		<div class="r_list">
+			<div id="rlist_head" class="head_line">
+				<div class="head_area">
+					<ul class="head">
+						<li class="list_check"><input type="checkbox" id="all_check_receipt" title="Select All" onclick="receiptFunc.select_all();"/></li>
+						<li class="list_send">To</li>
+						<li class="list_date">Sent date</li>
+						<li class="list_read">Check read</li>
+						<li class="list_subject">Title</li>
+						<li class="list_btn">Cancel</li>
+					</ul>
+				</div>
+			</div>
+			<div class="list_wrap">
+				<div>
+					<ol id="rlist">				
+					</ol>
+				</div>
+			</div>
+			<div class="list_nav" id="receipt_pagenation">
+			</div>
+		</div>		
+	</div>
+</div>
+</div>
+
+
+
+<div id="approvalPane" class="panes" style="display:none;">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="body_header">
+	<h1><span id="approval_tit_name"></span></h1>
+	<div class="search_top">
+		<div>	
+			<form id="approval_search_form" name="approval_search_form" action="/mail/list.do" method="post" onsubmit="return approval.search();">
+			<input type="text" placeholder="결재메일함 검색" name="srch_keyword" class="searchText">
+			<button class="btn_bgtxt wt pd5" type="submit"><span>Search</span></button> 		
+			<button class="btn_bgtxt wt pd5" type="button" id="btn_all_list_approval" style="display:none;" onclick="approval.alllist();"><span>Entire list</span></button>
+			<input type="hidden" name="_csrf" value="434560ec-b84a-4ada-a60a-a35a56b5a47b"></input>
+</form>
+		</div>
+	</div>
+</div>
+<!-- Contents Header Start -->
+<div class="content_header">
+<!--  결재메일함 상단 메뉴 start -->
+	<h3 class="blind">Approval system menus</h3>
+	<!-- 버튼라인 start -->
+	<div class="main_content_top_bt left textbtn">
+		<ul class="content_head_bt_set">
+			<li class="content_head_bt"><button type="button" class="btn head select_s" onclick="approval.onclick_allchk();"><span class="bt_caption select">Select All</span></button></li>					
+			<li class="content_head_bt"><button type="button" class="btn head delete_s" onclick="approval.del();"><span class="bt_caption delete">Delete</span></button></li>
+			<li class="content_head_bt" id="ap_cancel_btn"><button type="button" class="btn head cancel" onclick="approval.cancel();"><span class="bt_caption cancel approval">Cancel approval request</span></button></li>			
+		</ul>
+	</div>
+			
+	<div class="main_content_top_bt right">
+		<ul>
+			<li class="content_head_bt info_loading" id="approval_info_loading"><span class="loading"></span></li>
+			<li class="content_head_bt"><button type="button" class="btn head f5" onclick="approval.refreshPage();"><span class="bt_caption f5">Refresh</span></button></li>
+			<li class="content_head_bt"><button type="button" class="btn head state_view" onclick="ddmenu.show(this,'ap_state');"><span class="bt_caption state_view">View by status</span></button>
+				<!-- 항복별 보기 레이어 -->
+				<div id="ap_state" class="drop_menu cfg">
+					<ul>
+						<li class="drop_menu_title"><span class="txt pd_0_10">View Items</span>
+							<ul>
+								<li><label><span class="txt rt pd_0_10"><input type="radio" name="stateType" value="00" onclick="approval.changeState('00');" checked="checked"/>Entire list</span></label></li>
+								<li><label><span class="txt rt pd_0_10"><input type="radio" name="stateType" value="01" onclick="approval.changeState('01');"/>Approval complete</span></label></li>
+								<li><label><span class="txt rt pd_0_10"><input type="radio" name="stateType" value="02" onclick="approval.changeState('02');"/>Approval pending</span></label></li>
+								<li><label><span class="txt rt pd_0_10"><input type="radio" name="stateType" value="03" onclick="approval.changeState('03');"/>Cancel approval request</span></label></li>
+								<li><label><span class="txt rt pd_0_10"><input type="radio" name="stateType" value="04" onclick="approval.changeState('04');"/>Refused</span></label></li>
+								<li><label><span class="txt rt pd_0_10"><input type="radio" name="stateType" value="08" onclick="approval.changeState('08');"/>Approval complete</span></label></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</li>			
+			<li class="content_head_bt"><button type="button" class="btn head config" onclick="ddmenu.show(this,'ap_setting');"><span class="bt_caption config">Page setup</span></button>
+				<!-- 목록 설정버튼 레이어 -->
+				<div id="ap_setting" class="drop_menu cfg">
+					<ul>
+						<li class="drop_menu_title"><span class="txt pd_0_10">No. of List</span>					
+							<ul>
+								
+								<li><a href="javascript:;" onclick="approval.changePagesize(this,15);" ><span class="txt rt pd_0_10">15s</span></a></li>				
+								
+								<li><a href="javascript:;" onclick="approval.changePagesize(this,20);" ><span class="txt rt pd_0_10">20s</span></a></li>				
+								
+								<li><a href="javascript:;" onclick="approval.changePagesize(this,30);" ><span class="txt rt pd_0_10">30s</span></a></li>				
+								
+								<li><a href="javascript:;" onclick="approval.changePagesize(this,50);" ><span class="txt rt pd_0_10">50s</span></a></li>				
+								
+								<li><a href="javascript:;" onclick="approval.changePagesize(this,100);" ><span class="txt rt pd_0_10">100s</span></a></li>				
+								
+							</ul>
+						</li>
+					</ul>					
+				</div>			
+			</li>
+		</ul>		
+	</div>
+	<!--  결재메일함 상단 메뉴 end -->
+</div>
+
+<div class="content_area">
+	<div class="view_area">
+		<form id="ApprovalForm" action="/mail/list.do" method="post" onsubmit="return approval.search();return false;">
+		<input type="hidden" name="act" value="APPROVAL"/>
+		<input type="hidden" name="apKey"/>
+		<input type="hidden" id="apType" name="apType" value="SEND"/>
+		<input type="hidden" name="stateType" value="00"/>
+		<input type="hidden" name="cpage" value="1"/>
+		<input type="hidden" name="sort" value="ap_time"/>
+		<input type="hidden" name="order" value="desc"/>
+		<input type="hidden" name="search_text"/>		
+		<div class="ap_list">
+			<div id="ap_list_head" class="head_line">
+				<div class="head_area">
+					<ul class="head">
+						<li class="list_check"><input type="checkbox" id="all_check_approval" title="Select All" onclick="approval.select_all();"/></li>
+						<li class="list_subject">Title</li>				
+						<li class="list_date">Date</li>
+						<li class="list_stat">Status</li>
+						<li class="list_approver">Current approver</li>
+						<li class="list_drafter" id="head_drafter">Preparer</li>								
+					</ul>
+				</div>
+			</div>
+			<div class="list_wrap">
+				<ol id="aplist">			
+				</ol>
+				<div id="info_approval_empty" class="list_empty">No approval mails.</div>
+			</div>
+			<div class="list_nav" id="approval_pagenation">
+			</div>
+		</div>
+		<input type="hidden" name="_csrf" value="434560ec-b84a-4ada-a60a-a35a56b5a47b"></input>
+</form>	
+	</div>
+</div>
+</div>
+
+
+
+<div id="filteringPane" class="panes" style="display:none;">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="body_header">
+	<h1>Filtering mails</h1>
+	<div class="search_top">
+		<div>	
+			<form id="filtering_search_form" name="filtering_search_form" action="/mail/list.do" method="post" onsubmit="return filtering.search();">
+			<input type="text" placeholder="필터링메일 검색" name="srch_keyword" class="searchText">
+			<button class="btn_bgtxt wt pd5" type="submit"><span>Search</span></button> 		
+			<button class="btn_bgtxt wt pd5" type="button" id="btn_all_flist" style="display:none;" onclick="filtering.allList();"><span>Entire list</span></button>
+			<input type="hidden" name="_csrf" value="434560ec-b84a-4ada-a60a-a35a56b5a47b"></input>
+</form>
+		</div>
+	</div>	
+</div>
+
+<!-- Contents Header Start -->
+<div class="content_header">
+	<!--  수신확인 상단 메뉴 start -->
+	<h3 class="blind">Filtering mail menus</h3>
+	<!-- 버튼라인 start -->
+	<div class="main_content_top_bt left textbtn">
+		<ul class="content_head_bt_set">
+			<li class="content_head_bt"><button type="button" class="btn head select_s" onclick="filtering.onclick_allchk();"><span class="bt_caption select">Select All</span></button></li>		
+		</ul>
+	</div>
+			
+	<div class="main_content_top_bt right">
+		<ul>
+			<li class="content_head_bt info_loading" id="filtering_info_loading"><span class="loading"></span></li>
+			<li class="content_head_bt"><button type="button" class="btn head f5" onclick="filtering.refreshPage();"><span class="bt_caption f5">Refresh</span></button></li>
+			<li class="content_head_bt"><button type="button" class="btn head config" onclick="ddmenu.show(this,'filtering_setting');"><span class="bt_caption config">Set the list</span></button>
+				<!-- 설정버튼 레이어 -->
+				<div id="filtering_setting" class="drop_menu cfg">
+					<ul>
+						<li class="drop_menu_title"><span class="txt pd_0_10">No. of List</span>					
+							<ul>
+								
+								<li><a href="javascript:;" onclick="filtering.changePagesize(15);" ><span class="txt rt pd_0_10">15s</span></a></li>				
+								
+								<li><a href="javascript:;" onclick="filtering.changePagesize(20);" ><span class="txt rt pd_0_10">20s</span></a></li>				
+								
+								<li><a href="javascript:;" onclick="filtering.changePagesize(30);" ><span class="txt rt pd_0_10">30s</span></a></li>				
+								
+								<li><a href="javascript:;" onclick="filtering.changePagesize(50);" ><span class="txt rt pd_0_10">50s</span></a></li>				
+								
+								<li><a href="javascript:;" onclick="filtering.changePagesize(100);" ><span class="txt rt pd_0_10">100s</span></a></li>				
+								
+							</ul>
+						</li>
+					</ul>					
+				</div>
+			</li>
+		</ul>
+	</div>
+	<!--  수신확인 상단 메뉴 end -->
+</div>
+<!-- Contents Header End -->
+
+<div class="content_area">
+	<div class="view_area">
+		<form id="FilteringMailListForm" name="FilteringMailListForm" action="/mail/list.do" method="post" onsubmit="return false;">
+		<input type="hidden" name="act" value="FILTERING"/>
+		<input type="hidden" name="ukey"/>
+		<input type="hidden" name="srch_keyword"/>
+		<input type="hidden" name="cpage" value="1"/>
+		<input type="hidden" name="_csrf" value="434560ec-b84a-4ada-a60a-a35a56b5a47b"></input>
+</form>
+		<div class="f_list">
+			<div id="flist_head" class="head_line">
+				<div class="head_area">
+					<ul class="head">
+						<li class="list_check"><input type="checkbox" id="all_check_filtering" title="Select All" onclick="filtering.select_all();"/></li>
+						<li class="list_from">From</li>
+						<li class="list_to">To</li>
+						<li class="list_subject">Title</li>
+						<li class="list_date">Date</li>
+						<li class="list_size">Size</li>
+					</ul>
+				</div>
+			</div>
+			<div class="list_wrap">
+				<div>
+					<ol id="flist">				
+					</ol>
+				</div>
+			</div>			
+			<div class="list_nav" id="filtering_pagenation"></div>			
+		</div>		
+	</div>
+</div>
+</div>
+
+
+
+<div id="rssPane" class="panes" style="display:none;">
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="body_header">
+	<h1>RSS</h1>
+</div>
+
+<div class="content_area" style="top:60px;">
+	<div class="view_area">	
+		<div class="rss_header">
+			<h2 id="rss_title"></h2>
+			<p><span class="blind">URL</span><a href="javascript:;" target="_blank" id="rss_url"><span class="txt gray small" id="rss_url_text"></span></a></p>
+		</div>
+		<div class="rss_list">	
+			<div class="list_wrap">
+				<ol id="rsslist">			
+				</ol>
+			</div>
+		</div>
+	</div>
+</div>
+</div>	
+
+
+ 
+<div id="viewPane" class="panes" style="display:none;"></div>
+
+
+
+
+
+<div id="archivePane" class="panes" style="display:none;">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="body_header">
+    <h1>Archive History</h1>
+</div>
+<div class="content_area archive">
+    <div class="view_area frame">
+        <div class="frameArea" id="archiveArea">
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Contents area End -->
+
+<textarea id="emptyViewContent" style="display:none;">
+<table width="100%" height="100%" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#dcdcdc">
+	<tr>
+		<td align="center" style="background:#fff;vertical-align:top;padding:20px;line-height:1.5em">Select the mails from the list.</td>
+	</tr>
+</table>
+</textarea>
+
+
+<div id="modal_move" title="Move a mail" style="display:none">
+	<div class="cont">
+		<div class="div_sub_tx"><img src="/sens-static/images/common/bull_webhard01.gif"/> Select the target mailbox for saving the selected mail</div>
+		<div class="div_tree">
+			<div id="move_folder_tree">
+			</div>
+		</div>
+		<div class="div_tx">
+			<p><label><input type="checkbox" name="deny_isContinue" title="deny_isContinue"/> Do you want to save all of the mails coming from the same address to the same mailbox from now on?</label></p>
+			<p id="area_isAllMove"><label><input type="checkbox" name="deny_isAllMove" title="deny_isAllMove"/> Do you want to move other mails from the same address too?</label></p>
+		</div>
+		<div class="div_help">
+			<p>* If you wish to stop the movement of the mails, go to 'Settings - Filters' to remove the relevant item.</p>
+		</div>
+	</div>
+</div>
+
+<div id="dialog_readcheck" class="modal_area" style="display:none;"></div>
+
+
+
+<div id="layer_slightly" style="display:none;position:absolute;left:200px;z-index:9999;background:#FFF;">
+	<div class="list_prev_area">
+		<div class="prev_txt" id="slightlyContent"></div>
+		<div class="prev_btn_area">
+			<button class="btn_bgtxt wt pd5" onclick="slightly.del();" type="button">Delete</button>
+			<button class="btn_bgtxt wt pd5" onclick="slightly.close();" type="button">Close</button>
+			<button class="btn_bgtxt wt pd5" onclick="slightly.deny();" type="button">Block</button>			
+		</div>
+	</div>
+</div>
+
+
+<div id="layer_attach_prev" style="display:none;position:absolute;left:70px;z-index:9999;background:#FFF;">
+	<div class="list_prev_area">
+		<div class="prev_txt" id="attachPrevContent"></div>	
+		<div class="prev_btn_area">
+			<button class="btn_bgtxt wt pd5" onclick="attach_layer.close();" type="button">닫기</button>			
+		</div>
+	</div>
+	
+</div>
+
+
+<div id="modal_searchbox" class="modal_area" style="display:none;">
+	<form id="searchboxform" name="searchboxform" action="/mail/list.do" method="post">
+	<input type="hidden" name="searchbox_key"/>
+	<table>
+		<colgroup>
+			<col style="width:130px;">
+			<col style="width:auto;">
+		</colgroup>
+		<tr>
+			<th>Search Mailbox</th>
+			<td><label><input name="searchbox_name" class="config_input default" type="text" maxlength="20"></label></td>
+		</tr>
+		<tr>
+			<th>Title</th>
+			<td><label><input name="subject" class="config_input default" type="text" maxlength="20"></label></td>
+		</tr>
+		<tr>
+			<th>From</th>
+			<td><label><input name="fromaddr" class="config_input default" type="text" maxlength="20"></label></td>
+		</tr>
+		<tr>
+			<th>To</th>
+			<td><label><input name="toaddress" class="config_input default" type="text" maxlength="20"></label></td>
+		</tr>
+		<tr>
+			<th>Select a mail box.</th>
+			<td><select name="dirkey" id="searchbox_dirkey" class="hd_slt_mailbox select3"></select></td>
+		</tr>
+		<tr>
+			<th>Duration</th>
+			<td>
+				<input type="text" name="startdate" class="config_input search_term" style="width:56px;margin-left:5px;" readonly="readonly"> -  
+				<input type="text" name="enddate" class="config_input search_term" style="width:56px;margin-left:5px;" readonly="readonly">
+			</td>
+		</tr>
+	</table>
+	<input type="hidden" name="_csrf" value="434560ec-b84a-4ada-a60a-a35a56b5a47b"></input>
+</form>
+</div>
+
+
+
+
+
+
+<script type="text/javascript" src='/sens-static/js/common/popupList.js?dummy=58413'></script>
+<script type="text/javascript">
+	popupList.show(2);
+</script>
+
+			<!-- Contents area End -->
+		</div>
+	</div>
+	
+	<!-- Footer Start -->
+	
+
+
+
+
+
+
+
+
+
+<div class="footer">
+	<ul>
+	<!-- 메일 사용량 -->
+	<li class="useing"><span class="txt white strong">Mail usage</span>&nbsp;&nbsp;&nbsp;<span id="mail_curr_size" class="txt yellow strong">70.1 MB</span>&nbsp;&nbsp;<span class="txt gray strong">/</span>&nbsp;&nbsp;<span id="mail_max_size" class="txt white strong">1 GB</span>
+	
+	</li>
+	<!-- 공지사항 -->
+	<li class="notice">
+		<span class="txt yellow strong" style="float:left;">Notice</span>
+		<ul id="notice_item" class="notice_item">
+			
+			
+			<li><a href="javascript:;" onclick="notice.view('1','54dd9e393fd34a18ab33f9fa');"><span class="txt white">KOREATECH 웹 메일이 새로워졌습니다. - 2015.04.02</span></a></li>
+			
+			<li><a href="javascript:;" onclick="notice.view('1','54dd9e3f3fef1dc2f437802b');"><span class="txt white">이메일 불편사항 접수 : 560-1393 또는 khoh@koreatech.ac.kr - 2015.04.02</span></a></li>
+			
+		</ul>
+	</li>
+	<!-- 저작권 명시 -->
+	<li class="copyright">
+<span class="txt whitegray strong">Copyright © </span><a href="mailto:webmaster@koreatech.ac.kr"><span class="txt white strong">Korea University of Technology and Education</span></a> <span class="txt whitegray strong">All Rights Reserved.</span></li>
+	</ul>
+</div>
+	<!-- Footer End -->
+</div>
+
+
+
+<div id="modal_preview" class="modal_layout">
+	<div class="mask"></div>
+	<div class="preview">		
+		<div class="area">
+			<div class="prev_title">
+				<span class="txt strong white">Preview</span>
+			</div>
+			<div class="prev_area">
+				<table>
+					<colgroup>
+						<col style="width:100px;">
+						<col style="width:auto;">
+					</colgroup>
+					<caption class="blind">메일 발송 전 내용을 확인합니다.</caption>
+					<tr>
+						<th>From</th>
+						<td><span id="preview_from"></span></td>
+					</tr>
+					<tr>
+						<th>Title</th>
+						<td><span id="preview_subject" class="txt strong"></span></td>
+					</tr>
+					<tr>
+						<th>To</th>
+						<td><span id="preview_to"></span></td>
+					</tr>
+					<tr>
+						<th>Cc.</th>
+						<td><span id="preview_cc"></span></td>
+					</tr>
+					<tr>
+						<th>Bcc.</th>
+						<td><span id="preview_bcc"></span></td>
+					</tr>
+					<tr>
+						<th>Attachment</th>
+						<td id="preview_attach">
+						</td>
+					</tr>
+					<tr>
+						<th>메일옵션</th>
+						<td>
+							<ul>
+								<li id="preview_issave"><span class="mail_option"></span>Save the sent mail</li>
+								<li id="preview_each"><span class="mail_option"></span>each send</li>
+								<li id="preview_receipt"><span class="mail_option"></span>Check read</li>
+								<li id="preview_isreceiptmail"><span class="mail_option"></span>Recipient verification required</li>
+								<li id="preview_important"><span class="mail_option"></span>Important mail</li>
+								<li id="preview_issecure"><span class="mail_option"></span>Secure mail</li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<th>Send later</th>
+						<td id="preview_reserve"></td>
+					</tr>
+				</table>
+				<div class="prev_content" id="preview_content"></div>			
+			</div>
+			<div class="prev_config">
+				<span class="txt strong">발송 전 미리보기 설정 :</span>
+				<label><input type="radio" name="preview_mode" value="0" onclick="writeform.changePreviewMode(0);"/>Don't Use</label>
+				<label><input type="radio" name="preview_mode" value="1" onclick="writeform.changePreviewMode(1);"/>모든 메일</label>
+				<label><input type="radio" name="preview_mode" value="2" onclick="writeform.changePreviewMode(2);"/>Important mail</label>		
+			</div>
+			<div class="prev_footer">
+				<p class="btn_area"><button type="button" class="btn_bgtxt bk" onclick="writeform.send();">Send</button> <button type="button" class="btn_bgtxt rd" onclick="writeform.preview_close();">Cancel</button></p>
+			</div>		
+		</div>
+	</div>
+	
+</div>
+
+
+
+<div id="mailsending" class="sending_area">
+	<div class="modal">
+		<div class="modal_content loading">
+			<div class="modal_list">
+				<h2>The mail is being sent.</h2>
+				<img src="/sens-static/images/common/loading_bar.gif" alt="로딩중입니다"/>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if( sensmail ){
+	sensmail.userid = 'kutchoiwjun';
+	sensmail.language = 'ko';
+	sensmail.restrict_file = '';
+}
+</script>
+
+
+<div id="alertWindow" style="display:none;">
+	<div id="alertBox">
+		<div id="alertMessage"></div>
+	</div>
+</div>
+
+<div id="modal_login" title="Login" style="display:none;">
+<div class="modal_area pix">
+		<div class="modal">
+			<!-- modal_login start -->
+			<div class="modal_content">
+				<div class="modal_login">
+					
+					<div class="modal_caption">
+						<ul>
+							<li>Session Duration has passed. Please sign in again.</li>
+							<li>If you login, you go back to the screen being used.</li>
+							<li>Or you can send or register the content being written.</li>
+						</ul>
+					</div>
+					<div style="width:100%;">
+						<iframe name="modal_login_frame" id="modal_login_frame" style="width:100%;height:150px;" frameborder="0"></iframe>
+					</div>					
+				</div>
+			</div>
+			<!-- modal_login end -->
+		</div>
+	</div>	
+</div>
+
+<div id="draggable_layer">
+</div>
+</body>
+</html>��]~9      UH��UH��;/-       *:http://email.koreatech.ac.kr/mail/list.do request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:49:02 GMT
+Server: Apache
+Content-Language: en-US
+Content-Type: text/html;charset=UTF-8
+ charset UTF-8 uncompressed-len 0  �

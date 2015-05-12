@@ -1,0 +1,949 @@
+var _canLog = true;
+jQuery.ajaxSettings.traditional = true;
+jQuery.support.scriptEval = true;
+$(document).ready(function(){
+	highlightMenu.trigger();
+});
+var sensmail = {
+	MAIL:10,//메일 프로그램 코드
+	WEBHARD:11,//웹하드 프로그램 코드
+	CALENDAR:12,//일정관리 프로그램 코드
+	MEMBERDIR:13,//편지함관리
+	ADDRESS:14,//주소록
+	QUICKADDR:15,//자주 사용하는 주소
+	BOARD:16,
+	MANAGER:17,
+	CONFIG:18,
+	SMS:19,
+	SMSADDR:20,
+	UI_EXPRESS:0,
+	UI_STANDARD:1,
+	mailbox_name:{}, // 편지함 이름	
+	language:"ko",
+	ahost:null,
+	mhost:null,
+	userid:null,
+	name:null,
+	email:null,	
+	isAlive:true,// 세션이 살아있는가?
+	last_loadmail:null,
+	target_charset:"utf-8",	
+	reload_check:null,
+	mail_load_time:0,
+	reload_interval:60000,	// 새편지 체크 간격 (30초) -> 60초
+	autosave_interval:180000, // 자동저장 간격 기본 3분.
+	mbox_mailcount_list:null,	// 편지함별 메일 카운트(json)
+	targetFrame:self,	// 타겟프레임
+	interface_type:1,
+	/**
+	 * alert 이나 confirm 창을 dialog 로 사용할것인지 설정 
+	 */
+	use_dialog:true,
+	restrict_file:'',
+	/**
+	 * 메일함 이름을 제공한다. 
+	 * 스크립트에 이미 담겨진 메일함 정보에 해당 키에 대한 메일함 이름 데이터가 없을 경우
+	 * 메일함 이름 데이터를 다시 가져온다.
+	 */
+	getMailBoxName:function( key ){
+		if(this.mailbox_name[key]){
+			return this.mailbox_name[key];
+		}
+		
+		// 메일함 이름이 없을 경우 다시 서버에서 가져온다.		
+		sensmail.initMailBoxName();
+    
+        // 서버에서 메일함 이름을 다시 가져왔는데도 없을 경우 NULL 을 반환
+		if(this.mailbox_name[key]){
+            return this.mailbox_name[key];
+        }else{
+            return null;
+        }
+	}
+	,initMailBoxName:function(){
+        var url = app.contextPath+"/mail/json/mailbox.do";
+        $.ajax({
+            url: url ,
+            type : "post",
+            dataType:"json",
+            async:false,
+            cache:false,
+            timeout:5000,
+            error:function(xhr, txt){
+                AjaxUtil.error( xhr );
+            },
+            success:function( folderInfo ){
+                sensmail.setMailBoxName( folderInfo.mailboxlist );
+            }
+        });
+	}
+	,setMailBoxName:function( boxlist ){
+		var len = boxlist.length;
+		for( var i = 0  ; i < len ; i++ ){
+			var box = boxlist[i];
+			//console.log( "key : "+ box.folderKey );
+			sensmail.mailbox_name[ box.folderKey ] = box.folderName;
+		}
+	}
+	/**
+	 * 언어를 변경한다.
+	 * @param {} sel
+	 * @returns {} 
+	 */
+	,languageChange:function(language){
+	
+		var param = {
+			"language" : language
+		};
+		var url = app.contextPath+"/common/json/changeLanguage.do";
+					
+		$.get( url , param , function( data, textStatus ){
+			if( textStatus == 'success' ){
+				location.reload();
+			}
+		});
+	}
+	/**
+	 * 설정한 페이지 사이즈를 세션에 저장한다. 
+	 */
+	,pagesizeChange:function( pagesize ){
+		var param = {
+			"pagesize":pagesize
+		};
+		$.ajax({
+			url: app.contextPath+"/common/json/changePagesize.do",
+			data: param,
+			cache : false , 
+			type : "POST",
+			dataType:"json",
+			async: false,
+			beforeSend:function(){
+			},
+			error:function(xhr, txt){				
+				AjaxUtil.error( xhr ); 
+			},
+			success:function(){
+			}
+		});
+	}
+	/**
+	 * 메일함의 새메일 건수를 변경한다.
+	 * @param {} mailinfo
+	 * @returns {} 
+	 */
+	,set_mbox_mailcount:function( mailinfo ){
+
+		if( mailinfo ){
+			sensmail.mbox_mailcount_list = mailinfo;
+		}
+		
+		if( sensmail.mbox_mailcount_list ){
+			
+			var folder = lst.getFolderKey();
+						
+			try{
+				$(".tx_count").empty(); // 현재 설정되어있는 메일수를 초기화한다.
+				$(".left_menu_mail_ea").empty(); // 현재 설정되어있는 메일수를 초기화한다.
+			}catch(e){}
+			
+			$.each( sensmail.mbox_mailcount_list, function(){
+				
+				// 아이디에 점(.)이 있으면 jquery에서 .을 클래스로 인식
+				if( !this.folderKey ){
+					return true;
+				}
+				var mbox_key = this.folderKey.replace(/\./g, "\\.");
+
+				// 새편지 수
+				try {					
+					if(this.newmailcount != 0){
+						$("#"+mbox_key+"_count").html( this.newmailcount );
+					} else {
+						$("#"+mbox_key+"_count").empty(); 
+					}
+				
+					
+					// 읽음 상태 변경을 할 경우 메일 목록 위에 나오는 안 읽은 메일수가 변하도록 함.
+										
+					
+					// 중요메일함은 집계테이블에 데이터가 없기 때문에 업데이트를 하지 않는다.
+					if( mbox_key != mailbox.STAR ){
+						if( mbox_key == folder ){
+							$("#mbox_list_new_count").html( this.newmailcount );
+						}
+					}					
+				} catch(e){}
+				
+				//if(this.key == 'TOTAL') newmail_cnt = this.newmailcount;
+				
+			});
+		}
+		
+		/*
+		 * 전체 메일 건수를 보여주는 곳이 없음.
+		if ( newmail_cnt == 0 ){
+			$("#newmail_img").attr("src",app.static_server+"/sens-static/images/common/icon_mail.gif");
+		}else{
+			$("#newmail_img").attr("src",app.static_server+"/sens-static/images/common/icon_mail_new.gif");
+		}
+		
+		// userinfo.jsp의 메일 수
+		$("#newmail_count").html(newmail_cnt+'');
+		
+	
+		try {
+			$("#TOTAL_list_count").html( newmail_cnt );
+		} catch(e){}
+		$(".tx_big").html( newmail_cnt+'');
+		*/ 
+		
+	}	
+	/**
+	 * 결재메일함 건수 표시 
+	 */
+	,set_approval_count:function( approvalInfo ){
+	    
+        var cnt = "";
+        if( approvalInfo.send > 0 ){
+            cnt = approvalInfo.send;
+        }
+        $("#ap_send_count").html( cnt );
+        
+        cnt = "";
+        if( approvalInfo.receiver > 0 ){
+            cnt = approvalInfo.receiver;
+        }
+        $("#ap_receiver_count").html( cnt );
+	}
+	/**
+	 * 필터링 메일 목록 건수 화면에 표시 
+	 */
+	,set_filtering_count:function( filteringInfo ){
+	    var cnt = "";
+        if( filteringInfo.count > 0 ){
+            cnt = filteringInfo.count;
+        }
+        $("#filteringmail_count").html( cnt );
+	}
+	,reloadinfo:function(pg , init){
+		
+		if( init ){
+			sensmail.reload_check = setTimeout(function(){				
+				sensmail.reloadinfo( pg );
+			} , sensmail.reload_interval  );
+			return;
+		}
+		
+		try{
+            clearTimeout( sensmail.reload_check );
+        }catch(e){}    		
+		
+		var url = app.contextPath+"/common/json/agent.do";
+		$.ajax({
+			url: url ,
+			type : "POST",
+			dataType:"json",
+			async:true,
+			cache:false,
+			timeout:10000,
+			beforeSend:function(){
+                log.debug("agent run");
+			},
+			error:function(xhr, txt , response ){
+			    if( xhr.status == errorcode.session_expire ){
+                    loginmodal.open();
+                }
+                // 에이전트는 세션종료만 모달창 뜨게 하도록 함.
+				//AjaxUtil.error(xhr);
+			},
+			success:function( mboxinfo ){
+				try{
+					mailinfo = mboxinfo.mailboxlist;
+					if(typeof(mailinfo) != 'undefined'){
+						sensmail.mbox_mailcount_list = mailinfo;
+					}
+					
+					var currsize = mboxinfo.currsize;
+					var loadtime = mboxinfo.loadtime;
+					try {
+						// 편지함별 새편지 세팅
+						if( pg == sensmail.MAIL ){
+							sensmail.setMailBoxName( mailinfo );
+							sensmail.set_mbox_mailcount();
+						}						
+						if( loadtime ){
+							sensmail.mail_load_time = loadtime;
+						}
+					}catch(e){}
+
+					/* 게이지 있을때 */					
+					try {
+						$("#gage_text").html( currsize );
+					}catch(e){}
+					
+					// 결재메일 건수 표시
+					if( mboxinfo.approval ){
+					    sensmail.set_approval_count( mboxinfo.approval );
+					}
+					
+					// 필터링메일 건수 표시
+					if( mboxinfo.filtering ){
+					    sensmail.set_filtering_count( mboxinfo.filtering );
+					}
+										
+					// 새메일 알림창 생성
+					if( mboxinfo.isnewmail ){
+					    // 새창으로 띄우도록 함.
+						//sensmail.alarmMail( mboxinfo.latestmailbox , mboxinfo.latestmail );
+						sensmail.newmail_alarm( mboxinfo.latestmailbox , mboxinfo.latestmail );						
+						// 현재 페이지가 메일이고 현재보고 있는 메일함으로 새메일이 도착했을 경우 현재 목록을 리로딩 해준다.
+						if( pg == sensmail.MAIL ){
+							try{
+								var folder = lst.getFolderKey();
+								log.debug("folder : "+ folder );
+								log.debug("latestmailbox : "+ mboxinfo.latestmailbox );
+								if( folder == mboxinfo.latestmailbox ){
+									lst.refreshPage();
+								}
+							}catch(e){}
+						}
+					}
+					
+					//새쪽지 건수 표시
+					var newMemoCount = mboxinfo.newMemoCount;
+					var newMemo_msg = newMemoCount;
+					$("#newMemoCount").text( newMemo_msg );
+				}catch(e){}
+
+				sensmail.reload_check = setTimeout(function(){				
+					sensmail.reloadinfo( pg );
+				} , sensmail.reload_interval  );				
+			}
+		});
+	}
+	,getNewMailCount:function(folder){
+        var newmailcount = 0;
+        $.each( sensmail.mbox_mailcount_list, function(){
+
+            // 아이디에 점(.)이 있으면 jquery에서 .을 클래스로 인식
+            if( !this.folderKey ){
+                return true;
+            }
+            var mbox_key = this.folderKey.replace(/\./g, "\\.");
+
+            if( mbox_key == folder ){
+                newmailcount =  this.newmailcount;
+                return false;
+            }
+        });
+        return newmailcount;
+    }
+	/**
+	 * 새메일 알림 
+	 */
+	,alarmMail:function( folder , mailkey ){ 
+	    jConfirm( cmessage.CM0064 , cmessage.CM0065, function(){
+	        location.href=app.contextPath+"/mail/list.do#folder="+folder;
+	    });
+	}
+		
+	,openSms:function(){
+		var url = app.contextPath+"/sms/popup/main.do";
+		var smsWin = window.open(url,'smsWin','toolbar=no,width=850,height=432,directories=no,status=no,scrollbars=yes,resizable=no,menubar=no');
+		smsWin.focus();
+	}
+	
+	,openNote:function(){
+		var url = app.contextPath+"/SensMail?act=NOTE";
+		var memoWin = window.open(url,'memoWin','toolbar=no,width=700,height=300,directories=no,status=no,scrollbars=yes,resizable=no,menubar=no');
+		memoWin.focus();
+	}
+	
+	,open_mailwrite:function(to){
+		var url = "Mail?act=MAIL_WRITE";
+		if( to ){
+			url += "&to="+to;
+		}
+		var wname = sensmail.dummy();		
+		var writeWin = window.open(url, wname ,'toolbar=no,width=800,height=600,directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no');
+		writeWin.focus();
+	}
+	
+	,dummy:function(){
+		var s = "";
+		for(var i = 0 ; i < 10 ; i++ ){
+			var lRand = Math.floor(Math.random() * 10)+1;
+			s += lRand;
+		}
+		return s;
+ 	}
+ 	
+ 	,goMenu:function(url){
+ 		location.href = url+"?dummy="+this.dummy();
+ 	}
+ 	 	
+ 	,help:function(){
+ 		var url = app.contextPath+"/help/"+sensmail.language+"/help.jsp";
+ 		var writeWin = window.open(url, "help_window" ,'toolbar=no,width=965,height=600,directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no');
+ 		writeWin.focus();
+ 	} 	
+ 	
+ 	,oldMail:function(){
+        alert("구메일 가기는 4월 30일까지만 제공됩니다.");
+ 		var url = "http://old.koreatech.ac.kr/sso/index.jsp";
+ 		window.open(url, "_blank");
+ 	} 
+ 	
+ 	,faq:function(){
+ 		var url = app.contextPath+"/SensMail?act=FAQ";
+ 		var writeWin = window.open(url, "faq_window" ,'toolbar=no,width=945,height=600,directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no');
+ 		writeWin.focus();
+ 	}
+ 	 	
+	,newmail_alarm:function( folder , mailkey ){		
+		var alarm_win = window.open(app.contextPath+"/common/alarm/newmail.do?folder="+folder, 'alarm_win' ,'toolbar=no,width=500,height=300,directories=no,status=no,scrollbars=no,resizable=yes,menubar=no');					
+	},
+	/**
+	 * 세션이 살이 있는지 죽었는지 체크
+	 *	false 죽으면서 로그인 창 뜨도록 한다.
+	 *	true 세션이 살아있다.
+	 * @returns {Boolean}
+	 */
+	aliveSession:function(){
+		var url = app.contextPath+"/common/json/session/check.do";
+		var result;
+		$.ajax({
+			url:url,
+			type:"GET",
+			dataTpe:"json",
+			async:false,
+			cache:false,
+			timeout:10000,
+			error:function(xhr){
+				AjaxUtil.error(xhr);
+				result=false;
+			},
+			success:function(json){
+				result = true;
+			}
+		});
+		
+		return result;
+	}
+};
+
+//Array Remove - By John Resig (MIT Licensed)
+Array.prototype.remove = function(from, to) {
+  var rest = this.slice((to || from) + 1 || this.length);
+  this.length = from < 0 ? this.length + from : from;
+  return this.push.apply(this, rest);
+};
+
+Array.prototype.indexOf = function( str ){
+	var pos = -1;
+	for(var i = 0 ; i < this.length ; i++ ){
+		if(this[i] == str){ 
+			pos = i;
+			break;
+		}
+	}
+	return pos;
+};
+
+/**
+ * 자바스크립트 replaceAll 메서드 추가
+ * @param regex
+ * @param replacement
+ * @returns
+ */
+String.prototype.replaceAll = function(regex, replacement) {	
+    return this.split(regex).join(replacement);   
+};
+
+/**
+ * 자바스크립트 between 메서드 추가
+ * startChar 와 endChar 사이의 문자열을 추출한다.
+ * @param startChar
+ * @param endChar
+ */
+String.prototype.between = function( startChar , endChar ){
+	try{
+		var s = this.indexOf( startChar );
+		var e = this.indexOf( endChar );
+		return this.substring( s + 1 , e );
+	}catch(e){
+		return this;
+	}	
+};
+
+/**
+ * 첫문자열이 char 와 같다면 true , 아니면 false
+ * @param char
+ * @returns {Boolean}
+ */
+String.prototype.startWith = function( char ){
+	if( this.substring(0,1) == char ){
+		return true;
+	}else{
+		return false;
+	}
+};
+
+/**
+ * HTTP Error Code Define
+ */
+var errorcode = {
+	session_expire:451, // 세션 종료
+	not_allow:405, // 리소스를 허용안함
+	internal_error:500, // 서버 에러
+	notfound:404 // 페이지 없음	 
+};
+
+function setCookie(cKey, cValue)  // name,pwd
+{
+    var date = new Date(); // 오늘 날짜
+    // 만료시점 : 오늘날짜+10 설정
+    var validity = 10;
+    date.setDate(date.getDate() + validity);
+    // 쿠키 저장
+    document.cookie = cKey + '=' + escape(cValue) + ';path=/;expires=' + date.toGMTString();
+}
+
+function delCookie(cKey) {
+    // 동일한 키(name)값으로
+    // 1. 만료날짜 과거로 쿠키저장
+    // 2. 만료날짜 설정 않는다. 
+    //    브라우저가 닫힐 때 제명이 된다    
+
+    var date = new Date(); // 오늘 날짜 
+    var validity = -1;
+    date.setDate(date.getDate() + validity);
+    document.cookie =
+          cKey + "=;expires=" + date.toGMTString();
+}
+
+function getCookie( name ){
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length )
+	{
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) {
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 )
+			endOfCookie = document.cookie.length;
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		
+		x = document.cookie.indexOf( " ", x ) + 1;
+		
+		if ( x == 0 ) break;
+	}
+			return "";
+}
+
+
+function _log( message ) {
+	if( !_canLog ){
+		return;
+	}
+	var dt = new Date();
+	var tag = dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds()+"."+dt.getMilliseconds();	 
+	try {
+		//window.console.log( message );
+	} catch(e) {
+		if( !window.console ){
+			_canLog = false; // Permanently disable, when logging is not supported by the browser
+		}
+	}
+}
+
+function jAlert( message , callback , option ){
+	
+	if( !sensmail.use_dialog ){
+        alert( message );
+        callback();
+        return;
+    }
+        
+	if( $.trim( message ).length == 0 ){
+		alert( cmessage.CM0029 );
+		return;
+	}
+	
+	message = message.replace("\n","<br/>");
+	
+	$("#alertMessage").html( message );
+	
+	$("#alertWindow").dialog({
+ 		resizable: false,
+ 		title:cmessage.CM0061,
+ 		autoOpen:false,
+		modal: true,
+		zIndex:9000,
+		buttons: [
+			{
+				text : cmessage.CM0015,
+				click:function(){
+					$( this ).dialog( "destroy" );
+					if( callback ){
+						callback();
+					}
+				}
+			}
+		]
+	});
+	if( option ){
+		$("#alertWindow").dialog("option", option );
+	}
+	$("#alertWindow").dialog("open");
+}
+
+function jNotice( message , callback , option ){
+	
+	if( $.trim( message ).length == 0 ){
+		alert( cmessage.CM0029 );
+		return;
+	}
+	
+	message = message.replace("\n","<br/>");
+	
+	message += "<br/><span class=\"timeout_info\">"+ cmessage.CM0063 +"</span>";
+	
+	$("#alertMessage").html( message );
+	
+	$("#alertWindow").dialog({
+ 		resizable: false,
+ 		title:cmessage.CM0068,
+ 		autoOpen:false,
+		modal: true,
+		zIndex:9000
+	});
+	if( option ){
+		$("#alertWindow").dialog("option", option );
+	}
+	$("#alertWindow").dialog("open");	
+	// 1초뒤에 창이 닫히도록 한다.
+	setTimeout(function(){
+		$("#alertWindow").dialog("destroy");
+		if( callback ){
+			callback();
+		}
+	},1000);
+}
+
+function jConfirm( title, message, callback , option ){
+	
+	if( !sensmail.use_dialog ){
+	    if( confirm( message ) ){
+	        callback();
+	    }        
+        return;
+    }
+    	
+	if( $.trim( message ).length == 0 ){
+		alert( cmessage.CM0029 );
+		return;
+	}
+		
+	var html = message.replace("\n","<br/>");
+	$("#alertMessage").html( html );
+	
+	$("#alertWindow").dialog({
+ 		resizable: false,
+		modal: true,
+		autoOpen:false,
+		zIndex:9000,
+		title : title,
+		buttons: [
+		    {
+				text : cmessage.CM0015,
+				click:function(){
+					$( this ).dialog( "destroy" );
+					if( callback ){
+						callback();
+					}
+				}
+			},
+			{
+				text : cmessage.CM0028,
+				click:function(){
+					$( this ).dialog( "destroy" );
+					//$( this ).dialog( "destroy" );
+				}
+			}
+		]
+	});
+	if( option ){
+		$("#alertWindow").dialog("option", option );
+	}
+	$("#alertWindow").dialog("open");	
+}
+
+/**
+ * OS 에 따라서 다운로드를 처리한다.
+ * @param url
+ * @param method - GET , POST
+ * @param param - 파라미터
+ */
+function jDownload( url , method , param ){
+	
+	if( !method ){
+		method = "GET";
+	}
+	
+	$.fileDownload( url , {		
+	    popupWindowTitle : "File Download",
+	    httpMethod : method,
+	    data : param,
+		sucessCallback : function( url ){
+		},
+		failCallback : function( responseHtml , url ){		
+			if(responseHtml != ''){
+				jAlert( responseHtml );
+			}else{
+				jAlert( cmessage.CM0030 );
+			}			
+			return false;
+		}
+	});
+}
+
+function cbutton( text , callback ){
+	var obj = {
+		text:text,
+		click:function(){
+			$("#alertWindow").dialog("close");
+			callback();			
+		}
+	};
+	return obj;
+};
+
+function jChoose(){
+	
+	var arguments = this.jChoose.arguments;
+	
+	var message = '';
+	var title = cmessage.CM0031;
+	var buttons = new Array();
+	var j = 0;
+	for( var i in arguments ){
+		var arg = arguments[i];
+		if( typeof( arg ) == 'string' ){
+			if( i == 0 ){ // 첫번째는 메세지
+				message = arg;
+			}else if( i == 1 ){ // 두번째에 스트링이 온다면 그건 타이틀
+				title = arg;				
+			}
+		}else{ // string 형이 아닌것은 모두 버튼
+			buttons[j] = arg;
+			j++;
+		}			
+	}
+	
+	if( $.trim( message ).length == 0 ){
+		jAlert( cmessage.CM0029 );
+		return;
+	}
+	
+	message = message.replace("\n","<br/>");
+	
+	$("#alertMessage").html( message );
+	
+	$("#alertWindow").dialog({
+ 		resizable: false,
+		modal: true,
+		zIndex:9000,
+		title : title,
+		buttons: buttons
+	});
+}
+
+/**
+ * 안내창에 작업 결과를 알려준다.
+ */
+function jInfo( message , callback ){
+			
+	if( $.trim( message ).length == 0 ){
+		return;
+	}
+	$("#infoMessage").html( message );
+	// 1초동안 보여주면서 2초동안 보여주고 서서히 사라진다.
+	$("#infoMessage").fadeIn(800,function(){		
+		setTimeout(function(){
+			$("#infoMessage").fadeOut(800);	
+		},500);
+	});
+	
+	//이거 있어도 되겠쥬
+	if( callback ){
+		callback();
+	}
+}
+
+/**
+공지사항 목록 관련 스크립트
+*/
+var notice = {
+	timer:null,
+	run:function(){
+		notice.timer = setInterval(notice.rolling, 3000);
+		$("#notice_item").mouseover(function(){
+			clearInterval(notice.timer);
+		}).mouseout(function() {
+			notice.timer = setInterval(notice.rolling, 3000);
+		});
+	},
+	view:function( key ){
+		window.open(app.contextPath+'/board/view.do?ukey='+key,'','width=1024,height=600,scrollbars=yes,resizable=yes');
+	},
+	rolling:function(){
+		$("#notice_item ul").animate({
+			marginTop : parseInt($("#notice_item ul").css("margin-top")) - 20 + "px"		
+		}, "slow", "swing", function(){		
+			$("#notice_item ul").css("margin-top", "-20px");// 2번째 아이템을 보여준다.		
+			$("#notice_item ul li:first").appendTo("#notice_item ul"); // 첫번째 항목을 UL 의 마지막으로 이동시킨다.
+			$("#notice_item ul").css("margin-top", "0px");
+		});
+	}
+};
+
+/**
+	JSON 호출(JSONResult 이용)에 대한 성공/실패에 대한 리턴값 정의
+*/
+var JSONResult = {
+	SUCCESS:1,
+	FAIL:-1
+};
+
+/**
+ * 모달 로그인 Function
+ */
+var loginmodal = {
+	open:function(){
+		var isHttps = window.location.toString().search(/https/i) > -1;
+		var protocol = "http";
+		if( isHttps ){
+			protocol = "https";
+		}
+		$("#modal_login_frame").attr("src", app.contextPath + "/account/modal/login.do?protocol="+protocol+"&id="+sensmail.userid);		
+		$("#modal_login").dialog({
+			bgiframe: true,
+			autoOpen: true,
+			height: 320,
+			width: 580,
+			modal: true,		
+			resizable:false	
+		});
+	},
+	close:function(){
+		$("#modal_login").dialog("destroy");
+	}
+};
+
+var AjaxUtil = {
+	error:function( xhr ){
+		log.debug( "status : "+ xhr.status );
+		if( xhr.status == errorcode.session_expire ){
+			loginmodal.open();
+		}else if( xhr.status == errorcode.internal_error ){
+		    var json = JSON.parse( xhr.responseText );
+		    if( json && json.message ){
+		        jAlert( json.message );
+            }else{
+                jAlert( cmessage.CM0016 );
+            }
+        }else if( xhr.status == errorcode.notfound ){
+            jAlert( cmessage.CM0062 );
+		}else{
+			jAlert( cmessage.CM0016 );
+		}
+	}
+};
+
+/**
+쪽지 오픈
+**/
+var header_memo = {
+	open_memo :function(){
+		window.open(app.contextPath+'/memo/list.do', 'a','toolbar=no,width=620,height=445,top=100,left=200,directories=no,status=no,scrollbars=no,resizable=yes,menubar=no');		
+	}
+	
+};
+/**
+ * 자바스크립트 콘솔 디버그 
+ */
+var log = {
+	canLog:true,
+	debug:function( message ){ 
+		if( this.canLog ){
+			if( window.console ){
+				var time = new Date().format("hh:nn:ss.ns"); 
+				//window.console.log("["+ time +"] DEBUG - "+ message );
+			}else{
+				this.canLog = false; 
+			}
+		}
+	},
+	error:function( message ){
+		if( this.canLog ){
+			if( window.console ){
+				var time = new Date().format("hh:nn:ss.ns"); 
+				//window.console.log("["+ time +"] ERROR - "+ message );
+			}else{
+				this.canLog = false; 
+			}
+		}
+	}
+};
+
+/*
+$(document).ready(function(){	
+	$("select").selectBoxStyle();
+});
+*/
+/* IE에서 FLASH에 의해 타이틀이 변경되는 현상 방지 : START */
+if( $.browser.ie ){
+	var originalTitle = document.title.split("#")[0];
+	document.attachEvent('onpropertychange', function (evt) {
+	    if(evt.propertyName === 'title' && document.title !== originalTitle) {
+	        setTimeout(function () {
+	           document.title = originalTitle;
+	        }, 1);
+	    }
+	});
+}
+function changeTitle(newTitle)
+{
+    originalTitle = newTitle;
+    document.title = newtitle;
+}
+/* IE에서 FLASH에 의해 타이틀이 변경되는 현상 방지 : END */
+
+var highlightMenu = {
+	trigger:function(){
+		// 현재 보고 있는 메뉴 선택시 이벤트 트리거
+		$(document).on("click",".mbutton",function(){
+			//highlightMenu.removeClass();
+            highlightMenu.selectedMenu($(this).parent().data("dirkey") );
+			//$(this).parents("li.mbutton").addClass("active");
+		});
+	},
+	removeClass:function(){
+		$(".mbutton").each(function(){
+			$(this).removeClass("active");
+		});
+	},
+	selectedMenu:function( key ){
+		highlightMenu.removeClass();
+		$("#mnu_"+key).addClass("active");
+	}	
+};�F�f�      UH��UH��;/-UIy>   J:http://email.koreatech.ac.kr/sens-static/js/common/imoxion.js?dummy=58413 necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:49:03 GMT
+Server: Apache
+Last-Modified: Tue, 28 Apr 2015 13:18:28 GMT
+Etag: "5ebc-514c8b2b968f6"
+Accept-Ranges: bytes
+Content-Length: 24252
+Content-Type: application/javascript
+ uncompressed-len 0   ^�

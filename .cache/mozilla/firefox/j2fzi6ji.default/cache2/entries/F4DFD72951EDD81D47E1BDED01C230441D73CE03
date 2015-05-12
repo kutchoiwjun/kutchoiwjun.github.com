@@ -1,0 +1,1057 @@
+/**
+* set Params 
+* by lsh 파라메터 설정
+*/
+function setParameters() {
+	this.f = null;
+	this.set = function() {
+		this.params = arguments[0];
+		for(var item in this.params) {
+			$(item).value = this.params[item];
+		}
+	};
+	this.initForm = function() {
+		this.f = null;
+		return this;
+	};
+	this.formSet = function() {
+		this.f = document.forms[arguments[0]];
+		return this;
+	};
+	this.fset = function() {
+		if(this.f == null) {
+			return false;
+		}
+		this.params = arguments[0];
+		for(var item in this.params) {
+			this.f.elements[item].value = this.params[item];
+		}
+	};
+} 
+
+/**
+* 이미지 로딩 에러시 기본 이미지로 대체
+* by lsh
+*/
+function ErrorImg() {
+	this.defaultImg = function() {
+		this.target = arguments[0];
+		this.target.src = '/images/icon/icon_Noimage.gif';
+	};
+	this.setDefaultImg = function() {
+		this.target = arguments[0];
+		this.target.src = arguments[1];	
+	};
+} var erImg = new ErrorImg();
+
+
+function limitTextByte() {
+	this.MAX_LENTH = 0;
+
+	this.validate = function() {
+		this.targetObj = arguments[0];
+		this.MAX_LENTH = arguments[1];
+
+		this.vals = this.targetObj.value;
+		this.lens = this.vals.length;
+
+		this.curChar = '';
+		this.curByte = 0;
+		this.curIndex = 0;
+
+		for(var x=0; x<this.vals.length; x++) {
+			this.curChar = this.vals.charAt(x);
+			if(escape(this.curChar).length > 4) {
+				this.curByte += 2;
+			}else this.curByte++;
+
+			if(this.curByte <= this.MAX_LENTH) this.curIndex = x + 1;
+			if(this.curByte > this.MAX_LENTH) {
+				alert(this.MAX_LENTH + ' 자 이상 입력 하실 수 없습니다.\n초과된 내용은 삭제 됩니다.');
+				this.targetObj.value = this.vals.substr(0, this.curIndex);
+				break;
+			}
+		}
+		this.targetObj.focus();
+	};
+} 
+
+/**
+ * 화면단에서 사용하는 기능성 values 정의
+ * 
+ * @return
+ */
+var Const = {};
+function Const() {
+	/**
+	 * 문자 발송 제한 Byte
+	 */
+	this.MSG_MAX_BYTE = 80;
+}
+
+/**
+ * Validation 체킹 함수 모음
+ * @return
+ *
+ * var pUtils = new PageUtils();
+ * pUtils.isEmpty('')
+ *
+ * 인터 임성호
+ */
+function PageUtils() {
+	/**
+	 * 달력등 일반적으로 사용 되는 구분자 및 캐릭터 정의
+	 */
+	this.defaultDelimiter = '.';
+	this.defaultCharacter = '';
+
+	/**
+	 * Null 과 '' 체크
+	 * @return
+	 */
+	this.isEmpty = function() {
+		if(arguments[0] == null || arguments[0].replace(/ /gi, '') == '') {
+	        return true;
+	    }
+	    return false;
+	};
+	/**
+	 * Null 체크
+	 */
+	this.isNull = function() {
+		if(arguments[0] == null) {
+	        return true;
+	    }
+	    return false;
+	};
+	/**
+	 * Null 또는 '' 일 경우 default 값 셋팅
+	 * @return
+	 */
+	this.defaultIfEmpty = function() {
+		if(this.isEmpty(arguments[0])) {
+			return arguments[1];
+		}
+		return arguments[0];
+	};
+	/**
+	 * Null 일 경우 default 값 셋팅
+	 * @return
+	 */
+	this.defaultIfNull = function() {
+		if(this.isNull(arguments[0])) {
+			return arguments[1];
+		}
+		return arguments[0];
+	};
+	this.getLength = function() {
+		this.target = arguments[0];
+		for(var x=0; x<this.target.length; x++) {
+			if(this.target.charCodeAt(x) > 255) {
+				this.len += 2;
+			}else {
+				this.len++;
+			}
+		}
+		return this.len;
+	};
+	/**
+	 * 숫자 체크
+	 */
+	this.isNumber = function() {
+		return (arguments[0].match(/^[0-9]+$/)) ? true : false;
+	};
+
+	/**
+	 * 특수문자 체크 
+	 * @return
+	 */
+	this.isSpecialChar = function(){
+		return (arguments[0].match(/[~!@\#$%<>^&*\()\-=+_\']/)) ? true : false;
+	};
+
+	/**
+	 * 한글 체크 체크
+	 * @return
+	 */
+	this.isHangule = function(){
+		this.blRet = false;
+		var ch = '';
+		var len = arguments[0].length;
+		for(var i=0; i<len; i++)
+		{
+			 ch = escape(arguments[0].charAt(i));        //ISO-Latin-1 문자셋으로 변경
+
+			 if (ch.substring(0, 2) == '%u' && ch.substring(2,4) != '00') {
+		        return true;
+		    } else if (ch.substring(0,1) == '%' && parseInt(ch.substring(1,3), 16) > 127) {
+		    	return true;
+		    }
+		}
+		return this.blRet;
+	};
+	this.upper = function() {
+		return (this.defaultIfEmpty(arguments[0], '')).toUpperCase();
+	};
+	this.lower = function() {
+		return (this.defaultIfEmpty(arguments[0], '')).toLowerCase();
+	};
+	this.equals = function() {
+		return (arguments[0] == arguments[1]);
+	};
+	this.equalsIgnoreCase = function() {
+		return ((this.upper(this.defaultIfEmpty(arguments[0], ''))) == (this.upper(this.defaultIfEmpty(arguments[1], ''))));
+	};
+	this.startWith = function() {
+		this.s = arguments[0];
+		this.e = arguments[1];
+
+		return (this.s.substring(0, this.e.length) == this.e);
+	};
+	this.endWith = function() {
+		this.s = arguments[0];
+		this.e = arguments[1];
+
+		return (this.s.substring(this.s.length - this.e.length) == this.e);
+	};
+	/**
+	 *
+	 */
+	this.trim = function() {
+		return arguments[0].replace(/(^\s*)|(\s*$)/gi, "");
+	};
+	/**
+	 * arguments[0] : 문자열
+	 * arguments[1] : 구분자
+	 * 		Null 일 경우에는 [.]으로 대체
+	 * arguments[2] : 변경될 문자열
+	 * 		Null 일 경우에는 [] 으로 대체
+	 *
+	 * 주로 달력 사용시, . 등을 없애기 위해서 사용
+	 */
+	this.replaceAll = function() {
+	    this.tmp = '';
+
+	    if(!this.isEmpty(arguments[0])) {
+		    this.delimiter = this.defaultIfNull(arguments[1], this.defaultDelimiter);
+		    this.character = this.defaultIfNull(arguments[2], this.defaultCharacter);
+
+		    if(!this.isEmpty(this.trim(arguments[0])) && this.delimiter != this.character) {
+		        this.tmp = this.trim(arguments[0]);
+		        while(this.tmp.indexOf(this.delimiter) > -1){
+		            this.tmp = this.tmp.replace(this.delimiter, this.character);
+		        }
+		    }
+	    }
+
+	    return this.tmp;
+	};
+}
+
+/**
+ * 메시지 처리
+ * 		var msg = '${0}은 ${1}시간동안만 ${2}합니다.';
+ * 		var msgMnger = new MessageManager();
+ * 		alert(msg, '캠페인', '2', '유효');
+ * 
+ * 인터 임성호
+ * @return
+ */
+function MessageManager() {
+	this.getMessage = function() {
+		this.message = arguments[0];
+		if(arguments.length > 1) {
+			for(var x=1; x<arguments.length; x++) {
+				this.message = this.message.replace('${' + (x-1) + '}' , arguments[x]);
+			}
+		}
+		return this.message;
+	};
+};
+
+/**
+ * 문자열 및 숫자 등의 포맷 유틸
+ *
+ * var f = new FormatUtil();
+ * alert(f.commify(-1234567890.123));
+ *
+ * @return
+ *
+ *  인터 임성호
+ */
+function FormatUtil() {
+	this.commify = function() {
+		this.reg = /(^[+-]?\d+)(\d{3})/;
+		this.n = arguments[0].toString();
+
+		while(this.reg.test(this.n))
+			this.n = this.n.replace(this.reg, '$1' + ',' + '$2');
+
+		  return this.n;
+	};
+	this.unCommify = function() {
+		return (arguments[0].replace(/\,/g,''));
+	};
+	this.phone = function() {
+		this.reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\'\"\\\(\=]/gi;
+		this.tmpPhone = arguments[0].replace(this.reg, '');
+
+		return this.tmpPhone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3");
+	};
+	this.escapeSpChar = function() {
+		this.reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\'\"\\\(\=]/gi;
+		return arguments[0].replace(this.reg, '');
+	};
+	/**
+	 * www.someaddress.co.kr 처럼 http:// 없는 url 체킹
+	 */
+	this.url = function() {
+		this.reg = /^[\w\~\-\.]+\.[\w\~\-]+(\.[\w\~\-]+)+\s*$/g;
+		return arguments[0].search(this.reg) >= 0;
+	};
+}
+
+/**
+ * FormUtils
+ *
+ *
+ * @return
+ */
+function FormUtils() {
+	this.utils = new PageUtils();
+	/**
+	 * checkbox 전체 선택/해제
+	 *
+	 * arguments[0] : object
+	 * arguments[0] : target Id
+	 * <input type="checkbox" id="checkAll" name="checkAll" onclick="new FormUtils().checkAll(this, 'checkeQstnId');"/>
+	 */
+	this.checkAll = function() {
+		if(!this.utils.isNull(arguments[0]) && !this.utils.isNull(arguments[1])) {
+			this.obj = arguments[0];
+			this.targetId = arguments[1];
+
+			//if($(this.targetId)) {
+			this.isChecked = this.obj.checked;
+			this.checkList = $A(document.getElementsByName(this.targetId));
+			this.checkList.each(function(item, index) {
+				if(this.isChecked) {
+					item.checked = true;
+				}else item.checked = false;
+			}.bind(this));
+			//}
+		}
+	};
+	this.checkBoxValues = function() {
+		this.vals = [];
+		if(!this.utils.isNull(arguments[0])) {
+			this.targetId = arguments[0];
+
+			this.checkList = $A(document.getElementsByName(this.targetId));
+			this.checkList.each(function(item, index) {
+				if(item.checked) {
+					this.vals[this.vals.length] = item.value;
+				}
+			}.bind(this));
+		}
+		return this.vals;
+	};
+	/**
+	 * 숫자 입력시 3자리마다 컴마
+	 *   숫자만 입력 됨.
+	 * <input type="text" value="" onkeyup="this.value=new FormUtils().commify(this);"/>
+	 */
+	this.commify = function() {
+		this.obj = arguments[0];
+		this.n = this.obj.value;
+		return Number(String(this.n).replace(/\..*|[^\d]/g, '')).toLocaleString().slice(0,-3);
+	};
+	/**
+	 * maxLength 로 제한 하지 않을 경우
+	 * max_length attribute로 설정 하면 해당 문자열 길이를 체크 하여 제한 하도록 하는 스크립트
+	 *
+	 *
+	 * <input type="text" value="" max_length="5" onkeyup="new FormUtils().limitMaxLenth(this);"/>
+	 */
+	this.limitMaxLenth = function() {
+		this.obj = arguments[0];
+		this.len = 0;
+
+		if(this.obj) {
+			for(var x=0; x<this.obj.value.length; x++) {
+				if(this.obj.value.charCodeAt(x) > 255) {
+					this.len += 2;
+				}else {
+					this.len++;
+				}
+			}
+
+			if(this.obj.getAttribute('max_length')) {
+				this.maxLen = this.utils.defaultIfEmpty(this.obj.getAttribute('max_length'), '0');
+			}else {
+				if(!this.utils.isNull(arguments[1]))
+					this.maxLen = arguments[1];
+			}
+
+			if(this.maxLen) {
+				if(this.maxLen < this.len) {
+					alert('최대 ' + this.maxLen + 'byte 이상 입력 하실 수 없습니다.');
+					this.obj.value = this.obj.value.substring(0, this.maxLen);
+				}
+			}
+		}
+	};
+	this.onlyNumber = function() {
+		var keyCode = event.keyCode;
+		if(keyCode < 48 || keyCode > 57) {
+			event.returnValue = false;
+		}
+	};
+}
+
+/**
+ * 날짜 관련 함수
+ * @return
+ *
+ * var dUtils = new DateUtils();
+ * var today = dUtils.getToday();
+ *
+ *  인터 임성호
+ */
+function DateUtils() {
+	this.utils = new PageUtils();
+	this.compareSTmpDate = null;
+	this.compareETmpDate = null;
+	this.format = '';
+
+	this.DAY_OF_END_TIME = 24;
+	this.DEFINE_DAY = {
+		THIRTY: 30,
+		SIXTY: 60,
+		NINETY: 90
+	};
+
+	/**
+	 * 오늘 날짜
+	 */
+	this.getToday = function() {
+		this.date = new Date();
+
+		return this.getDates(this.date);
+	};
+	this.getHours = function() {
+		this.date = new Date();
+		
+		return this.date.getHours();
+	};
+	this.getMinutes = function() {
+		this.date = new Date();
+		
+		return this.date.getMinutes();
+	};
+	/**
+	 * 어제 날짜
+	 */
+	this.getYesterDay = function() {
+		this.date = new Date();
+		this.yDate = new Date(this.date.valueOf() - ((24*60*60*1000)));
+
+		return this.getDates(this.yDate);
+	};
+	/**
+	 * ? 일전 날짜
+	 * arguments[0] : 뺄 날짜
+	 */
+	this.getLastDay = function() {
+		this.date = new Date();
+		this.yDate = new Date(this.date.valueOf() - ((Number(this.utils.defaultIfNull(arguments[0], '0'))*24*60*60*1000)));
+
+		return this.getDates(this.yDate);
+	};
+	/**
+	 * ? 일 후 날짜
+	 * arguments[0] : 뺄 날짜
+	 */
+	this.getNextDay = function() {
+		this.date = new Date();
+		this.yDate = new Date(this.date.valueOf() + ((Number(this.utils.defaultIfNull(arguments[0], '0'))*24*60*60*1000)));
+
+		return this.getDates(this.yDate);
+	};
+	/**
+	 * 이번주 시작 날짜
+	 */
+	this.getStartWeek = function() {
+		this.date = new Date();
+		this.dayOfWeek = this.date.getDay();
+
+		this.year = this.date.getFullYear();
+		this.month = this.date.getMonth();
+		this.day = this.date.getDate();
+
+		this.year += (this.year < 2000) ? 1900 : 0;
+
+		this.startWeekDate = new Date(this.year, this.month, this.day - this.dayOfWeek);
+
+		return this.getDates(this.startWeekDate);
+	};
+	/**
+	 * 이번주 끝 날짜
+	 */
+	this.getEndWeek = function() {
+		this.date = new Date();
+		this.dayOfWeek = this.date.getDay();
+
+		this.year = this.date.getFullYear();
+		this.month = this.date.getMonth();
+		this.day = this.date.getDate();
+
+		this.year += (this.year < 2000) ? 1900 : 0;
+
+		this.endWeekDate = new Date(this.year, this.month, this.day + (6 - this.dayOfWeek));
+
+		return this.getDates(this.endWeekDate);
+	};
+	/**
+	 * 이번달의 시작 날짜
+	 */
+	this.getStartDayOfMonth = function() {
+		this.date = new Date();
+
+		this.tmpDate = new Date(this.date.getFullYear(), this.date.getMonth(), '01');
+
+		return this.getDates(this.tmpDate);
+	};
+	/**
+	 * 이번달의 끝 날짜
+	 */
+	this.getEndDayOfMonth = function() {
+		this.date = new Date();
+		this.tmpDate = new Date(this.date.getFullYear(), (this.date.getMonth() + 1), '');
+
+		return this.getDates(this.tmpDate);
+	};
+	/**
+	 * 지난달의 시작 날짜
+	 */
+	this.getStartLastDayOfMonth = function() {
+		this.date = new Date();
+
+		this.tmpDate = new Date(this.date.getFullYear(), (this.date.getMonth() - 1), '01');
+
+		return this.getDates(this.tmpDate);
+	};
+	/**
+	 * 지난달의 끝 날짜
+	 */
+	this.getEndLastDayOfMonth = function() {
+		this.date = new Date();
+		this.tmpDate = new Date(this.date.getFullYear(), (this.date.getMonth()), '');
+
+		return this.getDates(this.tmpDate);
+	};
+
+	/**
+	 * 입력날짜 끝 날짜
+	 */
+	this.getInEndLastDayOfMonth = function() {
+		this.date = new Date();
+		this.dates = [];
+		this.sTmpDate = arguments[0];
+
+		this.dates[0] = this.sTmpDate.substring(0, 4);
+		this.dates[1] = this.sTmpDate.substring(4, 6);
+
+		this.tmpDate = new Date(this.dates[0], this.dates[1], '');
+
+		return this.getDates(this.tmpDate);
+	};
+	/**
+	 * 날짜 비교
+	 *
+	 * 시작 날짜가 종료 날짜 보다 클 경우 false 리턴
+	 * 정상적인 경우에는 true 리턴
+	 */
+	this.compareDate = function() {
+		this.reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\'\"\\\(\=]/gi;
+
+		this.dates = [];
+		this.dates[0] = [];
+		this.dates[1] = [];
+
+		this.sTmpDate = this.utils.trim(arguments[0]);
+		this.eTmpDate = this.utils.trim(arguments[1]);
+
+		this.sTmpDate = this.sTmpDate.replace(this.reg, '');
+		this.eTmpDate = this.eTmpDate.replace(this.reg, '');
+
+		this.dates[0][0] = this.sTmpDate.substring(0, 4);
+		this.dates[0][1] = this.sTmpDate.substring(4, 6);
+		this.dates[0][2] = this.sTmpDate.substring(6);
+
+		this.dates[1][0] = this.eTmpDate.substring(0, 4);
+		this.dates[1][1] = this.eTmpDate.substring(4, 6);
+		this.dates[1][2] = this.eTmpDate.substring(6);
+
+		this.sDate = new Date(this.dates[0][0], this.dates[0][1], this.dates[0][2]);
+		this.eDate = new Date(this.dates[1][0], this.dates[1][1], this.dates[1][2]);
+
+		if((this.sDate > this.eDate)) {
+			return false;
+		}
+		return true;
+	};
+	/**
+	 * 두 날짜 사이에 포함 되었는지 여부 체크
+	 *
+	 * 			비교할 시작 날짜 , 비교할 종료 날짜					특정날짜
+	 * dUtils.setCompareDate('20100401', '20100430').isInclusionDate('20100520')
+	 * 특정날짜가 비교 시작/종료 안에 포함 되면 false , 포함되지 않았을 경우에는 true 리턴
+	 */
+	this.setCompareDate = function() {
+		this.compareSTmpDate = arguments[0];
+		this.compareETmpDate = arguments[1];
+		return this;
+	};
+	this.isInclusionDate = function() {
+		this.reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\'\"\\\(\=]/gi;
+
+		this.dates = [];
+		this.dates[0] = [];
+		this.dates[1] = [];
+		this.dates[2] = [];
+
+		this.sTmpDate = this.compareSTmpDate;
+		this.eTmpDate = this.compareETmpDate;
+		this.mTmpDate = arguments[0];
+
+		this.compareSTmpDate = null;
+		this.compareETmpDate = null;
+
+		if(this.reg.test(this.sTmpDate)) {
+			this.sTmpDate = this.sTmpDate.replace(this.reg, '');
+		}
+		this.dates[0][0] = this.sTmpDate.substring(0, 4);
+		this.dates[0][1] = this.sTmpDate.substring(4, 6);
+		this.dates[0][2] = this.sTmpDate.substring(6);
+
+		if(this.reg.test(this.eTmpDate)) {
+			this.eTmpDate = this.eTmpDate.replace(this.reg, '');
+		}
+		this.dates[1][0] = this.eTmpDate.substring(0, 4);
+		this.dates[1][1] = this.eTmpDate.substring(4, 6);
+		this.dates[1][2] = this.eTmpDate.substring(6);
+
+		if(this.reg.test(this.mTmpDate)) {
+			this.mTmpDate = this.mTmpDate.replace(this.reg, '');
+		}
+		this.dates[2][0] = this.mTmpDate.substring(0, 4);
+		this.dates[2][1] = this.mTmpDate.substring(4, 6);
+		this.dates[2][2] = this.mTmpDate.substring(6);
+
+		var sDate = new Date();
+		var eDate = new Date();
+		var mDate = new Date();
+
+		sDate.setFullYear(this.dates[0][0], this.dates[0][1], this.dates[0][2]);
+		eDate.setFullYear(this.dates[1][0], this.dates[1][1], this.dates[1][2]);
+		mDate.setFullYear(this.dates[2][0], this.dates[2][1], this.dates[2][2]);
+
+		if(sDate <= mDate && mDate <= eDate){
+			return false;
+		}
+
+		return true;
+	};
+	this.getSetDate = function() {
+		this.reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\'\"\\\(\=]/gi;
+
+		this.dates = [];
+
+		this.sTmpDate = arguments[0];
+
+		if(this.reg.test(this.sTmpDate)) {
+			this.sTmpDate = this.sTmpDate.replace(this.reg, '');
+		}
+		this.dates[0] = this.sTmpDate.substring(0, 4);
+		this.dates[1] = this.sTmpDate.substring(4, 6);
+		this.dates[2] = this.sTmpDate.substring(6);
+
+		this.tmpDate = new Date(this.dates[0], (this.dates[1] - 1), this.dates[2]);
+
+		return this.getDates(this.tmpDate);
+	};
+	/**
+	 * 날짜 포맷 설정
+	 * pUtils.setFormat('-').getToday();
+	 */
+	this.setFormat = function() {
+		this.format = arguments[0];
+		return this;
+	};
+	this.getDates = function() {
+		this.date = arguments[0];
+
+		this.year = this.date.getFullYear();
+		this.month = this.addZero((this.date.getMonth() + 1));
+		this.day = this.addZero(this.date.getDate());
+
+		return (this.year + this.format + this.month + this.format + this.day);
+	};
+	this.addZero = function() {
+		this.tmp = '';
+		if(!this.utils.isEmpty(arguments[0].toString())) {
+			if(Number(arguments[0]) < 10) {
+				this.tmp = '0' + arguments[0];
+			}else {
+				this.tmp = arguments[0];
+			}
+			return this.tmp;
+		}
+	};
+}
+
+/**
+ * 팝업 함수
+ * @return
+ *
+ *  var pUtils = new PopupUtils();
+ *	var name = 'View';
+ *	var p = pUtils.init({
+ *		url: 'about:blank', name: name, width: '650', height: '550'}
+ *	).open();
+ *
+ * 인터 임성호
+ */
+function PopupUtils() {
+	this.utils = new PageUtils();
+
+	this.opt = {};
+	this.defaultOpt = {
+		url: 'about:blank',
+		name: 'POPUP',
+		scrollbar: 'yes',
+		toolbar: 'no',
+		location: 'no',
+		status: 'yes',
+		menubar: 'no',
+		resizable: 'yes',
+		width: '400',
+		height: '450',
+		left:'250',
+		top:'100'
+	};
+
+	this.init = function() {
+		this.opt = arguments[0];
+		return this;
+	};
+	this.open = function() {
+		if(this.opt) {
+			if(this.utils.isEmpty(this.opt.name)) {
+				return null;
+			}else {
+				this.url = this.opt.url;
+				this.name = this.opt.name;
+
+				this.stat = ''
+					+ 'scrollbars=' + this.utils.defaultIfNull(this.opt.scrollbar, this.defaultOpt.scrollbar)
+					+ ',toolbar=' + this.utils.defaultIfNull(this.opt.toolbar, this.defaultOpt.toolbar)
+					+ ',location=' + this.utils.defaultIfNull(this.opt.location, this.defaultOpt.location)
+					+ ',status=' + this.utils.defaultIfNull(this.opt.status, this.defaultOpt.status)
+					+ ',menubar=' + this.utils.defaultIfNull(this.opt.menubar , this.defaultOpt.menubar)
+					+ ',resizable=' + this.utils.defaultIfNull(this.opt.resizable , this.defaultOpt.resizable)
+					+ ',width=' + this.utils.defaultIfNull(this.opt.width , this.defaultOpt.width)
+					+ ',height=' + this.utils.defaultIfNull(this.opt.height , this.defaultOpt.height)
+					+ ',left=' + this.utils.defaultIfNull(this.opt.left , this.defaultOpt.left)
+					+ ',top=' + this.utils.defaultIfNull(this.opt.top , this.defaultOpt.top);
+
+				return window.open(this.url, this.name, this.stat);
+			}
+		}else {
+			this.stat = ''
+				+ 'scrollbars=' + this.defaultOpt.scrollbar
+				+ ',toolbar=' + this.defaultOpt.toolbar
+				+ ',location=' + this.defaultOpt.location
+				+ ',status=' + this.defaultOpt.status
+				+ ',menubar=' + this.defaultOpt.menubar
+				+ ',resizable=' + this.defaultOpt.resizable
+				+ ',width=' + this.defaultOpt.width
+				+ ',height=' + this.defaultOpt.height
+				+ ',left=' + this.defaultOpt.left
+				+ ',top=' + this.defaultOpt.top;
+
+			return window.open(this.defaultOpt.url, this.defaultOpt.name, this.stat);
+		}
+	};
+}
+
+/**
+ *   var pModelUtils = new ModelPopupUtils();
+ *   var name = "test";
+ *
+ *   var url = "<c:url value='/admin/mbrNavi/retrieveBadMbr.dmp'/>";
+ *	 var p = pModelUtils.init({
+ *	 url: url, name: name, width: '500', height: '300',resizable:'no'}
+ *	 ).open();
+ *
+ *   참고사항
+ *    - 파라메터는 get방식으로 보내야함 <c:url value='/admin/mbrNavi/retrieveBadMbr.dmp?test=1'/>
+ */
+function ModelPopupUtils() {
+	this.utils = new PageUtils();
+
+	this.opt = {};
+	this.defaultOpt = {
+		url: 'about:blank',
+		scroll: 'yes',
+		status: 'yes',
+		resizable: 'yes',
+		width: '400',
+		height: '450'
+	};
+
+	this.init = function() {
+		this.opt = arguments[0];
+		return this;
+	};
+	this.open = function() {
+		if(this.opt) {
+			if(this.utils.isEmpty(this.opt.name)) {
+				return null;
+			}else {
+				this.url = this.opt.url;
+				window.name = this.opt.name;
+
+				this.stat = ''
+					+ 'dialogWidth:' + this.utils.defaultIfEmpty(this.opt.width , this.defaultOpt.width)+"px"
+					+ ';dialogHeight:' + this.utils.defaultIfEmpty(this.opt.height , this.defaultOpt.height)+"px"
+					+ ';scroll:' + this.utils.defaultIfEmpty(this.opt.scroll, this.defaultOpt.scroll)
+					+ ';status:' + this.utils.defaultIfEmpty(this.opt.status, this.defaultOpt.status)
+					+ ';resizable:' + this.utils.defaultIfEmpty(this.opt.resizable , this.defaultOpt.resizable);
+
+
+				return window.showModalDialog(this.url,window,this.stat);
+			}
+
+		}else {
+			this.stat = ''
+				+ 'dialogWidth:' + this.defaultOpt.width+"px"
+				+ ';dialogHeight:' + this.defaultOpt.height	+"px"
+				+ ';scroll:' + this.defaultOpt.scroll
+				+ ';status:' + this.defaultOpt.status
+				+ ';resizable:' + this.defaultOpt.resizable;
+
+
+			return window.showModalDialog(this.url, this.params, this.stat);
+		}
+	};
+}
+
+/**
+ * 셀렉트 멀티 타입의 아이템 이동 및 변경시에 사용 되는 함수
+ * @return
+ *
+ * 인터 임성호
+ *
+ * var orderItem = new SelectMultiItemOrderUtil();
+ *
+ * <select id="menulist" name="menulist" multiple="multiple"></select>
+ *
+ * 처음 : orderItem.first(pform.menulist)
+ * 위로 : orderItem.up(pform.menulist)
+ * 아래로 : orderItem.down(pform.menulist)
+ * 마지막 : orderItem.end(pform.menulist)
+ *
+ */
+function SelectMultiItemOrderUtil() {
+	this.first = function() {
+		this.o = arguments[0];
+		this.len = this.o.length;
+		this.cnt = 0;
+
+		for(var x=0; x<this.o.length; x++) {
+			if(this.isSelected(this.o, x)) {
+				if(x == 0) return;
+				this.idx = x;
+				for(var i=this.idx; i>this.cnt; i--) {
+					this.upgrid(this.o, this.idx);
+					this.idx = this.idx - 1;
+				}
+				this.cnt = this.cnt + 1;
+			}
+		}
+	};
+	this.end = function() {
+		this.o = arguments[0];
+		this.cnt = this.o.length -1;
+		for(var x=this.o.length - 1; x>= 0; x--) {
+			if(this.isSelected(this.o, x)) {
+				if(x == this.o.length - 1) return;
+				this.idx = x;
+
+				for(var i=this.idx; i<this.cnt; i++) {
+					this.downgrid(this.o, this.idx);
+					this.idx = this.idx + 1;
+				}
+				this.cnt = this.cnt + 1;
+			}
+		}
+	};
+	this.up = function() {
+		this.o = arguments[0];
+		 for(var x=0; x<this.o.length; x++) {
+			if(this.isSelected(this.o, x)) {
+				if(x == 0) return;
+				this.upgrid(this.o, x);
+			}
+		 }
+	};
+	this.down = function() {
+		this.o = arguments[0];
+		for(var x=this.o.length - 1; x>=0; x--) {
+			if(this.isSelected(this.o, x)) {
+				if(x == this.o.length - 1) return;
+				this.downgrid(this.o, x);
+			}
+		}
+	};
+	this.isSelected = function() {
+		return (arguments[0].options[arguments[1]].selected == true)
+	};
+	this.upgrid = function() {
+		this.o = arguments[0];
+		this.index = arguments[1];
+
+		if(this.index < 0) return;
+		if(this.index == 0) return;
+
+		this.downgrid(this.o, this.index - 1);
+	};
+	this.downgrid = function() {
+		this.o = arguments[0];
+		this.index = arguments[1];
+
+		if(this.index < 0) return;
+		if(this.index == this.o.length - 1) return;
+
+		this.grid(this.o, this.index, 1);
+	};
+	this.grid = function() {
+		this.o = arguments[0];
+		this.index = arguments[1];
+		this.distance = arguments[2];
+
+		this.opt = new Option(
+				this.o.options[this.index].text,
+				this.o.options[this.index].value,
+				false,
+				this.o.options[this.index].selected
+			);
+
+		for(var x=this.index; x<this.index + this.distance; x++) {
+			this.o.options[x].text = this.o.options[x + 1].text;
+			this.o.options[x].value = this.o.options[x + 1].value;
+			this.o.options[x].selected = this.o.options[x + 1].selected;
+		}
+		this.o.options[this.index + this.distance] = this.opt;
+	};
+}
+
+/**
+ * StringBuffer
+ * 인터 임성호
+ *
+ * @return
+ */
+function StringBuffer() {
+	this.txt = '';
+	this.init = function() {
+		this.txt = '';
+	};
+	this.append = function() {
+		this.txt += arguments[0];
+		return this;
+	};
+	this.toString = function() {
+		return this.txt;
+	};
+}
+
+/**
+ * 이미지 미리 보기
+ * 
+ * 인터 임성호
+ * 
+ * var viewers = new ImgViewer();
+ * viewers.init({
+ * 		path : 'C:/Documents and Settings/BlueSys/바탕 화면/11.jpg', 
+ * 		title : '팝업타이틀'
+ * }).open();
+ * 
+ * 이미지 미리보기를 위한 팝업을 만들지 않고 
+ * 	간단하게 스크립트 상에서 이미지만 로딩 하여 보여주는 팝업
+ * 
+ * @return
+ */
+function ImgViewer() {
+	this.opt = {};
+	
+	this.p = null;
+	this.img = null;
+	this.title = null;
+	this.tmpImgObj = null;
+
+	this.init = function() {
+		this.opt = arguments[0];
+		
+		this.tmpImgObj = new Image();
+		this.tmpImgObj.src = this.opt.path;
+		
+		return this;
+	}
+	this.open = function() {
+		//if(this.tmpImgObj.width != 0 && this.tmpImgObj.height != 0) {
+			this.width = this.tmpImgObj.width + 20;
+			this.height = this.tmpImgObj.height + 20;
+			
+			this.imageOpt = 'width=' + this.width + ',height=' + this.height;
+
+			this.p = window.open('', '', this.imageOpt);
+
+			this.buffer = new StringBuffer();
+			this.buffer.init();
+
+			this.buffer
+				.append('<html>')
+					.append('<head>')
+						.append('<title>::::: ' + this.opt.title + ' :::::</title>')
+						.append('<script type="text/javascript">')
+							.append('function resizers() {')
+								.append('this.obj = document.getElementById("img");')
+								.append('this.w = this.obj.width;')
+								.append('this.h = this.obj.height;')
+								.append('window.resizeTo(w + 10, h + 30);')
+							.append('}')
+						.append('<\/script>')
+					.append('</head>')
+					.append('<body topmargin="0" leftmargin="0" onload="resizers();">')
+						.append('<img id="img" src="' + this.opt.path + '" ')
+							.append('onclick="top.close();" ')
+							.append('style="cursor:hand;"').append('/>')
+					.append('</body>')
+				.append('</html>');
+
+			this.p.document.write(this.buffer.toString());
+
+			this.p.document.close();
+		//}
+	}
+}TCM��C      UH��UH��;/%U��   3:http://uniboard.koreatech.ac.kr/script/formUtil.js necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:48:22 GMT
+Accept-Ranges: bytes
+Etag: W/"27485-1370827992000"
+Last-Modified: Mon, 10 Jun 2013 01:33:12 GMT
+Content-Length: 27485
+Content-Type: text/javascript
+ uncompressed-len 0   k]

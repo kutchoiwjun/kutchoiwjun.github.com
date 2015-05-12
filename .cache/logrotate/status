@@ -1,0 +1,19 @@
+logrotate state -- version 2
+"/home/cwj/.cache/upstart/unity-panel-service.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/ssh-agent.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/indicator-power.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/indicator-printers.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/gnome-keyring-ssh.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/indicator-sound.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/unity7.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/update-notifier-release.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/unicast-local-avahi.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/dbus.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/update-notifier-cds.log" 2015-5-5-20:31:14
+"/home/cwj/.cache/upstart/gnome-session-Unity.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/window-stack-bridge.log" 2015-5-6-11:11:43
+"/home/cwj/.cache/upstart/im-config.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/unity-settings-daemon.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/at-spi2-registryd.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/gnome-keyring-gpg.log" 2015-5-12-21:5:21
+"/home/cwj/.cache/upstart/indicator-bluetooth.log" 2015-5-12-21:5:21

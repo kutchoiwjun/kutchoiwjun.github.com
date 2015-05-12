@@ -1,0 +1,635 @@
+var uploader;
+
+//플래시 버그 대응
+function pluploadChangeFocus(){
+	
+	document.body.tabIndex = 0;
+	document.body.focus();
+	
+}
+/**
+ * plupload 업로드 컴포넌트를 이용시 필요한 메서드
+ */
+var uploadComponent = {
+	
+	/**
+	 * 웹하드 첨부
+	 */	
+	WEBHARD_ATTACH:3,
+	/**
+	 * 원본 첨부 파일
+	 */
+	ORIGINAL_ATTACH:2,
+	/**
+	 * 전달 메일 첨부
+	 */
+	FORWARD_ATTACH:4,
+	/**
+	 * 일반 업로드 첨부 파일
+	 */
+	UPLOAD_FILE:1,
+	/**
+	 * 최대 업로드 파일 수 
+	 */
+	max_file_count:10,
+	/**
+	 * 현재 등록된 파일 수
+	 */
+	curr_file_count:0,
+	/**
+	 * 최대 일반 첨부파일 크기
+	 */
+	max_nfile_size:1024*1024*10,//10MB
+	/**
+	 * 최대 대용량 첨부파일 크기
+	 */
+	max_bfile_size:1024*1024*500,//500MB
+	/**
+	 * 일반 첨부파일 사이즈
+	 */
+	nfile_size:0,
+	/**
+	 * 대용량 첨부파일 사이즈
+	 */
+	bfile_size:0,
+	/**
+	 * 업로드 컴포넌트 초기화 
+	 */
+	init:function( uploadConfig ){
+	
+		// 서버에서 설정한 최대 첨부파일 크기를 설정한다.
+		if( uploadConfig ){
+			this.max_bfile_size = uploadConfig.max_bigfile_size;
+			this.max_file_count = uploadConfig.max_uploadfile_cnt;
+			this.max_nfile_size = uploadConfig.max_attachfile_size;
+			
+			log.debug("max_bfile_size: "+this.max_bfile_size);			
+			if(this.max_bfile_size < 0){
+				$("#label_max_bigfile").hide();
+			} else {
+				$("#max_bigfile_size").html( this.max_bfile_size.byteFormat(0) );
+			}
+			
+			log.debug("max_nfile_size: "+this.max_nfile_size);			
+			if(this.max_nfile_size < 0){
+				$("#div_add_file").hide();
+			} else {
+				$("#max_attachfile_size").html( this.max_nfile_size.byteFormat(0) );
+			}
+			
+			$("#max_uploadfile_cnt").html( this.max_file_count );			
+		}
+		
+		// 파일 수 및 용량 초기화
+		this.curr_file_count = 0;
+		this.nfile_size = 0;
+		this.bfile_size = 0;
+		var runtime_string = 'gears,html5,flash,silverlight';
+//		if(clientAgent.indexOf('Mac') > 0 && clientAgent.indexOf('Safari') > 0 &&  clientAgent.indexOf('Chrome') < 0){	
+//			// 맥OS 사파리: html5가 업로드가 잘 안되는 문제, 플래시는 잘 되기는 하지만 좀 오래걸리는 문제..
+//			//0903 : 맥OS 사파리에서 파일누락현상 발생. 
+//			runtime_string = 'gears,html5,flash,silverlight';
+//		}
+		
+		uploader = new plupload.Uploader({
+			// opera는 html4로 업로드한다.(flash가 잘 안됨)	
+			runtimes : runtime_string,
+			browse_button : 'pickfiles',
+			drop_element : 'filelist', 	// html5에서 파일을 drag해서 놓을 위치
+			container : 'nonActiveXUpload',
+			unique_names : true,
+			max_file_size : plupload.formatSize( (uploadComponent.max_bfile_size > 0)? uploadComponent.max_bfile_size : ((uploadComponent.max_nfile_size > 0)? uploadComponent.max_nfile_size : 0) ),
+			url : app.contextPath + '/mail/json/uploadFile.do',
+			//resize : {width : 320, height : 240, quality : 90},
+			flash_swf_url : app.static_server + '/sens-static/plugin/plupload/plupload.flash.swf',
+			silverlight_xap_url : app.static_server + '/sens-static/plugin/plupload/plupload.silverlight.xap'
+		});
+
+        log.debug("upload check 1");
+		// 초기화
+		uploader.bind('Init', function(up, params) {
+
+            // 드래그 앤 드롭이 가능한 위치에 있을 경우 표시해주는 역활을 한다.
+            if( uploader.features.dragdrop ) { // 드래그앤 드롭이 가능한 경우
+
+
+                $('#drag_info').show(); // 파일을 이곳으로 끌어오세요.
+
+                $("#filelist").bind("dragover",function(e){
+                    //log.debug("dragover");
+                    $(this).addClass("dragover");
+
+                });
+                $("#filelist").bind("dragenter",function(e){
+                    log.debug("dragenter");
+                    $(this).addClass("dragover");
+                    //$("#drag_layer").show();
+                });
+
+                $("#filelist").bind("dragleave",function(e){
+                    log.debug("dragleave");
+                    $(this).removeClass("dragover");
+                    //$("#drag_layer").hide();
+                });
+
+                $("#filelist").bind("drop",function(e){
+                    $(this).removeClass("dragover");
+                    log.debug("drop");
+                    //$("#drag_layer").hide();
+                });
+            }
+
+		});
+		
+		// 파일이 추가되었을때
+		uploader.bind('FilesAdded', function(up, files) {
+			
+			pluploadChangeFocus();
+			
+			var curr_file_length = uploadComponent.curr_file_count; // 추가 전 현재 파일 수		
+			var isOverFileCount = false;	
+
+			$.each(files, function(i, file) {
+
+				if(!file) return true;
+				
+				curr_file_length++;
+				
+				// 파일사이즈가 최대 대용량 파일 사이즈 초과시 추가 금지
+				
+				var max_file_size = (uploadComponent.max_bfile_size > 0)? uploadComponent.max_bfile_size : uploadComponent.max_nfile_size;
+								
+				if( file.size > max_file_size ){
+				    uploader.removeFile(file);				    
+				    jAlert( msg.get( message.M0147 , max_file_size.byteFormat(0) ) );									
+					
+				}else if( curr_file_length > uploadComponent.max_file_count ){ //등록된 파일 수가 기준치 오버
+					
+					// 제한 파일수가 넘어가면 uploader 에서 해당 파일을 제거한다.
+					uploader.removeFile(file);
+					isOverFileCount = true;
+																	
+				} else {
+					
+					$("#filelist").show();
+					
+					// 현재 등록된 일반 첨부 용량 + 현재 파일 용량이 일반 첨부 제한용량보다 크면 대용량으로 변환한다.
+					// 대용량 파일 최대업로드가 가능한지 체크
+					var islink = 0;
+					if( uploadComponent.max_bfile_size > 0 && uploadComponent.nfile_size + file.size > uploadComponent.max_nfile_size ){
+						islink = 1;
+					}
+					
+					if( islink == 1 ){
+						// 대용량파일이경우 최대 대용량파일 용량이 오버했는지 체크 
+						if( uploadComponent.bfile_size + file.size > uploadComponent.max_bfile_size ){
+							uploader.removeFile(file);
+							return true;
+						}
+					}
+					/*
+					uploadComponent.nfile_size += file.size;
+					uploadComponent.bfile_size += file.size;
+					*/
+					
+					if(uploader.runtime == 'html4'){
+						return false;
+					}
+					/*
+					$('#filelist').append(
+						'<div id="' + file.id + '" style="padding:1px 0"><img src="/sens-static/images/common/icon_file2.gif"> ' +
+						file.name + ' (' + plupload.formatSize(file.size) + ') <img src="/sens-static/images/common/bar_gauge01.gif" class="progress_bar" height="7" width="0" /><span class="percentage"></span>' +
+					'</div>');
+					*/					
+					
+					/*
+					var str = [],n= -1;					
+					str[++n] = "<ul class=\"afile_item\" id=\""+file.id+"\">";					
+					str[++n] = "<li class=\"afile_check\"><input type=\"checkbox\" id=\"input_"+file.id+"\" name=\"pup_attach\" fsize=\""+file.size+"\" islink=\""+islink+"\" value=\""+file.id+"\"/></li>";
+					str[++n] = "<li class=\"afile_subject\"><div class=\"area_filename\"><div class=\"att_filename\">"+file.name+"</div></div></li>";					
+					str[++n] = "<li class=\"afile_del\"><button type=\"button\" onclick=\"uploadComponent.delAttach('"+file.id+"');\"><img src=\"/sens-static/images/ko/btn_config_del.gif\"/></button></li>";
+					if( islink == 1 ){
+						str[++n] = "<li class=\"afile_type\"><button type=\"button\" id=\"btn_change_"+file.id+"\" onclick=\"uploadComponent.changeAttachFileType('"+file.id+"');\"><img id=\"img_change_"+file.id+"\" src=\"/sens-static/images/ko/btn_att_big.gif\"/></button></li>";	
+					}else{
+						str[++n] = "<li class=\"afile_type\"><button type=\"button\" id=\"btn_change_"+file.id+"\" onclick=\"uploadComponent.changeAttachFileType('"+file.id+"');\"><img id=\"img_change_"+file.id+"\" src=\"/sens-static/images/ko/btn_att_file.gif\"/></button></li>";
+					}
+					str[++n] = "<li class=\"afile_size\">"+ file.size.byteFormat(2) +"</li>";
+					str[++n] = "</ul>";
+					
+					$("#filelist").append( str.join('') );
+					*/
+					uploadComponent.addServerFile( file.name , file.size , file.id , uploadComponent.UPLOAD_FILE );
+				}			
+			});
+			
+			if( isOverFileCount ){
+				jAlert( msg.get( message.M0148 , uploadComponent.max_file_count ) );
+				//alert(bundle.getString("1461"));
+			}
+			//uploadComponent.setAttachInfo();
+		});
+		
+		// 모든 파일 업로드가 완료된 이후에 메일을 전송한다.
+		uploader.bind('UploadComplete', function(up, files) {
+		    
+		    // 업로드 진행창을 닫는다.
+		    write_modal.closeUploadModal();
+            
+            // 프로그레스 객체를 모두 제거한다.
+		    $("#upload_progress .progress_bar").progressbar("destroy");
+		    
+			setTimeout(function(){
+				writeform.sendProcess();
+			}, 500);
+		});
+		
+		// 해당 파일이 업로드 완료 되었을때
+		uploader.bind('FileUploaded', function(up, file, response){		
+			var obj = jQuery.parseJSON(response.response);
+			if( obj.result == -1 ){
+				jAlert( message.M0149 );
+			}else if( obj.result == 1 ){
+				
+				log.debug( "obj key : "+ obj.filekey );
+				log.debug( "file id : "+ file.id );
+				
+				$("#attach_"+file.id).attr("value", obj.filekey );				
+				log.debug("attach_"+file.id+" value is "+ $("#attach_"+file.id).val() );
+			}
+		});
+				
+		uploader.bind('UploadFile', function(up, file) {
+			$('<input type="hidden" name="file-' + file.id + '" value="' + file.name + '" />').appendTo('#submit-form');
+		});
+		
+		uploader.bind('Error', function(up, err) { 
+			if(err.code == '-600'){	// 파일사이즈 초과
+				var max_file_size = (uploadComponent.max_bfile_size > 0)? uploadComponent.max_bfile_size.byteFormat(0) : uploadComponent.max_nfile_size.byteFormat(0);								
+				jAlert(msg.get(message.M0147 , max_file_size ) );
+			} else {
+				
+				$("#uploader_err").show();
+				$("#idAttNoObj").hide();
+				
+				jAlert("Upload error: " + err.message + '(' + err.code + ')');
+			}
+		}); 
+		
+		// 업로드가 시작할 때
+		uploader.bind('BeforeUpload', function(up, file) {
+		});
+		
+		// 업로드가 진행중일때
+		uploader.bind('UploadProgress', function(up, file) {
+			//$('#' + file.id + " b").html(file.percent + "%");
+			//$('#'+file.id+' .percentage').html('('+file.percent + " / " + up.total.size + '%)');
+			log.debug("uploading.. attach_"+file.id + " ( "+ file.percent +" ) ");			
+			uploadComponent.progress( file.percent, "attach_"+ file.id );
+		});
+		
+		// 파일찾기에서 파일을 선택하는 순간.
+		uploader.bind('QueueChanged', function( up ) { 
+			
+			// 확장자 제한 확인
+			var restrict = ','+sensmail.restrict_file+',';
+			
+			var b_restrict = false;
+			$.each(up.files, function(i, file) {
+				if(!file) return true;
+				var ext = '.'+ImUtils.getFileExtension(file.name)+',';
+				
+				if(restrict.indexOf(ext) > -1){
+					uploader.removeFile(file);
+					$('#'+file.id).remove();
+					b_restrict = true;
+				}
+			});
+			if(b_restrict){
+				jAlert(msg.get(cmessage.CM0079,sensmail.restrict_file));
+				return false;
+			}
+			up.refresh(); 
+			//uploader.start(); 
+			
+			// 파일 첨부 영역 스타일 변경
+			$("#filelist").addClass("attach_added");
+			
+			pluploadChangeFocus();
+			
+	    });
+
+        $('#uploadfiles').click(function(e) {
+			uploader.start();
+			e.preventDefault();
+		});
+		
+		$('#uploadstop').click(function(e) {
+			uploader.stop();
+			e.preventDefault();
+		});
+				
+		uploader.init();		
+	},
+	/**
+	 * 컴포넌트에 등록된 파일들을 규칙에 맞게 정의함.
+	 */
+	setFile:function(){
+		
+		var attachments = "";
+		$("#MailWriteForm input[name='attach']").each(function(){
+			if( attachments.length > 0 ){
+				attachments += ";";
+			}			
+			attachments += $(this).val() + ":" +$(this).attr("islink") +":"+ $(this).attr("attach_type");
+			isAttach = true;
+		});
+		log.debug("attachments : "+attachments );
+		document.getElementById("attachments").value = attachments;	
+	},
+	/**
+	 * 웹하드 첨부파일을 컴포넌트에 등록한다.
+	 * @param id
+	 * @param name
+	 * @param size
+	 */
+	addWebhardFile:function( id, name, size ){		
+		this.addServerFile( name , size , id , uploadComponent.WEBHARD_ATTACH );
+	},
+	/**
+	 * 전달메일 추가
+	 */
+	addForwardMailFile:function( id, name, size ){
+		this.addServerFile( name , size , id , uploadComponent.FORWARD_ATTACH );
+	},
+	/**
+	 * 원본 첨부파일 추가
+	 */
+	addOriginalFile:function( id, name, size ){
+		this.addServerFile( name , size , id , uploadComponent.ORIGINAL_ATTACH );
+	},
+	/**
+	 * 업로드 컴포넌트에 데이터를 표시한다.
+	 * @param id
+	 * @param name
+	 * @param size
+	 */
+	addServerFile:function( name , size , id , type  ){
+		
+		var curr_file_count = uploadComponent.curr_file_count; // 현재 파일 수		
+		curr_file_count++;		
+		
+		// 파일 최대 수를 초과하면 등록을 못하게 한다.
+		if( curr_file_count > uploadComponent.max_file_count){		    
+			jAlert( msg.get( message.M0230 , uploadComponent.max_file_count ) );
+			return;
+		}
+		
+		// 현재 등록된 일반 첨부 용량 + 현재 파일 용량이 일반 첨부 제한용량보다 크면 대용량으로 변환한다.
+		var islink = 0;
+		if( uploadComponent.nfile_size + parseInt(size) > uploadComponent.max_nfile_size ){
+			if(uploadComponent.max_bfile_size > 0){
+				islink = 1;
+			} else {
+				log.debug("uploadComponent.max_bfile_size: "+uploadComponent.max_bfile_size);
+				log.debug("uploadComponent.nfile_size + parseInt(size): "+uploadComponent.nfile_size + parseInt(size));
+				log.debug("uploadComponent.max_nfile_size: "+uploadComponent.max_nfile_size);
+				
+				jAlert( msg.get( message.M0147 , uploadComponent.max_nfile_size.byteFormat(0) ) );
+				return;
+			}
+		}
+		
+		log.debug( "id :"+ id );
+		log.debug( "name : "+ name );
+		log.debug( "size : "+size );
+		log.debug( "type : "+type );
+		log.debug( "islink : "+islink );
+		var ext = ImUtils.getFileExtension(name);
+		var str = [],n= -1;
+
+		str[++n] = "<tr id=\""+id+"\">";
+		str[++n] = "<td class=\"addfile check\"><input type=\"checkbox\" id=\"attach_"+id+"\" name=\"attach\" value=\""+id+"\" fsize=\""+size+"\" islink=\""+islink+"\" attach_type=\""+ type +"\" filename=\""+ name + "\"/></td>";
+		str[++n] = "<td class=\"addfile name\"><div class=\"area_filename\"><div class=\"att_filename\"><span class=\"ico_whdlst "+ ext +"\"></span>"+name+"</div></div></td>";
+		str[++n] = "<td class=\"addfile size\">"+size.byteFormat(2)+"</td>";		
+		
+		if(uploadComponent.max_bfile_size > 0){
+			if( islink == 1 ){
+				str[++n] = "<td class=\"addfile add\"><button type=\"button\" class=\"btn_bgtxt wt pd10\" onclick=\"uploadComponent.changeAttachFileType('"+id+"',1);\"><span id=\"att_type_"+id+"\">"+ message.M0150 +"</span></button></td>";
+			}else{
+				str[++n] = "<td class=\"addfile add\"><button type=\"button\" class=\"btn_bgtxt wt pd10\" onclick=\"uploadComponent.changeAttachFileType('"+id+"',1);\"><span id=\"att_type_"+id+"\">"+ message.M0151 +"</span></button></td>";	
+			}		
+		}		
+		
+		str[++n] = "<td class=\"addfile del\"><button type=\"button\" class=\"btn_bgtxt wt pd10\" onclick=\"uploadComponent.attachDelete('"+id+"');\"><span>"+ message.M0028 +"</span></button></td>";
+		str[++n] = "</tr>";
+						
+		$("#attach_file tbody").append( str.join('') );	
+		uploadComponent.setAttachInfo();
+	},
+	
+	/**
+	 * 컴포넌트에 등록된 파일 유형이 변경되었을 경우 실행한다.
+	 * @param file_id
+	 * @param flag
+	 */
+	changeAttachFileType:function( file_id , flag ){
+		
+		var max_nfile_size = uploadComponent.max_nfile_size;
+		var max_bfile_size = uploadComponent.max_bfile_size;
+		
+		var islink = $("#attach_"+file_id).attr("islink");
+		var filesize = $("#attach_"+file_id).attr("fsize");
+		
+		// 대용량첨부에서 일반첨부로 변경할때 일반첨부파일 제한용량을 오버 했는지 체크한다.		
+		if( islink == 1 ){
+			//alert( attach_limit + " : " + (parseInt(attach_size) + parseInt(filesize)) ); 
+			if( max_nfile_size < uploadComponent.nfile_size + parseInt(filesize) ){
+				jAlert( message.M0152 );				
+				return;
+			}
+		}else{
+			if( max_bfile_size < uploadComponent.bfile_size + parseInt(filesize) ){
+				jAlert( message.M0153 );
+				return;
+			}
+		}
+		
+		var n_islink = islink == 1 ? 0 : 1;
+		
+		$("#attach_"+file_id).attr("islink", n_islink );
+		
+		if( n_islink == 1 ){//대용량으로 변경
+			$("#att_type_"+file_id).html( message.M0150 );
+		}else{//일반첨부로 변경
+			$("#att_type_"+file_id).html( message.M0151 );
+		}
+		uploadComponent.setAttachInfo();
+	},
+	/**
+	 * 업로드 파일 삭제
+	 */
+	delAttach:function(file_id){
+		uploader.removeFile(uploader.getFile(file_id));
+		uploadComponent.attachDelete( file_id );
+	},
+	/**
+	 * 첨부파일 목록을 인터페이스에서 제거한다.
+	 */
+	attachDelete:function( id ){
+		$('#'+id).remove();
+		uploadComponent.setAttachInfo();
+		log.debug("delete attach :" + id );
+	},
+	/**
+	 * 첨부파일 모두 선택
+	 */
+	attach_selectall:function(){
+		var checked = $("#attach_all").is(":checked");
+		$("input[name='attach']").each(function(){
+			$(this).attr("checked",checked);
+		});
+	},
+	/**
+	 * 선택된 파일 삭제
+	 */
+	doDelFile:function(){
+		
+		var check_attach_cnt = 0;
+		$("input[name='attach']:checked").each(function(){
+			var id = $(this).attr("value");
+			if( $(this).attr("type") == uploadComponent.UPLOAD_FILE ){					
+				uploadComponent.delAttach( id );
+			}else{
+				uploadComponent.attachDelete( id );
+			}
+			check_attach_cnt++;
+		});
+		if( check_attach_cnt == 0 ){
+			jAlert( message.M0229);
+			return;
+		}
+		
+		uploadComponent.setAttachInfo();		
+		$("#attach_all").attr("checked",false); // 모두 선택 해제		
+	},
+	/**
+	 * 컴포넌트에 등록된 파일들의 용량 및 개수를 구한다.
+	 * 개수 및 용량을 구한 뒤에 첨부파일 정보란에 업데이트 한다.
+	 */
+	setAttachInfo:function(){
+		
+		uploadComponent.nfile_size = 0; // 설정된 값 초기화
+		uploadComponent.bfile_size = 0;// 설정된 값 초기화
+		uploadComponent.curr_file_count = 0;// 첨부파일 카운트 초기화
+		
+		$("input[name='attach']").each(function(i){
+			try { 
+				var islink = parseInt( $(this).attr('islink') );
+				if( islink == 1 ){
+					uploadComponent.bfile_size += parseInt($(this).attr('fsize'));
+				}else{
+					uploadComponent.nfile_size += parseInt($(this).attr('fsize'));
+				}
+				uploadComponent.curr_file_count++;
+			} catch(e){}
+		});
+		
+		$("#curr_uploadfile_cnt").html( uploadComponent.curr_file_count );
+		$("#attach_size").html( uploadComponent.nfile_size.byteFormat(2) );
+		$("#bigfile_size").html( uploadComponent.bfile_size.byteFormat(2) );
+				
+		
+		if( uploader && uploader.features.dragdrop ){
+			// 등록된 파일이 존재하면 드래그 안내를 없앤다.
+			if( uploadComponent.curr_file_count == 0 ){		
+				$("#drag_info").show();
+			}else{
+				$("#drag_info").hide();
+			}
+		}
+	},
+	reset:function(){
+		$("input[name='attach']").each(function(){
+			var id = $(this).attr("value");
+			if( $(this).attr("type") == uploadComponent.UPLOAD_FILE ){					
+				uploadComponent.delAttach( id );
+			}else{
+				uploadComponent.attachDelete( id );
+			}			
+		});		
+		uploadComponent.setAttachInfo();		
+	},
+	/**
+	 * 업로드 프로그레스바 상태를 업데이트 한다. 
+     * @param {Object} p 진행률(%)
+     * @param {Object} id 업데이트 객체 아이디
+	 */
+    progress:function(p, id) {
+        if(uploader.runtime != 'html4'){
+            
+            $('#'+id+' .progress_bar').progressbar("value",p);            
+        }
+    },
+    
+    uploadProgressInit:function(){        
+        var html = [],n=-1;
+        $("input[name='attach']").each(function(i){
+            try { 
+                var fileid = $(this).attr('id');
+                var filename = $(this).attr("filename");
+                html[++n] = "<li id=\""+ fileid +"\">";
+                html[++n] = "<dl>";
+                html[++n] = "<dt>";
+                html[++n] = filename;             
+                html[++n] = "</dt>";
+                html[++n] = "<dd>";
+                html[++n] = "<div class=\"progress_bar\"></div>";
+                html[++n] = "</dd>";
+                html[++n] = "</dl>";
+                html[++n] = "</li>";
+            } catch(e){}
+            log.debug( html.join('') );
+        });
+        $("#upload_progress").html( html.join('') );
+        
+        $("#upload_progress .progress_bar").progressbar({                
+                complete:function(){                    
+                    // 업로드가 완료되면 화면에서 감춘다.
+                    //$(this).parent().parent().hide();
+                    
+                    // 업로드가 완료되면 Complete으로 보여준다.
+                    //$(this).find("progress-label").text( "Complete" );
+                    
+                    // 업로드가 완료되면 배경색을 녹색으로 변경한다.
+                    //$(this).parent().css("background-color","#6992E7");
+                },
+                value:0
+        });
+    },
+    /**
+     * 업로드 중지 
+     */
+    stop:function(){
+        uploader.stop();        
+        jAlert( cmessage.CM0060 );
+    },
+    getFileList:function(){
+    	var attachList = new Array();
+		$("#MailWriteForm input[name='attach']").each(function(){
+			var attach = new Object();
+			attach.name = $(this).attr("filename");
+			attach.size = $(this).attr("fsize");
+			attach.islink = $(this).attr("islink");
+			attachList.push(attach);
+		});
+		return attachList;		
+    }
+};�O���      UH��UH��;/-UIy>   I:http://email.koreatech.ac.kr/sens-static/js/mail/plupload.js?dummy=58413 necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:49:04 GMT
+Server: Apache
+Last-Modified: Tue, 28 Apr 2015 13:18:28 GMT
+Etag: "55e7-514c8b2b9ca9e"
+Accept-Ranges: bytes
+Content-Length: 21991
+Content-Type: application/javascript
+ uncompressed-len 0   U�

@@ -1,0 +1,852 @@
+/* Copyright IBM Corp. 2010  All Rights Reserved.                    */
+.accessControlRootDiv {
+    min-width: 600px;
+    background-color: #d0d0d0;
+    width: 774px;
+}
+
+.dbcsEnlarged .dialog_container .accessControlRootDiv {
+    font-size: 0.83em;
+}
+
+.accessControlSearchBtnDiv {
+    margin-bottom: 10px;
+    font-size: 1.4em;
+    clear: both;
+}
+
+.accessControlContent {
+    float: left;
+    width: 740px;
+    height: 505px;
+    background-color: #e1e1e1;
+}
+
+.accessControlListDiv {
+    height: 424px;
+    font-size: 1.4em;
+    position: relative;
+    margin: 22px 22px 10px 22px;
+}
+
+.accessControlBottomNoSearchDiv {
+    margin: 5px 40px 5px 80px;
+}
+
+.accessControlEditListDiv {
+    position: absolute;
+    top: 0;
+    left: 485px;
+    width: 210px;
+    height: 100%;
+}
+
+.accessControlPersonalizeListDiv {
+    margin: 24px 9px;
+    float: left;
+}
+
+.accessControlViewListDiv {
+    margin: 0 250px;
+    width: 210px;
+    height: 100%;
+}
+
+.dj_ie6 .accessControlViewListDiv{
+	margin: 0 241px;
+}
+
+
+.accessControlEditList {
+    overflow-y: hidden;
+    margin: 5px;
+}
+
+.editList {
+    background-color: #ffffff;
+    border: solid 1px #a3c0e7;
+    width: 208px;
+}
+
+.accessControlPersonalizeList {
+    overflow-y: hidden;
+    height: 315px;
+    margin: 5px;
+}
+
+.personalizeList {
+    background-color: #ffffff;
+    border: solid 2px #98FB98;
+    width: 198px;
+    height: auto;
+}
+
+.accessControlViewList {
+    height: auto;
+    overflow-y: hidden;
+    margin: 5px;
+    text-align: left;
+}
+
+.viewList {
+    background-color: #FFFFFF;
+    border: 1px solid #E1B982;
+    width: 208px;
+}
+
+.searchIndicatorContainer{
+	display:none;
+}
+
+.searchIndicatorImg{
+	background-image: url("images/progress-anim.gif");
+	width:20px;
+	height:20px;
+	margin: 5px;
+	float:left;
+}
+
+.searchIndicatorText{
+	height:30px;
+	line-height:30px;
+	float:left;
+}
+
+.accessControlNoResultMsg{
+	display:none;
+}
+.accessControlSearchList {
+    overflow-y: hidden;
+    height: auto;
+    margin: 5px;
+}
+
+.searchList {
+    background-color: #ffffff;
+    border: solid 1px #c2c2c2;
+    width: 208px;
+}
+
+.overList {
+    border: 1px solid #aaa;
+}
+
+.accessControlSearchListDiv {
+    margin: 0 40px 0 0;
+    width: 210px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.clear {
+    clear: both;
+}
+
+.dividerLine {
+    background: transparent url("images/sharepage/divider_line.png") repeat-x scroll left top;
+    height: 2px;
+}
+
+.accessControlBottomDiv {
+    height: 600px;
+    padding: 15px 15px 0px;
+    font-family: Arial, Helvetica, Sans-Serif;
+}
+
+.accessControlBottomDivWithError {
+    height: 630px;
+    padding: 15px 15px 0px;
+    font-family: Arial, Helvetica, Sans-Serif;
+}
+
+.accessControlShadowBox {
+    position: relative;
+    clear: both;
+	float:left;
+	display:block;
+}
+
+.accessControlUpperDiv {
+    padding: 15px 0px 10px 18px;
+    font-family: Arial, Helvetica, Sans-Serif;
+}
+
+.accessControlIcon {
+    margin-right: 12px;
+}
+
+.share_heading_icon_img {
+    background-image: url(/mum/images/sharepage/share_heading_icon.png);
+    width: 44px;
+    height: 44px;
+}
+
+.dj_ie6 .share_heading_icon_img {
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale, src="/mum/images/sharepage/share_heading_icon.png");
+	background:none;
+}
+.accessControlUpperBtnDiv{
+	margin:5px;
+}
+.accessControlPageName{
+	color:#000000;
+	font-style:italic;
+}
+.accessControlDesp{
+	color:#4e4c4c;
+	font-size: 1.2em;
+	line-height:1.6em;
+	padding-left: 2px;
+	padding-bottom: 10px;
+}
+.accessControlTitle{
+	color:#000000;
+	font-size: 2.2em;
+}
+.accessControlBottomBtnDiv{
+	text-align:right;
+	margin:15px;
+}
+
+
+/* -------------------- begin of shadow-------------------*/
+
+.accessControlShadow{
+	position:absolute;
+	font-size:0;
+}
+.insetTopLeftCorner{
+	background:transparent url("images/sharepage/inset_left_top_corner.png") repeat scroll 0%;
+	width:3px;
+	height:3px;
+	left:0; top:0;
+}
+
+.insetTopRightCorner{
+	background:transparent url("images/sharepage/inset_right_top_corner.png") repeat scroll 0%;
+	width:3px;
+	height:3px;
+	right:0; top:0;
+}
+
+.insetLeftBottomCorner{
+	background:transparent url("images/sharepage/inset_left_bottom_corner.png") repeat scroll 0%;
+	width:3px;
+	height:3px;
+	left:0;
+	bottom:0;
+}
+
+.insetRightBottomCorner{
+	background:transparent url("images/sharepage/inset_right_bottom_corner.png") repeat scroll 0%;
+	width:3px;
+	height:3px;
+	right:0; bottom:0;
+}
+	
+.insetTopMiddle{
+	background:transparent url("images/sharepage/inset_top_middle.png") repeat-x scroll 0%;
+	width:734px;
+	height:3px;
+	top:0;left:3px;
+}
+	
+.insetLeftMiddle{
+	background:transparent url("images/sharepage/inset_left_middle.png") repeat-y scroll 0%;
+	width:3px;
+	height:502px;
+	top:3px;left:0;
+}
+
+.insetBottomMiddle{
+	background:transparent url("images/sharepage/inset_bottom_middle.png") repeat-x scroll 0%;
+	width:734px;
+	height:3px;
+	bottom:0;left:3px;
+}
+	
+.insetRightMiddle{
+	background:transparent url("images/sharepage/inset_right_middle.png") repeat-y scroll 0%;
+	width:3px;
+	height:502px;
+	top:3px;right:0;
+}
+
+/* -------------------- end of shadow-------------------*/
+
+.accessControlRemoveBtnDiv{
+	margin-bottom:10px;
+	margin-right:22px;
+	float:right;
+}
+
+.dj_ie7 .accessControlRemoveBtnDiv{
+	margin-right:11px;	
+}
+
+.dj_ie6 .accessControlRemoveBtnDiv{
+	margin-right:8px;
+	margin-bottom:5px;	
+}
+
+.displayNone{
+	display:none;
+}
+	/* view acl */
+.dojoDndItem_aclview { 
+	margin:3px;
+	*margin:4px 3px 3px;
+	line-height:1.4em;
+}
+
+.dojoDndItemOver_aclview {
+	background: #feeec1;
+	cursor:pointer;
+}
+
+.dojoDndItemSelected_aclview {
+	background: #feeec1; color: #444;
+}
+
+.dojoDndItemOver_aclview .dojoDndItemSelected_aclview {
+	background: #ededed;
+}
+
+.dojoDndItemBefore_aclview {
+	border-top: 2px solid #369;
+}
+
+.dojoDndItemAfter_aclview {
+	border-bottom: 2px solid #369;
+}
+.dojoDndItemAnchor_aclview {
+	background: #feeec1; color: black;
+}
+
+.dojoDndAvatarHeader_aclview {
+	background: #aaa;
+}
+
+.dojoDndAvatarItem_aclview {
+	background: #fff;
+	border-bottom:1px solid #666;
+}
+
+/* personalize acl */
+.dojoDndItem_aclpersonalize { 
+	margin:3px;
+	*margin:4px 3px 3px;
+	line-height:1.4em;
+}
+
+.dojoDndItemOver_aclpersonalize {
+	background: #98FB98;
+	cursor:pointer;
+}
+
+.dojoDndItemSelected_aclpersonalize {
+	background: #ccf; color: #444;
+}
+
+.dojoDndItemOver_acl .dojoDndItemSelected_aclpersonalize {
+	background: #ededed;
+}
+
+.dojoDndItemBefore_aclpersonalize {
+	border-top: 2px solid #369;
+}
+
+.dojoDndItemAfter_aclpersonalize {
+	border-bottom: 2px solid #369;
+}
+.dojoDndItemAnchor_aclpersonalize {
+	background: #ccf; color: black;
+}
+
+.dojoDndAvatarHeader_aclpersonalize {
+	background: #aaa;
+}
+
+.dojoDndAvatarItem_aclpersonalize {
+	background: #fff;
+	border-bottom:1px solid #666;
+}
+
+/* edit acl */
+.dojoDndItem_acledit { 
+	margin:3px;
+	*margin:4px 3px 3px;
+	line-height:1.4em;
+}
+
+.dojoDndItemOver_acledit {
+	background: #d3eaff;
+	cursor:pointer;
+}
+
+.dojoDndItemSelected_acledit {
+	background: #d3eaff; color: #444;
+}
+
+.dojoDndItemOver_acledit .dojoDndItemSelected_acledit {
+	background: #ededed;
+}
+
+.dojoDndItemBefore_acledit {
+	border-top: 2px solid #369;
+}
+
+.dojoDndItemAfter_acledit {
+	border-bottom: 2px solid #369;
+}
+.dojoDndItemAnchor_acledit {
+	background: #d3eaff; color: black;
+}
+
+.dojoDndAvatarHeader_acledit {
+	background: #aaa;
+}
+
+.dojoDndAvatarItem_acledit {
+	background: #fff;
+	border-bottom:1px solid #666;
+}
+
+	/* search acl */
+.dojoDndItem_aclsearch { 
+	margin:3px;
+	*margin:4px 3px 3px;
+	line-height:1.4em;
+}
+
+.dojoDndItemOver_aclsearch {
+	background: #DDDDDD;
+	cursor:pointer;
+}
+
+.dojoDndItemSelected_aclsearch {
+	background: #DDDDDD; color: #444;
+}
+
+.dojoDndItemOver_aclsearch .dojoDndItemSelected_aclsearch {
+	background: #ededed;
+}
+
+.dojoDndItemBefore_aclsearch {
+	border-top: 2px solid #369;
+}
+
+.dojoDndItemAfter_aclsearch {
+	border-bottom: 2px solid #369;
+}
+.dojoDndItemAnchor_aclsearch {
+	background: #DDDDDD;
+	color: black;
+}
+
+.dojoDndAvatarHeader_aclsearch {
+	background: #aaa;
+}
+
+.dojoDndAvatarItem_aclsearch {
+	background: #fff;
+	border-bottom:1px solid #666;
+}
+
+input.lotusFormButtonShort {
+	background:transparent url("images/formBtnBg.gif") repeat-x scroll left top;
+	border:1px solid #4C94D6;
+	color:white;
+	font-weight:bold;
+	margin-right:5px;
+	padding:2px 7px;
+	font-family:inherit;
+	font-size:inherit;
+}
+
+input.lotusFormButtonLong {
+	background-color:#FFFFFF;
+	background-image:url(./images/whiteBtnBkgd.png);
+	background-position:left center;
+	background-repeat:repeat-x;
+	border:1px solid #C0C7CD;
+	color:#0084FF;
+	font-size:inherit;
+	font-weight:bold;
+	padding:2px 10px 4px;
+	text-decoration:none;
+	white-space:nowrap;
+	cursor:pointer;
+	cursor:hand;	
+}
+
+.dj_ie input.lotusFormButtonLong {
+	width:auto;
+	overflow:visible;
+}
+
+input.lotusFormButtonLong:focus,input.lotusFormButtonLong:hover{
+	border:1px solid #8E8E8E;
+	outline:0;
+}
+
+.accessControlReassignDiv{
+	padding:20px 13px 20px;
+	font-weight:bold;
+	font-family : Arial, Helvetica, Sans-Serif;
+	overflow:auto;
+}
+
+.accessControlReassignHas {
+	font-style:italic;
+	color: gray;
+	margin-left:2px;
+	margin-right:2px;
+}
+
+.accessControlReassignLevel {
+	font-weight:b;
+}
+.accessControlReassignTitle{
+	font-size:1.6em;
+}
+.accessControlReassignList{
+	font-size:1.6em;
+	
+}
+.accessControlReassignConfirm{
+	color:#4C94D6;
+	font-size:1.6em;
+}
+
+.accessControl_searchOptions {
+	font-family: Arial;
+	color: #666666;
+	background:transparent url("images/sharepage/boxBackground.png") repeat-x scroll left top;
+	border: 2px solid #FFFFFF;
+	position: absolute;
+	z-index: 50;
+	cursor: pointer;
+}
+.searchOption_item{
+	padding: 4px 12px;
+	text-overflow:ellipsis;
+	overflow:hidden;
+	white-space:nowrap;
+}
+
+.searchOption_item_highlighted {
+	background:transparent url("images/sharepage/highlightBg.png") repeat-x scroll left top;
+	background-position: 10px 2px;
+	font-weight:normal;
+}
+
+.addToViewBtnMiddle{
+	width:206px;padding:4px 0;	
+	border:1px solid #DCAB32;
+	text-align:center;
+	
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+}
+
+.addToViewBtnMiddle:hover{
+	border-color:#C17612;
+}
+
+.dijit_a11y .addToViewBtnMiddle{
+	display:none;
+}
+.dijit_a11y .addToEditBtnMiddle{
+	display:none;
+}
+
+.addBtnA11y{
+	display:none;
+}
+
+.dijit_a11y .addBtnA11y{
+	display:inline;
+	float:left;
+}
+.addToEditBtnA11y_button,.addToViewBtnA11y_button{
+	width:189px;
+}
+
+
+.addToView{
+	cursor:pointer;
+	background:#FFEBB2 url("images/sharepage/add_to_view_btn.png") repeat-x center;
+	border:1px solid #F0F0F0;
+	
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+}
+
+.addToView:hover{
+	background:#FFDC80 url("images/sharepage/add_to_view_btn_hover.png") repeat-x center;
+}
+
+.addToEdit{
+	cursor:pointer;
+	background:#D3E5FF url("images/sharepage/add_to_edit_btn.png") repeat-x center;
+	border:1px solid #F0F0F0;
+	
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+}
+
+.addToEdit:hover{
+	background:#B2D2FF url("images/sharepage/add_to_edit_btn_hover.png") repeat-x center;
+}
+
+.addToEditBtnMiddle{
+	width:206px;padding:4px 0;	
+	border:1px solid #559BEE;
+	text-align:center;
+
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+}
+
+.addToEditBtnMiddle:hover{
+	border-color:#2F66E4;
+}
+
+.searchResultHeaderMiddle{
+	font-weight:bold;
+	padding:4px 10px;
+	color:white;
+	font-weight:bold;
+	border: 1px solid #6A6A6A;
+	background:#737373 url("images/sharepage/search_results_gray_gradient.png") repeat-x top left;
+		
+	border-radius:2px 2px 0 0;
+	
+	-moz-border-radius-topleft: 2px;
+	-moz-border-radius-topright: 2px;
+ 	
+	-webkit-border-top-left-radius: 2px;
+	-webkit-border-top-right-radius: 2px;
+}
+
+.accessControlCancel{
+	margin-right: 15px;
+	text-decoration:underline;
+	vertical-align:middle;
+}
+.accessControlSearchListUpDiv{
+	height:22px;
+	width:208px;
+	border-bottom:1px solid #c2c2c2;
+}
+.accessControlViewListUpDiv{
+	height:22px;
+	width:208px;
+	border-bottom:1px solid #c2c2c2;
+}
+.accessControlEditList {
+	text-align: left;
+	height:auto;
+}
+.accessControlEditListUpDiv{
+	height:22px;
+	width:208px;
+	border-bottom:1px solid #c2c2c2;
+}
+.accessControlSearchListDownDiv{
+	height:22px;
+	width:208px;
+	border-top:1px solid #c2c2c2;
+	position:absolute;
+	bottom:0;
+}
+.accessControlViewListDownDiv{
+	height:22px;
+	width:208px;
+	border-top:1px solid #c2c2c2;
+	position:absolute;
+	bottom:0;
+	
+}
+.accessControlEditListDownDiv{
+	height:22px;
+	width:208px;
+	border-top:1px solid #c2c2c2;
+	position:absolute;
+	bottom:0;
+}
+.accessControlJumpUpDiv{
+	height:22px;
+	width:40px;
+	float:left;
+	border-left:1px solid #c2c2c2;
+	text-align:center;
+}
+.accessControlPageUpDiv{
+	float:left;
+	height:22px;
+	padding-left:84px;
+	text-align:left;
+	width:83px;
+}
+.accessControlJumpDownDiv{
+	border-left:1px solid #C2C2C2;
+	float:left;
+	height:22px;
+	width:40px;
+	text-align:center;
+}
+.accessControlPageDownDiv{
+	float:left;
+	height:22px;
+	padding-left:84px;
+	text-align:left;
+	width:83px;
+}
+/*
+.common_cancel{
+	margin-right: 13px;
+	text-decoration:underline;
+	cursor:pointer;
+	font-size:12px;
+	font-family : Arial, Helvetica, Sans-Serif ;
+	font-weight: normal;
+	color:#0063DC !important;
+}
+
+.common_cancel:hover, .common_cancel:focus{
+	color:#05386B !important;
+	border-bottom:0pt none !important;
+	text-decoration:underline !important;
+}
+*/
+.initACLSearchInput{
+	width: 170px;
+	vertical-align: middle;
+	color: #ccc;
+	font-style:italic;
+	padding:1px 5px;
+}
+.ACLSearchInput{
+	width: 170px;
+	vertical-align: middle;
+	color: #555;
+	padding:1px 5px;
+}
+
+.lotusFormButtonReassignNoChange {
+	margin-right:0px;
+	margin-left:13px;
+}
+
+.dj_safari .lotusFormButtonReassign {
+	margin-right:0px;
+	margin-left:0px;
+}
+
+input.accessSearch{
+	border:1px solid #808080;
+}
+
+input.accessSearch:focus,input.accessSearch:hover{
+	outline:0;
+	border:1px solid #404040;
+}
+
+.aclSearchItemHover{
+	background:#DDDDDD none repeat scroll 0 0;
+	cursor:pointer
+}
+
+.aclViewItemHover{
+	background:#FEEEC1 none repeat scroll 0 0;	
+	cursor:pointer
+}
+
+.aclEditItemHover{
+	background:#D3EAFF none repeat scroll 0 0;
+	cursor:pointer
+}
+
+.aclUserItem{
+	line-height:1.4em;
+	margin:3px;
+}
+
+.aclUserItem div.aclUserItemFloater {
+	float: left;
+	margin-right: 5px;
+}
+
+.aclUserItemContent{
+	font-family:Arial, Helvetica, Sans-Serif;
+    font-size:14px;
+}
+
+
+
+/*new by zhaojing */
+.includeBox{
+	margin-top:5px;
+	margin-bottom:5px;
+	line-height:1.4em;	
+	font-size:12px;
+	text-align:left;
+}
+
+.includeInside{
+	margin:3px;	
+}
+
+.viewIncludeBox{
+	background-color: #fff4c9;
+	border: 1px solid #e1b982;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px	
+}
+
+.editIncludeBox{
+	background-color: #d3e5ff;
+	border: 1px solid #a3c0e7;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px	
+}
+
+.includeContent{
+	color:#000000;
+	padding:5px;	
+}
+.accessControlListDiv .lotusMessage{
+	margin: 22px 22px 0px 22px;
+}
+
+.accessControlSearchListDiv .lotusMessage{
+	margin: 5px;
+}
+/* adjust length when message is displayed for 
+   accessControlListDiv, insetRightMiddle and insetLeftMiddle */
+.accessControlInnerMessage{
+	height: 575px;
+}
+/* adjust length when message is displayed for 
+   accessControlBottomDiv */
+.accessControlOuterMessage{
+	height: 670px;
+}
+[x±æñ      UH‘×UH‘×;/"UHŸç   8:http://portal.koreatech.ac.kr/mum/css/accessControl.css necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:48:07 GMT
+Server: IBM_HTTP_Server
+Last-Modified: Wed, 21 Sep 2011 19:54:08 GMT
+Content-Length: 15787
+Cache-Control: max-age=3600
+Expires: Tue, 05 May 2015 10:48:07 GMT
+Content-Type: text/css
+Content-Language: en-US
+ uncompressed-len 0   =«

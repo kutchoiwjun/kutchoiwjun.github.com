@@ -1,0 +1,426 @@
+/* Copyright IBM Corp. 2010  All Rights Reserved.                    */
+.dialog_leftsidebar {
+	min-height:30px;
+	position:absolute;
+    left: 1px; width: 25px; top: 49px; bottom: 1px;
+	background-color: black;
+	opacity:0.4;
+	filter: alpha(opacity=40); /*for IE*/
+ 	cursor: move;
+	padding-bottom: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+.dialog_leftsidebar_notitle {
+	min-height:30px;
+	position:absolute;
+    left: 1px; width: 25px; top: 14px; bottom: 14px;
+	background-color: black;
+	opacity:0.4;
+	filter: alpha(opacity=40); /*for IE*/
+ 	cursor: move;
+	padding-bottom: 0 !important;
+	margin-bottom: 0 !important; 
+	z-index:-1;
+}
+
+.dialog_rightsidebar {
+	min-height:30px;
+	position:absolute;
+	right: 1px; width: 25px; top: 49px; bottom: 1px;
+	background-color: black;
+	opacity:0.4;
+	filter: alpha(opacity=40); /*for IE*/
+ 	cursor: move;
+	padding-bottom: 0 !important;
+	margin-bottom: 0 !important; 
+}
+* html .dialog_rightsidebar{
+	background:none;
+}
+
+.dialog_rightsidebar_notitle {
+	min-height:30px;
+	position:absolute;
+	right: 1px; width: 25px; top: 14px; bottom: 14px;
+	background-color: black;
+	opacity:0.4;
+	filter: alpha(opacity=40); /*for IE*/
+ 	cursor: move;
+	padding-bottom: 0 !important;
+	margin-bottom: 0 !important; 
+}
+
+* html .dialog_rightsidebar_notitle{
+	background:none;
+}
+
+.dialog_endbar {
+	height: 0px;
+ 	cursor: move;
+	text-align: right;
+	padding-right:13px;
+	font-size: 1.4em;
+	background:black;
+	opacity: 0.4;
+	filter: alpha(opacity=40); /*for IE*/
+}
+
+.mumRoundCorner .dialog_endbar {
+	-moz-border-radius: 0px 0px 20px 20px;
+	-webkit-border-radius: 0px 0px 20px 20px;
+}
+
+* html .dialog_endbar{
+	background-color:#22334d;
+	display: none;
+}
+
+.dialog_titlebar {
+	cursor: move;	
+	background-image: url(images/oneui/titleBkgd.png);
+	background-color: white;
+	background-position: 0 -900px;
+	border-bottom: #E2EBF1 solid 1px;
+	color: #444444;
+	font-weight: bold;
+	font-family: Arial, Helvetica, Sans-Serif;
+	font-size: 1.95em;
+	line-height: 1.2em;
+	padding: 12px 12px 12px 20px;
+}
+
+.mumRoundCorner .dialog_titlebar {
+	-moz-border-radius: 20px 0px 0px 0px;
+	-webkit-border-radius: 20px 0px 0px 0px;
+}
+
+.dialog_titlebar_notitle {
+	font-size:1.2em;
+	cursor: move;
+	height: 13px;
+	padding:8px;
+	background-image: url(images/blackAlpha40.png);
+	background-repeat:repeat;
+	/*
+	background-color: black;
+	opacity: 0.4;
+	*/
+}
+
+.mumRoundCorner .dialog_titlebar_notitle {
+	-moz-border-radius: 11px 11px 0px 0px;
+	-webkit-border-radius: 11px 11px 0px 0px;
+}
+
+* html .dialog_titlebar_notitle{
+	background: transparent;
+}
+
+a.dialog_titlebar_close_wrapper,
+a.dialog_titlebar_close_wrapper:visited {
+	float: right;
+	border: #2F76B9 1px solid;
+	text-decoration: none;
+	line-height: 0.8em;
+	font-size: 0.7em !important;
+}
+
+a.dialog_titlebar_close_wrapper:hover {
+	border-color: #10395F;
+}
+
+.dialog_titlebar_close {
+	cursor: pointer;	
+	height: 16px;
+	width: 16px;
+	background: url(images/oneui/iconClose16.png) left top no-repeat;
+	color: #105CB6;
+	font-weight: bold;
+	border: 0 none;
+	vertical-align: top;
+}
+
+.dijit_a11y .dialog_titlebar_close {
+	width: 0;
+	height: 0;	
+}
+
+.customDialogDiv .lotusAltText {
+	color: #FFFFFF;
+	display: none;
+}
+
+.dijit_a11y .customDialogDiv .lotusAltText {
+	display: inline;		
+}
+
+.dialog_titlebar_title {
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.dj_ie .dialog_titlebar_title {
+	white-space: normal;
+	display:inline;	
+}
+
+.dialog_rightResize_handler {
+	/*background:url('images/rightResize.png') no-repeat bottom right;*/
+	position:absolute; 
+	right:0; 
+	bottom:6px; 	
+	width:16px;
+	height:16px; 
+	cursor:nw-resize;
+	display:none;
+}
+
+.dialog_leftResize_handler {
+	/*background:url('images/leftResize.png') no-repeat bottom left;*/
+	position:absolute; 
+	left:0; 
+	bottom:6px; 	
+	width:16px;
+	height:16px; 
+	cursor:nw-resize;
+	display:none;
+}
+
+
+.dialog_container {
+	min-height:30px;
+	padding-bottom: 0 !important;
+	margin-bottom: 0 !important;
+	border:none;
+	overflow: hidden;
+	top:32px;
+	bottom:20px;
+	left:20px;
+}
+
+.dbcsEnlarged .dialog_container{
+	font-size: 1.2em;
+}
+
+* html .dialog_container{
+	margin-bottom:0px;
+	padding-top:1px; /* fix for the margin-top problem inside the dialog*/	
+}
+.custom_dialog {
+	display:none;
+	position: absolute;
+	z-index: 999;
+	background-color: transparent;
+	
+}
+
+.custom_dialog_nomodel {
+	position: absolute;
+	z-index: 790;
+	background-color: transparent;
+	
+}
+
+.dialog_rightTopCorner{
+	position:absolute;
+	background:url("images/customDialog/top_right_rounded_cap.png") repeat;
+	height:13px;
+	width:13px;
+	top:0;
+	right:-13px;
+}
+
+.mumRoundCorner .dialog_rightTopCorner{
+	background:none;	
+}
+
+* html .dialog_rightTopCorner{
+	background:none;	
+}
+
+.dialog_rightShadow{
+	position:absolute;
+	background:url("images/customDialog/right_shadow.png") repeat-y;
+	width:13px;
+	right:-13px;
+	top:13px;
+	bottom:0;
+}
+
+.mumRoundCorner .dialog_rightShadow{
+	background:none;	
+}
+
+* html .dialog_rightShadow{
+	background:none;	
+}
+
+.dialog_leftBottomCorner{
+	position:absolute;
+	background:url("images/customDialog/bottom_left_rounded_corner.png") repeat;
+	height:13px;
+	width:21px;
+	bottom:-13px;
+	left:0;
+}
+
+.mumRoundCorner .dialog_leftBottomCorner{
+	background:none;	
+}
+
+* html .dialog_leftBottomCorner{
+	background:none;	
+}
+
+.dialog_bottomShadow{
+	position:absolute;
+	background:url("images/customDialog/bottom_shadow.png") repeat-x;
+	height:13px;
+	bottom:-13px;
+	left:21px;
+	right:0px;
+}
+
+.mumRoundCorner .dialog_bottomShadow{
+	background:none;	
+}
+
+* html .dialog_bottomShadow{
+	background:none;	
+}
+.dialog_cornerShadow{
+	position:absolute;
+	background:url("images/customDialog/bottom_right_rounded_corner.png") repeat;
+	height:13px;
+	width:13px;
+	bottom:-13px;
+	right:-13px;	
+}
+
+.mumRoundCorner .dialog_cornerShadow{
+	background:none;	
+}
+
+* html .dialog_cornerShadow{
+	background:none;	
+}
+
+.customDialogDiv {
+	border: 1px solid #999999;
+}
+
+.mumRoundCorner .customDialogDiv {
+	-moz-border-radius: 11px ;
+	-webkit-border-radius: 11px;
+}
+
+* html .customDialogDiv{
+	background-color:#22334d;
+}
+.customDialogResizeHandle {
+	float: right;
+	position: relative;
+	right: 4px;
+	bottom: 17px;
+	width: 13px;
+	height: 13px;
+	z-index: 20;
+	background-image: url('images/customDialog/customDialog_resize.png');
+	line-height: 0px;
+	cursor: nw-resize;
+}
+
+.dj_ie .customDialogResizeHandle{
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale, src="/mum/images/customDialog/customDialog_resize.png");	
+	background:none;
+	right: 2px;
+	bottom: 15px;
+}
+
+.customDialogWidgetIcon {
+	width:19px;
+	height:19px;
+}
+
+.customDialogUnderlayWrapper {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	display: none;
+	background: transparent;
+}
+
+.customDialogUnderlay {
+	background: black;
+	opacity: 0.35;
+	filter: alpha(opacity=35); /*for IE*/
+}
+
+.customDialogUnderlayWrapper_nomodel {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 996;
+	display: none;
+	background: transparent;
+}
+
+.tundra .common_save, .common_save, .reorder-page-dialog .common_save {
+	margin-right: 13px;
+}
+
+.tundra .confirm_cancel, .confirm_cancel {
+	padding-left: 10px;
+}
+
+.customDialogDiv input.lotusFormButtonDisabled {
+	background-image:url("images/lotusBlueButtonDisabled.png");
+	background-position:left center;
+	background-repeat:repeat-x;
+	border: 1px solid #94B7DE;
+	color:white;
+	font-weight:bold;
+	font-size: 1.3em;
+	padding:1px 10px 2px;
+}
+
+.lotusDialogFooter{
+	padding:12px 12px 12px 20px;
+	background-color:#E2EBF1;
+}
+
+.dj_ie7 .lotusDialogFooter{
+	padding-top: 16px;
+	padding-bottom: 16px;
+}
+.dj_ie8 .lotusDialogFooter{
+	padding-top: 18px;
+	padding-bottom: 18px;
+}
+.dj_ie6 .lotusDialogFooter{
+	padding-top: 11px;
+	padding-bottom: 10px;
+}
+/* use vertical-align to center Cancel link */
+.dj_ie6 .customDialogDiv .lotusDialogFooter .lotusAction{vertical-align:super}
+.dj_ie7 .customDialogDiv .lotusDialogFooter .lotusAction{vertical-align:auto}
+.dj_ie8 .customDialogDiv .lotusDialogFooter .lotusAction{vertical-align:auto}
+.dj_ie7 .customDialogDiv .lotusDialogFooter .common_cancel{vertical-align:super}
+.dj_ie8 .customDialogDiv .lotusDialogFooter .common_cancel{vertical-align:4%}
+
+/*
+.lotusBtnImg {
+	background: #2C86EB url(images/oneui/btnSpecialBkgd.png) left top repeat-x;
+}
+*/
+ˆˆžŒÀ      UH‘×UH‘×;/"UHŸç   7:http://portal.koreatech.ac.kr/mum/css/customDialog.css necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:48:07 GMT
+Server: IBM_HTTP_Server
+Last-Modified: Wed, 21 Sep 2011 19:54:08 GMT
+Content-Length: 8532
+Cache-Control: max-age=3600
+Expires: Tue, 05 May 2015 10:48:07 GMT
+Content-Type: text/css
+Content-Language: en-US
+ uncompressed-len 0   !T

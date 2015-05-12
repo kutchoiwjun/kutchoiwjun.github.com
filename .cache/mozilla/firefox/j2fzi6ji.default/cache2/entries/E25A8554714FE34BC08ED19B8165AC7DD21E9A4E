@@ -1,0 +1,812 @@
+/*
+ * 자동완성 모듈
+ * 사용법 
+ * 입력을 받는 객체(input 또는 textarea 에 actb.init(this,{mode}) 를 선언한다. 
+ * mode 종류
+ * - MAIL : 수신자가 메일주소로 보이며 메일 주소를 보여준다.
+ * - USER : 사용자 아이디를 보여준다.
+ * - NULL : mode 값이 없을 경우 기본 MAIL 으로 지정됨.
+ * 
+ * author : sunggyu
+ * date : 2013-04-22
+ */
+var actb = {
+    MAIL:100
+    ,USER:101
+    ,MOBILE:102
+    ,ORG:103
+	,ALL:1 //전체목록
+	,LATEST:2 //최근수신자 목록
+	,KEY_ENTER:13
+	,KEY_TAB:9
+	,KEY_PAGEUP:33
+	,KEY_PAGEDOWN:34
+	,KEY_END:35
+	,KEY_HOME:36	
+	,KEY_UP:38
+	,KEY_DOWN:40
+	,KEY_ESC:27
+	,type:null
+	/* 자동완성 레이어가 붙을 위치 */
+	,areaAppendId:null
+	,areaWidth:270
+	,areaHeight:340	
+	,curr:''
+	,listcount:0
+	,delay_hide:0
+	,limit:20
+	,pos:0
+	,delimiter:","
+	,timeOut:3000
+	,old_page_no:1
+	,delay_time:0
+	,chkLimit:1
+	,my_addr:[]
+	,myaddrDelimiter:"&lt;"
+	,servletURL:app.contextPath + "/autocomplete/mail/write.do"
+	/**
+	 * 최근 수신자 목록
+	 */
+	,latest:null
+	/**
+	 * input 창에 포커스가 왔을 때 환경 설정
+	 * @param obj
+	 */
+	,mobile:function(obj){
+	    actb.type = actb.MOBILE;
+	    actb.init(obj);
+	}
+	,mail:function(obj, dstid){
+	    actb.type = actb.MAIL;
+	    /* 자동완성 레이어가 붙을 위치 */
+	    if(dstid) actb.areaAppendId = dstid;
+	    actb.init(obj);
+	}
+	,user:function(obj){
+	    actb.type = actb.USER;
+        actb.init(obj);
+	}
+	,org:function(obj){
+		if(obj.value == null || obj.value == ""){
+			actb.type = actb.ORG;
+	        actb.init(obj);
+		}
+	}
+	,init:function(obj){
+		
+		if (obj) actb.curr = obj;
+		
+		actb.areaWidth = actb.curr.offsetWidth;
+			
+		if ( actb.actbAddrArea ) {
+			$("#actbAddrArea").remove();
+			$("#actbAddrFrame").remove();
+			actb.actbAddrArea = null;
+			actb.actbAddrFrame = null;			
+		}
+	
+		// check browser (IE 5.0)
+		if ( navigator.userAgent.indexOf("MSIE 5.0") != -1 ){
+			return;
+		}
+		
+		actb.curr.onkeydown = actb.move_Select;
+		actb.curr.onkeyup = actb.CheckInput;
+	
+		actb.createSelectListLayer();
+		
+		if (actb.getCurrentInput().length > actb.chkLimit) actb.updateList();
+	}
+	
+	,move_Select:function(e){
+	    
+	    //log.debug("move_select");
+	
+		if ( actb.listcount == 0 ) return;
+		 
+		var code;
+		if( browser.type == browser.IE ){
+			code = event.keyCode;
+		}else{
+			code = e.which;
+		}
+		
+		if ( code == actb.KEY_ENTER ) {
+			if( browser.type != browser.IE ){
+				e.preventDefault();
+			}
+		}
+		
+		var showArea = $("#actbAddrArea").is(":visible");		
+		if( showArea ){
+			
+			// actb.pos 값 구하기 : start 
+				  
+			if ( code == actb.KEY_UP || code == actb.KEY_DOWN || code == actb.KEY_TAB || code == actb.KEY_ENTER ) {
+			
+				if( browser.type == browser.IE ){
+					event.returnValue=false;
+				} else {
+					e.preventDefault();
+				}				
+			}
+			
+			if( code == actb.KEY_UP ){			    
+			    if( actb.pos > 0 ){
+			        actb.pos--;
+			    }
+			    else{
+			        actb.pos = actb.listcount - 1;			        
+			    }
+			}
+			else if ( code == actb.KEY_TAB || code == actb.KEY_DOWN ) {
+				
+				if( actb.listcount == 1 && code == actb.KEY_TAB ) {
+					actb.applySelectAddr();
+					return ;
+				}
+				if ( actb.pos < actb.listcount-1){
+					actb.pos++;
+				} else {
+					actb.pos = 0;
+				}				
+			}
+			else if( code == actb.KEY_UP || code == actb.KEY_DOWN || code == actb.KEY_PAGEDOWN || code == actb.KEY_PAGEUP || code == actb.KEY_HOME || code == actb.KEY_END ){            
+			
+				if ( code == actb.KEY_UP ) {
+	
+					if ( actb.pos > 0 ) {
+						actb.pos--;
+					} else {
+						actb.pos = actb.listcount-1;
+					}
+									
+				} else if ( code == actb.KEY_DOWN ){
+				
+					if ( actb.pos < actb.listcount - 1 ) {
+						actb.pos++;
+					} else {
+						actb.pos = 0;
+					}
+				}
+				else if( code == actb.KEY_PAGEDOWN ){
+					
+					if ( actb.pos + 10 < actb.listcount - 1 ) {
+						actb.pos += 10;
+					} else {
+						actb.pos =  actb.listcount - 1;
+					}
+				
+				} else if( code == actb.KEY_PAGEUP ){
+					
+					if ( actb.pos - 10 < 0 ) {
+						actb.pos += 10;
+					} else {
+						actb.pos =  actb.listcount - 1;
+					}
+					
+				} else if( code == actb.KEY_HOME ){
+					
+					actb.pos = 0;
+					
+				} else if( code == actb.KEY_END ){
+					
+					actb.pos = actb.listcount - 1;
+				}
+
+				// 현재 봐야 하는 페이지 번호를 구한다.(한페이지에는 기본 10개의 항목을 보여준다.)
+                /*
+				var page_no = Math.floor(actb.pos / 10) + 1;
+				
+					
+				
+				// 기존 페이지 넘버와 다를 경우 스크롤위치를 변경해준다.
+				if( page_no != actb.old_page_no ){
+					// 스크롤 위치 구함 ( 공식 : ( 보여줄 페이지 번호 - 1 ) * 한 목록의 높이(20px);
+					
+					// 현재 보이는 목록의 가장 위의 항목 값을 구한다.
+					var scrollMovePoint = ( page_no - 1 ) * 10 * 20;
+					
+					log.debug( "actb.pos : "+ actb.pos +" / scrollMovePoint : "+ scrollMovePoint +" / page_no : "+ page_no );
+					$("#actbArea").scrollTop( scrollMovePoint );
+				}
+				actb.old_page_no = page_no;
+                */
+			}
+
+			// actb.pos 값 구하기 : end
+			
+			actb.updateSelectList();
+		}
+	}
+	/**
+	 * 키보드 입력 이벤트 
+	 */
+	,CheckInput:function(e){
+        
+		var code;
+		if( browser.type == browser.IE ){
+			code = event.keyCode;
+		}
+		else{
+			code = e.which;
+		}
+		
+		//log.debug("CheckInput : "+ code );
+		
+		if( code == actb.KEY_ESC ){
+		    actb.close();
+		    return;
+		}
+				
+		var showArea = $("#actbAddrArea").is(":visible");
+		
+		var currInput = actb.getCurrentInput();
+		
+		if( code != actb.KEY_UP && code != actb.KEY_DOWN && code != actb.KEY_ENTER ){
+			
+			if ( currInput.length > actb.chkLimit ) {
+				actb.getActbDelayList( currInput );
+			}
+		}
+		
+		if ( code == actb.KEY_ENTER ) {
+				
+			actb.applySelectAddr();
+			
+		}
+		else if ( code == actb.KEY_UP ){
+		    
+		}
+		else if ( code == actb.KEY_DOWN ) {
+	
+			if ( !showArea && currInput.length > actb.chkLimit ){
+				actb.updateList();
+			}
+			
+		}
+		else if ( code != actb.KEY_TAB && code!= actb.KEY_DOWN ) {
+		    	
+			if ( currInput.length > actb.chkLimit ) {
+			    if( !showArea ){			    
+    			    actb.actbArea.innerHTML = "";
+                    actb.my_addr = null;
+                }
+				actb.updateList();
+			}
+			else {
+				actb.hideSelectList();
+			}
+		}
+	}
+	/**
+	 * 자동완성 레이어 생성 
+	 */
+	,createSelectListLayer:function(){
+		
+		var autoCompleteDiv = $(actb.curr).parent();
+		/* 자동완성 레이어가 붙을 위치 */
+		if(actb.areaAppendId){
+			autoCompleteDiv = $('#'+actb.areaAppendId).parent();
+		}
+		
+		// backgound frame
+		actb.actbAddrFrame = document.createElement('iframe');
+		actb.actbAddrFrame.id = "actbAddrFrame";
+		//actb.actbAddrFrame.style.top = ( actb.curr.offsetHeight - 1 ) + 'px';
+		actb.actbAddrFrame.style.left = '0px';
+		actb.actbAddrFrame.style.width = '100%';
+		actb.actbAddrFrame.setAttribute("frameBorder","0");
+		
+		// addr
+		actb.actbAddrArea = document.createElement("div");
+		actb.actbAddrArea.id = 'actbAddrArea';
+		//actb.actbAddrArea.style.top = ( actb.curr.offsetHeight - 1 ) + 'px';
+		actb.actbAddrArea.style.left = '0px';
+		actb.actbAddrArea.style.width = '100%';
+		
+		// create selectlist area
+		actb.actbArea = document.createElement('div');
+		actb.actbArea.id = 'actbArea';
+				
+		// append to body
+		actb.actbAddrArea.appendChild(actb.actbArea);
+		//$(autoCompleteDiv).append(actb.actbAddrFrame);
+		$(autoCompleteDiv).append(actb.actbAddrArea);
+		
+		  				
+		$("#actbAddrArea").append('<div id="actbMenu"></div>');
+		// 메일주소를 보여주는 곳에서만 최근수신자 목록을 보여준다.
+		if( actb.type == actb.MAIL ){
+		  $("#actbMenu").append('<button type="button" class="btn_bgtxt wt" onclick="actb.getAllList();">'+ cmessage.CM0066 +'</button>');
+		  $("#actbMenu").append('<button type="button" class="btn_bgtxt wt" onclick="actb.getLatestReceiverList();">'+ cmessage.CM0067 +'</button>');
+		}		
+		$("#actbMenu").append('<span class="btn_close"><button type="button" class="btn_bgtxt bk right" onclick="actb.hideSelectList();">'+ cmessage.CM0033 +'</button></span>');
+		
+		// add events	자동으로 닫히는 이벤트틑 삭제.(닫기 버튼 클릭으로 변경 )
+		/*	
+		actbAddrArea.onmouseover = function(){
+			window.clearTimeout(actb.delay_hide);
+		};	
+		actbAddrArea.onmouseout = function(){
+			actb.delay_hide = window.setTimeout('actb.hideSelectList()',actb.timeOut);
+		};
+		*/
+	}
+	,showSelectList:function() {
+		//$(actb.curr).data('autocomplete-open', true);
+		$("#actbAddrArea").show();
+		$("#actbAddrFrame").show();			
+	}
+	,hideSelectList:function() {
+		//$(actb.curr).data('autocomplete-open', false);
+		$("#actbAddrArea").hide();
+		$("#actbAddrFrame").hide();		
+	}
+	,selectAddrOver:function(obj){
+		$(obj).addClass("highlight");
+	}
+	,selectAddrOut:function(obj){
+		$(obj).removeClass("highlight");
+	}
+	,selectAddrMouseOver:function(obj){
+		$(obj).addClass("highlight");	
+		actb.pos = parseInt(obj.id.substr(12,2));
+		actb.updateSelectList();
+	}
+	,updateSelectList:function(){
+	    
+		// 현재 선택된 리스트를 강조표시한다.
+		for(var i=0 ; i < actb.listcount ; i++ ) {
+			if ( i != actb.pos ) {
+				actb.selectAddrOut( document.getElementById('AddrListItem'+i) );
+			} else {
+				actb.selectAddrOver( document.getElementById('AddrListItem'+actb.pos) );
+			}
+		}
+		
+		
+        try{
+            var t = document.getElementById('AddrListItem'+actb.pos).getBoundingClientRect();
+            var t2 = document.getElementById('actbAddrArea').getBoundingClientRect();
+
+            //if( browser.type == browser.IE ){
+            //    if (t.bottom > actb.areaHeight+t2.top) $("#actb.actbArea.doScroll('scrollbarDown');
+            //    if (t.bottom > t2.bottom + 50 ) actb.actbArea.scrollTop=1000;
+            //    if (t.top < 0 ) {
+            //        actb.actbArea.scrollTop=0;
+            //    } else if ( t.top < t2.top ) {
+            //        actb.actbArea.doScroll('scrollbarUp');
+            //    }
+            //}
+            //else {
+            //    if (t.bottom > actb.areaHeight+t2.top) actb.actbArea.scrollTop=300;
+            //    if (t.bottom > t2.bottom + 50 ) actb.actbArea.scrollTop=1000;
+            //    if (t.bottom < 300) actb.actbArea.scrollTop=0;
+            //}
+
+            if (t.bottom > actb.areaHeight+t2.top) actb.actbArea.scrollTop=300;
+            if (t.bottom > t2.bottom + 50 ) actb.actbArea.scrollTop=1000;
+            if (t.bottom < 300) actb.actbArea.scrollTop=0;
+
+        }catch(e){
+            log.debug(e);
+        }
+		/*
+		window.clearTimeout(actb.delay_hide);
+		actb.delay_hide = window.setTimeout('actb.hideSelectList()',actb.timeOut);
+		*/
+	}
+	/**
+		자동완성 데이터 목록을 갱신
+	*/
+	,updateList:function( type ){	
+		
+		//log.debug("updateList");
+		
+		actb.pos = 0;
+		
+		if( !type ){
+			type = actb.ALL;
+		}
+        
+		//$("#actbAddrArea").css("top",eval(actb.curr.offsetHeight - 1 ) + 'px');
+		//$("#actbAddrFrame").css("top",eval(actb.curr.offsetHeight - 1 ) + 'px');
+		
+		actb.actbArea = document.getElementById("actbArea");
+		if( type == actb.ALL ){
+			actb.actbArea.innerHTML = actb.createSelectList();
+		}else{
+			actb.actbArea.innerHTML = actb.createLatestList();
+		}
+		
+		actb.updateSelectList();
+		actb.showSelectList();
+		
+		// 검색 결과가 없을 경우 창을 닫는다.(전체 목록에서만..)
+		if ( actb.listcount == 0 && type == actb.ALL ){
+			actb.hideSelectList();
+		}
+	}
+	/**
+		자동완성 목록을 구축
+	*/
+	,createSelectList:function(){
+	
+		var lastWord = actb.getCurrentInput();		
+		
+		var max_length = 0;
+		actb.listcount = 0;
+	
+		var html = [] , n = -1;		
+		// addressbook
+		if (lastWord != "") {
+		    		
+			if( actb.my_addr == null || actb.my_addr.length == 0 ){				
+				return;			
+			}
+						
+			lastWord = lastWord.toLowerCase();
+			
+			html[++n] = '<ul>';
+			
+			var lstEmail = [];
+			for( var i = 0 ; i < actb.my_addr.length ; i++){
+				
+				var completeData = actb.my_addr[i];
+							
+				if( !completeData ) continue;
+				var source_type = completeData.source_type;
+				var name = completeData.name;
+				var email = completeData.email;
+				log.debug("email:"+email);
+				var userid = completeData.userid;
+
+				if( lstEmail.indexOf( email ) != -1 ){ // 이미 리스트에 들어간 메일주소는 보여주지 않는다.
+                    continue;
+                }
+                lstEmail.push( email );
+
+				var addr;
+				if( actb.type == actb.MAIL ){
+					if( source_type == CompleteData.source_type.ADDRESS_GROUP ){ // 주소록 그룹
+						addr = name;
+					}else if( source_type == CompleteData.source_type.ORGANIZATION_GROUP ) { // 조직도 그룹
+						addr = name;
+					}else if( source_type == CompleteData.source_type.GROUPMAIL ){ // 그룹메일
+						addr = name;
+					}else{
+						addr = name == '' ? email : name + "&lt;"+email+"&gt;";
+					}
+				}
+				else{
+				    addr = name == '' ? userid : name + "&lt;"+userid+"&gt;";  
+				}
+				var hidden_addr = addr;
+				if( actb.type == actb.MAIL ){
+					if( source_type == CompleteData.source_type.ADDRESS_GROUP ){
+						hidden_addr = email;
+					}else if( source_type ==  CompleteData.source_type.ORGANIZATION_GROUP ){
+						hidden_addr = email;
+					}else if( source_type ==  CompleteData.source_type.GROUPMAIL ){
+						hidden_addr = email;
+					}
+				}
+
+                var recv_css = "enable";
+                var recv_info = "";
+                if( completeData.enabled ) {
+                    if (completeData.enabled != 1) {
+                        recv_css = "disable";
+                        if (completeData.enabled == 2) {
+                            recv_info = "[휴면]";
+                        } else if (completeData.enabled == 3) {
+                            recv_info = "[정지]";
+                        }
+                    }
+                }
+
+				// 부서,직급 정보 추가
+				var etc = null;             
+                if( completeData.dept ) {
+                    etc = completeData.dept;
+                    if( recv_info ){
+                        etc = recv_info + etc;
+                    }
+                    etc = etc.replaceAll(",","<br/>");
+                }
+				if( etc ){
+				    addr += "<span class='actb_etc'>"+ etc +"</span>";
+				}
+
+				// 같은 주소가 중복으로 나오는 문제 제거
+				// var pattern = new RegExp("\"\s*"+addr+"\s*", "gi");
+				// log.debug( html );
+				// log.debug( addr + " : "+  pattern.test(html) );			
+				// if(pattern.test(html)) continue;
+				
+				// 이름 또는 이메일이 같은 경우를 찾는다.
+				if ( (tmpLoc1 = addr.toLowerCase().indexOf(lastWord,0)) == 0 || (tmpLoc2 = addr.toLowerCase().indexOf(actb.myaddrDelimiter+lastWord,0)) > 0) {
+					
+					
+					html[++n] = '<li id="AddrListItem'+actb.listcount+'" onmouseover="actb.selectAddrMouseOver(this);">';
+					
+					// 주소 타입( 조직도,공용주소록,주소록 )
+					//html[++n] = '<span class="type"></span>';
+					html[++n] = '<a href="javascript:;" onclick="actb.applySelectAddr();">';
+					html[++n] = '<span class="email '+ recv_css+'">';
+					if ( tmpLoc1 == 0 ) { // 이름이 같은 경우
+						html[++n] = '<span class="highlightWord">'+addr.substr(0,lastWord.length)+'</span>';
+						html[++n] = addr.substr(lastWord.length,addr.length);
+					} else { // 메일주소가 같은 경우
+						
+						tmpLoc = tmpLoc2+actb.myaddrDelimiter.length-1;
+						
+						html[++n] = addr.substr(0,tmpLoc);
+						html[++n] = '<span class="highlightWord">'+addr.substr(tmpLoc+1,lastWord.length)+'</span>';					
+						html[++n] = addr.substr(tmpLoc+1+lastWord.length,addr.length);
+						
+					}
+					var tmp;
+					// 이름부분을 따옴표로 묶음
+					if( actb.type == actb.MAIL ){
+						tmp = hidden_addr;
+                        if( name == '') tmp = hidden_addr;
+					}
+					else if( actb.type == actb.USER ){
+                        tmp = userid;
+					}
+					else if( actb.type == actb.ORG ){
+						tmp = name+","+email+","+completeData.dept+","+completeData.position+","+completeData.office_no+","+userid; 
+					}
+					html[++n] = '<input type="hidden" id="AddrListItemHidden'+actb.listcount+'" name="AddrListItemHidden'+actb.listcount+'" value="'+tmp+'"/>';
+					html[++n] = '</span></a>';
+					
+					html[++n] = '</li>';
+					actb.listcount++;
+				}
+				if (actb.listcount > actb.limit)  break;			
+			}
+			//console.log( html.join('') );			
+			html[++n] = '</ul>';
+			
+			// 한페이지에 모자를 값을 더해준다.(스크롤을 위해서)
+			// if( actb.listcount > 10 ){					
+				// var modCount = 10 - ( actb.listcount % 10 );
+				// var modHeight = modCount * 20;
+				// if( modCount > 0 ){
+					// html[++n] = '<div style="clear:both;display:block;height:'+modHeight+'px;"></div>';				
+					// log.debug( actb.listcount +" / "+ modCount +" / "+ modHeight );
+				// }
+			// }
+		}				
+		return html.join('');
+	}
+	/**
+	 * 최근수신자 목록을 그린다.
+	 */
+	,createLatestList:function(){
+	
+		var max_length = 0;
+		actb.listcount = 0;
+	
+		var html = [] , n = -1;
+								
+		if( actb.latest == null || actb.latest.length == 0 ){
+			return "<ul><li class='info'>등록된 최근수신자가 없습니다.</li></ul>";
+		}
+				
+		html[++n] = '<ul>';
+		
+		for( var i = 0 ; i < actb.latest.length ; i++){
+			
+			var completeData = actb.latest[i];
+						
+			var name = completeData.name;
+			var email = completeData.email;			
+			var ukey = completeData.ukey;
+			
+			var addr = name == '' ? email : name + "&lt;"+email+"&gt;";			
+			
+			// 이름 또는 이메일이 같은 경우를 찾는다.
+			html[++n] = '<li id="AddrListItem'+actb.listcount+'" onmouseover="actb.selectAddrMouseOver(this);">';
+			
+			html[++n] = '<a href="javascript:;" onclick="actb.applySelectAddr();">';
+			html[++n] = '<span class="email">';
+			html[++n] = addr;
+						
+			// 이름부분을 따옴표로 묶음
+			var tmp = "&quot;" + addr.replace(/\s?&lt;/g, "&quot; &lt;");
+			if(name == '') tmp = addr;
+						
+			html[++n] = '<input type="hidden" id="AddrListItemHidden'+actb.listcount+'" name="AddrListItemHidden'+actb.listcount+'" value="'+tmp+'"/>';
+			html[++n] = '</span></a>';
+			
+			// 최근수신자를 삭제하는 기능 추가
+			html[++n] = '<button type="button" class="btn del" onclick="actb.latest_del(\''+ ukey +'\');"><span class="blind">삭제</span></button>';
+			html[++n] = '</li>';
+			actb.listcount++;
+		}				
+		html[++n] = '</ul>';
+		//console.log( html.join('') );
+		return html.join('');
+	}
+	/**
+		서버에서 검색어로 데이터 가져오기
+	*/
+	,getActbList:function( rcpt ) {
+        
+		var param = {
+			"rcpt":rcpt,
+			"type":actb.type
+		};	
+		$.ajax({
+			url: actb.servletURL,
+			data : param,
+			type : "POST",
+			dataType:"json",
+			async:false,
+			cache:false,
+			timeout:5000,
+			error:function(xhr, txt){
+			    AjaxUtil.error( xhr );				
+			},
+			success:function( data ){
+			    // 타입이 메일이 경우 최근수신자까지 추가한다.
+			    if( actb.type == actb.MAIL ){
+    				if( data ){				    
+    					actb.my_addr = data.concat( actb.latest );
+    				}else{
+    					actb.my_addr = actb.latest;					
+    				}
+				}
+				else if( actb.type == actb.USER || actb.type == actb.MOBILE || actb.type == actb.ORG ){
+				    if( data ){                 
+                        actb.my_addr = data;
+                    }
+				}
+				actb.updateList();
+			}
+		});
+	}
+	/**
+		서버에서 검색어로 데이터 가져오기
+	*/
+	,getLatestReceiverList:function(){
+		actb.my_addr = actb.latest;
+		actb.updateList( actb.LATEST );
+	}
+	,getAllList:function(){
+		var rcpt = actb.getCurrentInput();		       
+		actb.getActbList( rcpt );
+	}
+	,setCaret:function(obj,l){
+		obj.focus();
+		if (obj.setSelectionRange){
+			obj.setSelectionRange(l,l);
+		}else if(obj.createTextRange){
+			m = obj.createTextRange();
+			m.moveStart('character',l);
+			m.collapse();
+			m.select();
+		}
+	}	
+	/**
+		현재 선택된 값을 수신자창에 반영
+	*/
+	,applySelectAddr:function(){
+	    	    
+		//$(actb.curr).data('autocomplete-open', false);
+
+		var curInput = actb.getCurrentInput();
+	
+        var bShow = $("#actbAddrArea").is(":visible");
+        
+	    if( bShow ){	        	        
+	        var email = document.getElementById('AddrListItemHidden'+actb.pos ).value;	        
+	    }else{
+	        var email = "";
+	    }
+		
+		var tmpObj = actb.curr;
+		var tmpObj_value = $.trim( tmpObj.value );
+		tmpObj_value = tmpObj_value.substr(0, tmpObj_value.length-curInput.length);
+		tmpObj_value = $.trim( tmpObj_value );
+	
+		if (tmpObj_value.length==0 && bShow) {
+			if(actb.type == actb.ORG){
+				
+				var data = [];
+				data = email.split(",");
+				//name+","+completeData.dept+","+completeData.position+","+completeData.office_no;
+				tmpObj.value = data[0];
+				$("#email").val(data[1]);
+				$("#dept").val(data[2]);
+				$("#position").val(data[3]);
+				$("#member_key").val(data[4]);
+				$("#userid").val(data[5]);
+				
+			}else{
+				/* 메일 자동완성 수신자 입력방식 변경 */
+				if(actb.type == actb.MAIL && actb.areaAppendId) {
+					tmpObj.value = email;					
+				}
+				else tmpObj.value = email+actb.delimiter+'';
+			}
+		} else if (tmpObj_value.substr(tmpObj_value.length-1,1) == actb.delimiter && bShow) {
+			/* 메일 자동완성 수신자 입력방식 변경 */
+			if(actb.type == actb.MAIL && actb.areaAppendId) tmpObj.value = tmpObj_value;
+			else tmpObj.value = tmpObj_value+''+email+actb.delimiter+'';	
+		} else if (bShow) {
+			/* 메일 자동완성 수신자 입력방식 변경 */
+			if(actb.type == actb.MAIL && actb.areaAppendId) tmpObj.value = tmpObj_value+''+email;
+			else tmpObj.value = tmpObj_value+''+actb.delimiter+' '+email+actb.delimiter+'';
+		}
+		
+		//log.debug("tmpObj : "+ tmpObj.value );
+		
+		actb.pos = 0;
+		actb.hideSelectList();
+		actb.setCaret(actb.curr,tmpObj.value.length);
+		/* 메일 자동완성 수신자 입력방식 변경 */
+		if(actb.type == actb.MAIL && actb.areaAppendId) {
+			// 포커스를 빠져나간다.
+			$(actb.curr).blur();
+		}
+	}
+	,getCurrentInput:function(){
+		return $.trim( actb.curr.value.split( actb.delimiter ).pop() );
+	}
+	,getActbDelayList:function( rcpt ){
+		if(actb.delay_time) window.clearTimeout(actb.delay_time);
+		actb.delay_time = setTimeout(function(){ actb.getActbList( rcpt );},200);	
+	}
+	/**
+	 * 최근수신자 목록을 삭제한다.
+	 * 삭제를 한후 목록을 다시 가져온다.
+	 */
+	,latest_del:function( ukey ){		
+		var param = {
+			"ukey":ukey
+		};
+		$.ajax({
+			url : app.contextPath + "/mail/json/latestreceiver/del.do",
+			type : "POST",
+			cache : false,
+			data : param,
+			dataType : "json",
+			async : false,
+			error: function( xhr ){
+				jAlert( cmessage.CM0016 );
+			},
+			success : function( jsonData ){
+				actb.hideSelectList();
+				actb.latest = jsonData.latestList;
+				actb.updateList( actb.LATEST );
+			}
+		});
+	}
+	/**
+	 * 검색창을 닫는다.
+	 */
+	,close:function(){
+		actb.hideSelectList();
+	}
+};
+
+var CompleteData = {
+	source_type:{
+		"ADDRESS_GROUP":1,
+		"ORGANIZATION":2,
+		"ORGANIZATION_GROUP":3,
+		"GROUPMAIL":4
+	}
+}�Pl      UH��UH��;/-UIy>   G:http://email.koreatech.ac.kr/sens-static/js/common/actb.js?dummy=58413 necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:49:03 GMT
+Server: Apache
+Last-Modified: Tue, 28 Apr 2015 13:18:28 GMT
+Etag: "5cd1-514c8b2b97896"
+Accept-Ranges: bytes
+Content-Length: 23761
+Content-Type: application/javascript
+ uncompressed-len 0   \�

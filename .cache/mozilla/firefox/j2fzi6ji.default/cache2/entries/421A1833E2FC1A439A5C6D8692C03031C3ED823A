@@ -1,0 +1,683 @@
+/*=================================================================
+SCRIPT NAME 		: open popup
+EXPLAIN 				: 팝업 공통 스크립트
+WRITTEN DATE 		: 2006.04.02
+AUTHOR 					: JangDongJin
+E-MAIL					: robher@empas.com
+COMMENT 				:
+=================================================================*/
+
+//Window.Open 공통 함수
+function MM_openBrWindow(theURL,winName,features)
+{
+	window.open(theURL,winName,features);
+}
+
+function openWinC(p_url,p_target,p_option)
+{
+	var v_arr ;
+	var vwidth = 400;
+	var vheight = 300;
+
+	if (p_option.indexOf("width=") > -1)
+	{
+		v_arr = p_option.split(",");
+		for (i = 0; i < v_arr.length; i++)
+		{
+			if (v_arr[i].indexOf("width=") > -1)
+			{
+				vwidth = v_arr[i].substring(v_arr[i].indexOf("=") +1, v_arr[i].length);
+				break;
+			}
+		}
+	}
+
+	if (p_option.indexOf("height=") > -1)
+	{
+		v_arr = p_option.split(",");
+		for (i = 0; i < v_arr.length; i++)
+		{
+			if (v_arr[i].indexOf("height=") > -1)
+			{
+				vheight = v_arr[i].substring(v_arr[i].indexOf("=") +1, v_arr[i].length);
+				break;
+			}
+		}
+	}
+
+	var winl = (screen.width - vwidth) / 2;
+	var wint = (screen.height - vheight) / 2;
+	window.open(p_url,p_target,p_option +",top="+ wint +",left="+ winl);
+	window.open(p_url,p_target,p_option +",top="+ wint +",left="+ winl);
+
+	p_url = null;
+	p_option = null;
+	p_target = null;
+}
+
+function visitBlog(p_url)
+{
+	if (p_url == "SEARCH")
+	{
+		openWinC("Yblog_others.findOthers","FUNDBLOG","width=700,height=500,scrollbars=1");
+	}
+	else if (p_url != "")
+	{
+		window.open(p_url);
+	}
+}
+
+function Login()
+{
+	openWinC("Yblog_func_login.Login?p_returnUrl="+ escape(document.URL),"LOGIN","width=320,height=220,scrollbars=0")
+}
+
+/*=================================================================
+SCRIPT NAME 		: common
+EXPLAIN 				: Go Redirect URL Function
+WRITTEN DATE 		: 2006.04.02
+AUTHOR 					: JangDongJin
+E-MAIL					: robher@empas.com
+COMMENT 				:
+=================================================================*/
+var getUrlRedirect = false;
+var getUrlRCnt = 0;
+function goURL(p_menu1,p_menu2,p_flag,p_url,p_event)
+{
+	try
+	{
+		if (p_menu1 != 'X')
+		{
+			var menu = document.getElementById("study_menu");
+			var menuList = menu.getElementsByTagName("li");
+			for (i = 0; i < menuList.length; i++)
+			{
+				if (menuList[i].id.indexOf("hliMenu") > -1)
+				{
+					if (menuList[i].id == p_menu1)
+						$(menuList[i].id).className = "on";
+					else
+						$(menuList[i].id).className = "";
+
+					if (menuList[i].id.indexOf("_") > -1)
+					{
+						if (menuList[i].id.indexOf(p_menu1) > -1)
+							$(menuList[i].id).style.display = "";
+						else
+							$(menuList[i].id).style.display = "none";
+
+						if (menuList[i].id == p_menu2)
+							$(menuList[i].id).className = "depth2_on";
+						else
+							$(menuList[i].id).className = "depth2";
+					}
+
+					//상위 메뉴를 클릭했을때 해당 상위 메뉴의 첫번째 하위 메뉴를 자동 클릭 해준다.
+					if (i > 0 && p_menu1 == menuList[i-1].id && p_menu1 == p_menu2)
+					{
+						menuList[i].click();
+					}
+				}
+			}
+			menu = null;
+			menuList = null;
+		}
+
+		switch (p_flag)
+		{
+			case "NRM":
+				$("blog_right").style.display = "";
+				$("blog_body").style.display = "";
+				$("study_body").style.display = "none";
+
+				if (p_url != "" && (p_url != $("ifrmBlog").src || p_event != "LOAD"))
+					$("ifrmBlog").src = p_url;
+				break;
+			case "STD":
+				$("blog_right").style.display = "none";
+				$("blog_body").style.display = "none";
+				$("study_body").style.display = "";
+
+				if (p_url != "" && (p_url != $("ifrmStudy").src || p_event != "LOAD"))
+					$("ifrmStudy").src = p_url;
+				break;
+			default:
+				$("blog_right").style.display = "none";
+				$("blog_body").style.display = "none";
+				$("study_body").style.display = "";
+
+				if (p_url != "" && (p_url != $("ifrmStudy").src || p_event != "LOAD"))
+					$("ifrmStudy").src = p_url;
+				break;
+		}
+		p_menu1 = null;
+		p_menu2 = null;
+		p_flag  = null;
+		p_url	= null;
+		p_event	= null;
+		getUrlRedirect = true;
+	}
+	catch(e)
+	{
+		if (getUrlRedirect == false && getUrlRCnt < 10)
+		{
+			getUrlRCnt++;
+			setTimeout("goURL('"+ p_menu +"', '"+ p_flag +"' , '"+ p_url +"')",300);
+		}
+
+		//alert(e.message);
+	}
+}
+
+/*=================================================================
+SCRIPT NAME 		: common
+EXPLAIN 				: Self Frame Resize Function
+WRITTEN DATE 		: 2006.04.02
+AUTHOR 					: JangDongJin
+E-MAIL					: robher@empas.com
+COMMENT 				:
+=================================================================*/
+
+var iframeWidth = 0;
+
+//reSize Frame
+function resizeFrmForAjax()
+{
+	try{
+		if (isIE())
+		{
+			if (iframeWidth == 0)
+				iframeWidth = document.body.scrollWidth;
+	
+			if (document.body.scrollHeight > 600)
+			{
+			 self.resizeTo(iframeWidth, document.body.scrollHeight + 25);
+			}
+			else
+			{
+			 self.resizeTo(iframeWidth, 630);
+			}
+		}
+		else
+		{
+			var fname = parent.document.getElementsByTagName("iframe");
+
+			for (i = 0; i < fname.length; i++)
+			{
+				if (fname[i].id.indexOf("ifrm") > -1)
+				{
+					if (fname[i].contentWindow.document.body.scrollHeight > 600)
+						fname[i].style.height = (fname[i].contentWindow.document.body.scrollHeight + 30) + "px";
+					else
+						fname[i].style.height = "610px";
+				}
+			}
+		}
+			
+	}
+	catch(e)
+	{
+		//alert(e.message);
+	}
+}
+
+//ResizeFrame
+var getResizeCnt = 0;
+function resizeFrm()
+{
+	try
+	{
+		if (iframeWidth == 0)
+			iframeWidth = document.body.scrollWidth;
+
+		if (isIE())
+		{
+			if (document.body.scrollHeight == 0 && getResizeCnt < 10)
+			{
+				setTimeout("resizeFrm()",1000);
+				getResizeCnt++;
+			}
+			if (document.body.scrollHeight > 600)
+			{
+				self.resizeTo(iframeWidth, document.body.scrollHeight + 25);
+			}
+			else
+			{
+		 		self.resizeTo(iframeWidth, 630);
+			}
+		}
+		else
+		{
+			var fname = parent.document.getElementsByTagName("iframe");
+
+			for (i = 0; i < fname.length; i++)
+			{
+				if (fname[i].id.indexOf("ifrm") > -1)
+				{
+					if (fname[i].contentWindow.document.body.scrollHeight > 600)
+						fname[i].style.height = (fname[i].contentWindow.document.body.scrollHeight + 30) + "px";
+					else
+						fname[i].style.height = "610px";
+				}
+			}
+		}
+
+		getResize = true;
+	}
+	catch(e)
+	{
+		//alert(e.message);
+	}
+}
+
+/*=================================================================
+SCRIPT NAME 		: common
+EXPLAIN 				: Ajax 통신을 위한 공통 스크립트( 폼 처리 스크립트 포함)
+WRITTEN DATE 		: 2006.04.02
+AUTHOR 					: JangDongJin
+E-MAIL					: robher@empas.com
+COMMENT 				:
+=================================================================*/
+function AjaxUpdater(p_div,p_url)
+{
+	AjaxResponse();
+	var myAjax = new Ajax.Updater({success: p_div}, p_url,{method: "get"});
+}
+
+function AjaxUpdater(p_div,p_url,p_param)
+{
+	AjaxResponse();
+	var myAjax = new Ajax.Updater({success: p_div}, p_url,{method: "get", parameters: p_param});
+}
+
+function AjaxRequestDiv(p_div,p_url,p_param)
+{
+	AjaxResponse();
+	var myAjax = new Ajax.Updater({success: p_div}, p_url,{method: "get", parameters: p_param});
+}
+
+//Background Process
+function AjaxRequestDivHide(p_div,p_url,p_param)
+{
+	var myAjax = new Ajax.Updater({success: p_div}, p_url,{method: "get", parameters: p_param});
+}
+
+function whenAjaxRequest(p_url,p_method,p_pars,p_resultmsg)
+{
+	var myAjax = new Ajax.Request(p_url,{method: p_method,	parameters: p_pars,	onComplete: showResult});
+}
+
+//아약스를 이용하여 인서트 DML을 실행할 경우.
+function whenAjaxSubmit(p_url,p_method,p_pars)
+{
+	var myAjax = new Ajax.Request(p_url,{method: p_method,	parameters: p_pars,	onComplete: submitResult});
+}
+
+//결과값 리턴(메세지 alert  후 링크 이동
+function submitResult(Result)
+{
+	try
+	{
+		var txt = Result.responseText;
+		if (txt.indexOf("<?xml") >= 0)
+		{
+			var xmlDoc = Result.responseXML;
+			var message = xmlDoc.getElementsByTagName("MESSAGE")[0].firstChild.nodeValue;
+			var returl	= unescape(xmlDoc.getElementsByTagName("LINK")[0].firstChild.nodeValue);
+
+			if(message != "NO")
+			{
+				alert(message );
+			}
+
+			var aUrl = returl.split(":");
+
+			switch (aUrl[0])
+			{
+				case 'CLOSE':
+					window.close();
+					break;
+				case 'CLOSE_OPENER':
+					opener.history.go(0);
+					window.close();
+					break;
+				case 'BACK':
+					window.close();
+					break;
+				case 'BACK_OPENER':
+					opener.history.go(0);
+					window.close();
+					break;
+				case 'REFLASH':
+					self.history.go(0);
+					break;
+				case 'PARENT_GO':
+					parent.location.href = unescape(aUrl[1]);
+					break;
+				case 'NO':
+					break;
+				default:
+					location.href = unescape(returl);
+					break;
+			}
+		}
+		else
+		{
+			alert(txt);
+		}
+		
+		Result = null;
+		txt = null;
+		xmlDoc = null;
+		
+	}
+	catch(e)
+	{
+		alert(e.message +" - "+ txt);
+	}
+}
+
+//form의 값들을 파라메터로 변환한다.(Ajax로 인서트 등의 작업을 하기 위해.)
+function collectParams(p_frm)
+{
+	var frm = document.forms[p_frm];
+	var retval = "";
+	try
+	{
+		retval = Form.serialize(frm);
+		return retval;
+		retval = null;
+	}
+	catch(e)
+	{
+		alert("Error : Collect Forms - "+ e.message);
+	}
+}
+
+//Ajax 응답 처리
+var myGlobalHandlers = "";
+
+function AjaxResponse()
+{
+	try{
+		$("hdivSystemWork").style.left = (document.body.scrollWidth - 225) / 2;
+		$("hdivSystemWork").style.top = "150px";
+		//$("hdivSystemWork").style.top = (document.body.scrollHeight - 0);
+
+		var myGlobalHandlers = {
+			onCreate: function(){
+				$("hdivSystemWork").style.display = "";
+			},
+
+			onComplete: function() {
+				if(Ajax.activeRequestCount == 0){
+					$("hdivSystemWork").style.display = "none";
+					resizeFrmForAjax();
+				}
+			}
+		};
+
+		Ajax.Responders.register(myGlobalHandlers);
+	}
+	catch(e)
+	{
+		//alert("Error : AjaxLoadging - "+ e.message);
+	}
+}
+
+
+
+/*=================================================================
+SCRIPT NAME 		: common
+EXPLAIN 				: XML + XSLT = HTML을 셋팅하기 위한 함수
+WRITTEN DATE 		: 2006.04.02
+AUTHOR 					: JangDongJin
+E-MAIL					: robher@empas.com
+COMMENT 				:
+=================================================================*/
+
+function TransformXML3(xmlText, stylePath, objDiv)
+{
+	try{
+		xmlText = trim(xmlText);
+		var domCat3 = new ActiveXObject("Msxml2.DOMDocument");
+		domCat3.async = false;
+		domCat3.loadXML(xmlText);
+
+
+
+		var domDetailStyle3 = new ActiveXObject("Msxml2.DOMDocument");
+		domDetailStyle3.async = false;
+		domDetailStyle3.load(stylePath);
+
+		if(domCat3 && domDetailStyle3)
+		{
+			$(objDiv).innerHTML = htmlDecode(domCat3.transformNode(domDetailStyle3));
+		}
+		else
+			alert("One or more documents failed to load");
+
+		xmlText = null;
+		domCat3 = null;
+		domDetailStyle3 = null;
+	}
+	catch(x)
+	{
+		alert(x.message);
+	}
+}
+
+/*=================================================================
+SCRIPT NAME 		: common
+EXPLAIN 				: 학습 관련 공통 스크립트
+WRITTEN DATE 		: 2006.04.02
+AUTHOR 					: JangDongJin
+E-MAIL					: robher@empas.com
+COMMENT 				:
+=================================================================*/
+function subjWin(url)
+{
+	var goUrl;
+	goUrl = url;
+	window.open(goUrl,'subjinfo','status=no,toolbar=no,location=no,directories=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=700,screenX=0,screenY=0');
+}
+
+function studyWin(url,zf_masform,wid,hei)
+{
+	var goUrl;
+	goUrl = url;
+	window.open(goUrl,'stwin','status=no,toolbar=no,location=no,directories=no,menubar=no,scrollbars=yes,resizable=yes,width='+wid+',height='+hei+',screenX=0,screenY=0');
+}
+
+function controlWinOpen(p_url,p_width,p_height,p_name)
+{
+	window.open(p_url,p_name,"toolbar=no,status=no,location=no,directories=no,menubar=no,scrollbars=yes,resizable=yes,top=100, left=100, width="+p_width+",height="+p_height);
+}
+
+/*=================================================================
+SCRIPT NAME 		: common
+EXPLAIN 				: File Upload Function
+WRITTEN DATE 		: 2006.04.02
+AUTHOR 					: JangDongJin
+E-MAIL					: robher@empas.com
+COMMENT 				:
+=================================================================*/
+
+//파일 완료 여부 체크. 절대 삭제 불가
+var gFileUpload = false;
+
+//이미지 미리보기
+function viewImages(p_file)
+{
+	openWinC("Yblog_func_file.viewImages?p_filename="+ p_file,"IMGPREV","width=500,height=500,scrollbars=1,resizable=1");
+}
+//이미지 사이즈 조정
+function resizeImg(himg,hsize)
+{
+	var pImg = $(himg);
+	if (pImg.width > hsize)
+		pImg.width = hsize;
+}
+
+
+/*=================================================================
+SCRIPT NAME 		: common
+EXPLAIN 				: 수강신청 관련 함수
+WRITTEN DATE 		: 2006.04.02
+AUTHOR 					: LeeMinHo
+E-MAIL					: scada
+COMMENT 				:
+=================================================================*/
+function whenDontPeriod()
+{
+	alert("수강신청 기간이 아닙니다.\n\n수강신청 하실 수 없습니다.    ");
+	return;
+}
+
+function whenDontSubjseq()
+{
+	alert("신청할 수 있는 차수정보가 없습니다.    \n\n수강신청 하실 수 없습니다.    ");
+	return;
+}
+
+function whenProposeDept(propUri)
+{
+	window.open(propUri,"win","toolbar=no,statusbar=no,location=no,directories=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=700").focus();
+}
+
+function whenPropose(p_seqval,p_tid,p_finalurl,p_proptype)
+{
+	var propUri = "http://www.credu.com/pls/cyber/y_prop.subjInfo?p_proptype="+p_proptype+"&p_seqval="+p_seqval+"&p_tid="+p_tid+"&p_finalurl="+p_finalurl;
+	window.open(propUri,"win","toolbar=no,statusbar=no,location=no,directories=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600").focus();
+}
+
+function whenProposeN(p_seqval,p_tid,p_finalurl,p_grcode,p_blog,p_proptype)
+{
+	var propUri = "http://www.credu.com/pls/cyber/y_prop.subjInfo?p_proptype="+p_proptype+"&p_seqval="+p_seqval+"&p_tid="+p_tid+"&p_finalurl="+p_finalurl+"&p_grcode="+p_grcode+"&p_blog="+p_blog;
+	window.open(propUri,"win","toolbar=no,statusbar=no,location=no,directories=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600").focus();
+}
+
+
+function whenProposeRe(p_seqval,p_tid,p_finalurl,p_proptype)
+{
+
+	if (!confirm("이 과정에 대해 이미 신청한 정보가 있습니다.\n\n재 신청을 하시게 되면 기존 신청정보는 삭제가 됩니다.\n\n재 신청을 하시겠습니까?"))
+	{
+		return;
+	}
+	var propUri = "http://www.credu.com/pls/cyber/y_prop.subjInfo?p_proptype="+p_proptype+"&p_seqval="+p_seqval+"&p_tid="+p_tid+"&p_finalurl="+p_finalurl+"&p_retry=Y";
+	window.open(propUri,"win","toolbar=no,statusbar=no,location=no,directories=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600").focus();
+}
+
+
+/*=================================================================
+SCRIPT NAME 		: common
+EXPLAIN 				: 기타 함수
+WRITTEN DATE 		: 2006.04.02
+AUTHOR 					: LeeMinHo
+E-MAIL					: scada
+COMMENT 				:
+=================================================================*/
+function isIE()
+{
+	var ua = navigator.userAgent.toLowerCase();
+	return (ua.indexOf("msie") != -1) && (ua.indexOf("opera") == -1) && (ua.indexOf("webtv") == -1);
+}
+
+function htmlDecode(p_val)
+{
+	var v_val;
+	v_val = p_val.replace(/&quot;/gi,'"');
+	v_val = v_val.replace(/&lt;/gi,'<');
+	v_val = v_val.replace(/&gt;/gi,'>');
+	return v_val;
+
+	v_val = null;
+}
+
+function trim(str) {
+	var count = str.length;
+	var len = count;
+	var st = 0;
+
+	while ((st < len) && (str.charAt(st) <= ' ')) {
+	   st++;
+	}
+	while ((st < len) && (str.charAt(len - 1) <= ' ')) {
+	   len--;
+	}
+	return ((st > 0) || (len < count)) ? str.substring(st, len) : str ;
+}
+
+
+
+/*2009.01.09 한남대 추가*/
+//Popup
+function popup(theURL,winName,features) { 
+  window.open(theURL,winName,features);
+}
+
+//Tab over
+function tab_bar(select_tb,su){
+for(i=1 ; i<=su ; i++){
+	var obj = document.all["screen_tb"+i];
+	obj.style.display="none";
+}
+show_screen(select_tb)
+}
+function show_screen(su){
+
+var obj = document.all["screen"+su];
+obj.style.display="";	
+}
+
+
+
+
+
+//flash insert
+
+function MakeFlashString(source,id,width,height,wmode, otherParam)
+{	
+return "<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,22,0\" width="+width+" height="+height+" id="+id+"><param name=wmode value="+wmode+" /><param name=movie value="+source+" /><param name=quality value=high />"+otherParam+"<embed src="+source+" quality=high wmode="+wmode+" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.macromedia.com/shockwave/download/index.cgi?p1_prod_version=shockwaveflash\" width="+width+" height="+height+"></embed></object>";
+}
+
+function MakeObjectString(classid, codebase, name, id, width,height, param)
+{
+return "<object classid="+classid+" codebase="+codebase+" name="+name+" width="+width+" height="+height+" id="+id+"><param name=wmode value="+wmode+" />"+param+"</object>";
+}
+
+function MakeMovieString(MovieURL, width, height, showControl, autoStart)
+{
+return "<EMBED SRC='"+MovieURL+"' width='"+width+"' height='"+height+"'  showcontrols='"+showControl+"' autostart='"+autoStart+"'></EMBED>";
+}
+
+//innerHTML Type
+function SetInnerHTML(target, code)
+{ 
+target.innerHTML = code; 
+}
+
+//Direct Write Type
+function DocumentWrite(src)
+{
+document.write(src);
+}
+
+
+
+//scrolling table with fixed cell
+function scrollX() {
+document.getElementById("topLine").scrollLeft = document.getElementById("mainDisplay").scrollLeft;
+}
+function scrollY() { 
+document.getElementById("leftDisplay").scrollTop = document.getElementById("mainDisplay").scrollTop;
+}
+pq<��      UH��UH��;/%U��   1:http://uniboard.koreatech.ac.kr/script/common.js necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:48:22 GMT
+Accept-Ranges: bytes
+Etag: W/"17959-1370827991000"
+Last-Modified: Mon, 10 Jun 2013 01:33:11 GMT
+Content-Length: 17959
+Content-Type: text/javascript
+ uncompressed-len 0   F'

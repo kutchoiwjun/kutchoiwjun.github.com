@@ -1,0 +1,1885 @@
+////////////////////////////////////////////////////////////////////////////////////
+//
+// KSignCASE-Web v2.0 javascript function definition.
+//
+////////////////////////////////////////////////////////////////////////////////////
+function CheckAX_OpenWeb()
+{
+	navigator.plugins.refresh(false);
+	var numPlugins = navigator.plugins.length;
+	 
+	if(numPlugins == 0) {
+		return false;
+	}
+
+	for (var i = 0; i < numPlugins; i++) {
+		var plugin = navigator.plugins[i];
+		if(plugin.filename == "npkpg_moj_fox.dll" || plugin.filename == "npkpg_moj_safari.dll" || plugin.filename == "npkpg_moj_chrome.dll" || plugin.filename == "npkpg_moj_opera.dll") {
+										
+//								alert("ksign plugin file : " + plugin.filename);
+//								alert("ksign plugin version : " + plugin.description);
+						
+			return true;
+		 }
+	 }
+	 return false;	
+}
+
+function CheckAX()
+{
+	var Installed = false;
+	// AxKSignCASE ÇÁ·ÎÁ§Æ® ÀÏ¶§
+	var KSIGNActiveXProgID = "AxMOJ.AxMOJ.1";
+	
+	try
+	{
+		var xObj = new ActiveXObject(KSIGNActiveXProgID);
+	
+		if(xObj){
+			Installed = true;
+		}
+		else
+		{
+			Installed = false;
+		}
+	}
+	catch(ex)
+	{
+		Installed = false;
+	}
+	
+	return Installed;
+} 
+
+/*
+function InitConfig()
+{
+	var ret;
+
+	//////////////////////////////////////////////////////////////////////////////////
+	// È¯°æ¼³Á¤½Ã º¯°æÇÏÁö ¾Ê´Â È¯°æ º¯¼öÀÇ °æ¿ì BSTR ÇüÀº ""À» intÇüÀº -1À» ÀÔ·ÂÇÑ´Ù.
+	//////////////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////////////
+	// SetAppCommon(BSTR PkiType, int nNtCa, int nActiveDs, int *retval)
+	// [APP_COMMON]ÀÇ Á¤º¸¸¦ Setting ÇÏ´Â ÇÔ¼ö 
+	// 1. BSTR PkiType : CAÀÇ Á¾·ù¸¦ 	
+	//	#define AXKCASE_COMMON_PKITYPE_NPKI		("NPKI")
+	//	#define AXKCASE_COMMON_PKITYPE_GPKI		("GPKI")
+	//	#define AXKCASE_COMMON_PKITYPE_PPKI		("PPKI")
+	// 2. int nNtCa : CAÀÇ Á¾·ù°¡ NtÀÎÁö ¾Æ´ÑÁö (1/0)				
+	// 3. int nActiveDs : DS°¡ Active µð·ºÅä¸®ÀÎÁö ¾Æ´ÑÁö (1/0)	
+	//////////////////////////////////////////////////////////////////////////////////
+
+	ret = document.AxKCASE.SetAppCommon("GPKI", 0, 0);
+	if( ret != 0 ) {
+		errmsg = document.AxKCASE.GetErrorContent();
+		alert("SetAppCommon error: "+errmsg );
+		return;
+	}
+                   
+	//////////////////////////////////////////////////////////////////////////////////
+	// SetCMPInform(BSTR CaIp, int nCmpPort, BSTR CmpKmCertDn, BSTR CmpDsIp,
+	//					int nDsPort, int nWtlsCert, int nCmpCaVer, int *retval)
+	// [CMP_INFORM]ÀÇ Á¤º¸¸¦ Setting ÇÏ´Â ÇÔ¼ö 
+	// 1. BSTR CaIp : CA ¼­¹öÀÇ IP ÁÖ¼Ò 
+	// 2. int nCmpPort : CA ¼­¹öÀÇ cmp Æ÷Æ®
+	// 3. BSTR CmpKmCertDn : VID¸¦ À§ÇÑ ¾ÏÈ£Å°ºÐ¹è ÀÎÁõ¼­ DN
+	// 4. BSTR CmpDsIp : DS ¼­¹ö IP ÁÖ¼Ò 
+	// 5. int nDsPort : DS ¼­¹ö Æ÷Æ® 
+	// 6. int nWtlsCert : ÀÎÁõ¼­°¡ Wtls¿ëÀÎÁö ¾Æ´ÑÁö (1/0)
+	// 7. int nCmpCaVer : CA ¼­¹ö ¹öÀü 
+	//////////////////////////////////////////////////////////////////////////////////
+
+	ret = document.AxKCASE.SetCMPInform("61.250.225.8", 5502, "", "61.250.225.4", 411, 0, 2);
+	if( ret != 0 ) {
+		errmsg = document.AxKCASE.GetErrorContent();
+		alert("SetCMPInform error: "+errmsg );
+		return;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////
+	// SetPKCSInform(int nSign_ContentInc,	int nSign_CertPathInc, int nSign_CvOp,
+	//				 int nSign_EncOaep, int nSign_SaveCert,	int nEnc_SignCertOp,
+	//               int nEnc_LocalKmCert,  int nEnc_SaveCert, char *pszEncAlgo) 
+	// [PKCS_INFORM]ÀÇ Á¤º¸¸¦ Setting ÇÏ´Â ÇÔ¼ö 
+	// 1. int nSign_ContentInc : ÀüÀÚ¼­¸í½Ã ¿ø¹® Æ÷ÇÔ/¹ÌÆ÷ÇÔ (1/0)
+	// 2. int nSign_CertPathInc : ÀüÀÚ¼­¸í½Ã ÀÎÁõ¼­ Chain Æ÷ÇÔ/¹ÌÆ÷ÇÔ (1/0)
+	// 3. int nSign_CvOp : ÀüÀÚ¼­¸í½Ã ¼­¸í¿ë ÀÎÁõ¼­ °ËÁõ ¿É¼Ç (1/0)
+	// 4. int nSign_EncOaep : RSA OAEP »ç¿ë ¼±ÅÃ ¿É¼Ç (1/0)	
+	// 5. int nSign_SaveCert : ÀüÀÚ¼­¸í °ËÁõ½Ã ÀÎÁõ¼­ ÀúÀå ¿É¼Ç (1/0)	
+	// 6. int nEnc_SignCertOp : ¾ÏÈ£È­½Ã ¼­¸í¿ë ÀÎÁõ¼­ »ç¿ë ¿É¼Ç (1/0)
+	// 7. int nEnc_LocalKmCert : ¾ÏÈ£È­½Ã ÀÎÁõ¼­ ÂüÁ¶ ·ÎÄÃ ¿ì¼±¼øÀ§ (1/0)
+	// 8. int nEnc_SaveCert : ¾ÏÈ£È­½Ã ÀÎÁõ¼­ ÀúÀå ¿É¼Ç (1/0)	
+	// 9. char* pszEncAlgo : ¾ÏÈ£È­½Ã »ç¿ëÇÒ ±âº» ¾Ë°í¸®Áò  (SEED, DES, 3DES, RC2)
+	//////////////////////////////////////////////////////////////////////////////////
+
+	ret = document.AxKCASE.SetPKCSInform(1, 0, 0, 0, 0, 0, 1, 1, "SEED");
+	if( ret != 0 ) {
+		errmsg = document.AxKCASE.GetErrorContent();
+		alert("SetPKCSInform error: "+errmsg );
+		return;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////
+	// SetCVInform(int nAnyPolicy, BSTR ArlDn, BSTR Policies, int nPathValOp,
+	// BSTR ValMethod, BSTR Crl_ChkOp, int nCrl_SaveOp, int *retval)
+	// [CV_INFORM]ÀÇ Á¤º¸¸¦ Setting ÇÏ´Â ÇÔ¼ö 
+	// 1. int nAnyPolicy : ¸ðµçÁ¤Ã¥ Çã¿ë ¿É¼Ç (1/0)	
+	// 2. BSTR ArlDn : CA ÀÎÁõ¼­ÀÇ ARL ºÐ±âÁ¡ÀÌ ¾øÀ» °æ¿ì ARLDN °ª ¼³Á¤
+	// 3. BSTR Policies : ÃÊ±â Á¤Ã¥ ÁýÇÕ
+	// 4. int nPathValOp : ÀÎÁõ °æ·Î °ËÁõ ¿É¼Ç (1/0)	
+	// 5. BSTR ValMethod : CRL/OCSP °ËÁõ ¿É¼Ç (CRLCHECK_OCSP, CRLCHECK_CRL)	
+	// 6. BSTR Crl_ChkOp : CRL °ËÁõ ¿É¼Ç 
+	//                          (CRL_CHECK_FULL, CRL_CHECK_USERONLY, CRL_CHECK_NONE)
+	// 7. int nCrl_SaveOp : CRL ÀúÀå ¿É¼Ç (1/0)
+	//////////////////////////////////////////////////////////////////////////////////
+
+	ret = document.AxKCASE.SetCVInform(1, "", "1.2.3.4.5|2.5.29.32.0|1.2.392.200132|1.2.392.200132.1|1.2.392.200132.1.1|1.2.392.200132.1.1.1|1.2.410.200004.2.1|1.2.410.200004.5.1.1.5|1.2.410.200004.5.1.1.7|1.2.410.200004.5.2.1.1|1.2.410.200004.5.2.1.2|1.2.410.200004.5.3.1.1|1.2.410.200004.5.3.1.2|1.2.410.200004.5.3.1.4|1.2.410.200004.5.4.1.1|1.2.410.200004.5.4.1.2|1.2.410.200004.5.4.1.3|1.2.410.200004.5.4.1.4|1.2.410.200004.5.4.1.5|1.2.410.200004.5.4.1.7|1.2.410.200005.1.1.1|1.2.410.200005.1.1.5|1.2.410.200012.1.1.1|1.2.410.200012.1.1.3|1.2.410.100001.2.2.1",
+	1, "CRLCHECK_CRL", "CRL_CHECK_FULL", 0);
+	if( ret != 0 ) {
+		errmsg = document.AxKCASE.GetErrorContent();
+		alert("SetCVInform error: "+errmsg );
+		return;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////
+	// SetOPPInform(BSTR RaAdmin_Path, int AdminPort, int *retval)	
+	// [OPP_INFORM]ÀÇ Á¤º¸¸¦ Setting ÇÏ´Â ÇÔ¼ö 
+	// 1. BSTR RaAdmin_Path : RA ÀÎÁõ¼­ ÀúÀå À§Ä¡
+	//        "%ProgramFiles%\\NPKI\pki\\RA" "%FloppyDrive%\\NPKI\\pki\\RA" 
+	// 2. int AdminPort : CAÀÇ Admin Æ÷Æ®
+	//////////////////////////////////////////////////////////////////////////////////
+
+	ret = document.AxKCASE.SetOPPInform("", 8502);
+	if( ret != 0 ) {
+		errmsg = document.AxKCASE.GetErrorContent();
+		alert("SetOPPInform error: "+errmsg );
+		return;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////
+	// SetCMInform(BSTR PriKey_EncAlg, int *retval)	
+	// [CM_INFORM]ÀÇ Á¤º¸¸¦ Setting ÇÏ´Â ÇÔ¼ö 
+	// 1. BSTR PriKey_EncAlg : °³ÀÎÅ° ¾ÏÈ£È­ ¾Ë°í¸®Áò	
+	//	  "KCP_PBEWithMD2DES_CBC" "PBE_ENCALGO_MD5DES" 	
+	//	  "PBE_ENCALGO_SHA1SEED" "PBE2_ENCALGO_SHA1SEED"
+	//	  "PBE2_ENCALGO_SHA1DESEDE" 
+	//////////////////////////////////////////////////////////////////////////////////
+
+	ret = document.AxKCASE.SetCMInform("PBE_ENCALGO_SHA1SEED");
+	if( ret != 0 ) {
+		errmsg = document.AxKCASE.GetErrorContent();
+		alert("SetCMInform error: "+errmsg );
+		return;
+	}  
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	// SetSubjectInform(  BSTR szSubjectDefaultMedia, 
+	//                    int nSubjectPwdPolicyOp, 
+	//                    int nSubjectPwdMinLen, 
+	//                    int nSubjectPwdRandomLevel, 
+	//                    int nSubjectPwdValidTime, 
+	//                    int *retval)	
+	// [SUBJECT_INFORM]ÀÇ Á¤º¸¸¦ Setting ÇÏ´Â ÇÔ¼ö 
+	// 1. BSTR szSubjectDefaultMedia : µðÆúÆ® ÀúÀå ¸ÅÃ¼	
+	//	  "HARDDISK", "FLOPPYDISK", "SMARTCARD", "USB" Áß ¼±ÅÃ 	
+	// 2. int nSubjectPwdPolicyOp	 : ÆÐ½º¿öµå Á¤Ã¥ ¿É¼Ç (1/0)	
+	// 3. int nSubjectPwdMinLen 	 : ÆÐ½º¿öµå ÃÖ¼Ò ±æÀÌ  (8~16)
+	// 4. int nSubjectPwdRandomLevel : ÆÐ½º¿öµå ±¸¼º ·¹º§ (0/1/2)	
+	// 5. int nSubjectPwdValidDays 	 : ÆÐ½º¿öµå À¯È¿ ±â°£ 
+	// 6. int nSubjectPwdAlarmDays 	 : ÆÐ½º¿öµå º¯°æÀÏ ¾Ë¸² °æ°í ¸Þ½ÃÁö Ãâ·ÂÀÏ 
+	//////////////////////////////////////////////////////////////////////////////////
+	ret = document.AxKCASE.SetSubjectInform("HARDDISK", 0, 8, 1, 30,10);
+	if( ret != 0 ) {
+		errmsg = document.AxNCASign.GetErrorContent();
+		alert("SetSubjectInform error: "+errmsg );
+		return;
+	}
+
+
+}
+*/
+
+function SetConfig()
+{
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	document.AxKCASE.SetCommonInfo();
+	return;
+}
+
+function CheckFirewall()
+{
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	document.AxKCASE.CheckFirewall();
+	return;
+}
+
+function SelectCert_OpenWeb(form)
+{
+	var userAgent = navigator.userAgent;
+	userAgent = userAgent.toLowerCase();
+
+	if ( userAgent.indexOf("safari") != -1 || userAgent.indexOf("chrome") != -1 ) {
+		SelectCert_OpenWeb_sa_ch(form);
+	} else {
+		SelectCert_OpenWeb_op_fi(form);
+	}
+}
+
+function SelectCert_OpenWeb_sa_ch(form)
+{
+	//alert("js-105");
+	var dn;
+
+	if(!CheckAX_OpenWeb()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	dn = AxKCASE.SelectCert();
+	if ((dn == null) || (dn == ""))
+	{
+		if(AxKCASE.GetErrorCode() != -1)
+			alert(AxKCASE.GetErrorContent());
+		return false;
+	}
+	form.user_dn.value = dn;
+
+	return true;
+}
+
+function SelectCert_OpenWeb_op_fi(form)
+{
+	//alert("js-105");
+	var dn;
+
+	if(!CheckAX_OpenWeb()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	dn = document.AxKCASE.SelectCert();
+	if ((dn == null) || (dn == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return false;
+	}
+	form.user_dn.value = dn;
+
+	return true;
+}
+
+function SelectCert(form)
+{
+	var dn;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	dn = document.AxKCASE.SelectCert();
+	if ((dn == null) || (dn == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return false;
+	}
+	form.user_dn.value = dn;
+
+	return true;
+}
+
+function ManageCert()
+{
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	document.AxKCASE.ManagementCert();
+	return;
+}
+
+
+function IssueCert()
+{
+	var ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	ret = document.AxKCASE.IssueCertificate("", "");
+	if(ret != 0){
+		if(ret != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert("ÀÎÁõ¼­ ¹ß±ÞÀ» ¿Ï·áÇß½À´Ï´Ù.");
+	return;
+}
+
+function ReIssueCert()
+{
+	var ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	ret = document.AxKCASE.IssueCertificate("", "");
+	if(ret != 0){
+		if(ret != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert("ÀÎÁõ¼­ Àç¹ß±ÞÀ» ¿Ï·áÇß½À´Ï´Ù.");
+	return;
+}
+
+function UpdateCert()
+{
+	var ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	ret = document.AxKCASE.UpdateCertificate();
+	if(ret != 0){
+		if(ret != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert("ÀÎÁõ¼­ °»½ÅÀ» ¿Ï·áÇß½À´Ï´Ù.");
+	return;
+}
+
+function KeyUpdateCert()
+{
+	var ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	ret = document.AxKCASE.KeyUpdateCertificate();
+	if(ret != 0){
+		if(ret != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert("ÀÎÁõ¼­ Å°°»½ÅÀ» ¿Ï·áÇß½À´Ï´Ù.");
+	return;
+}
+
+function HoldCert()
+{
+	var ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	ret = document.AxKCASE.HoldCertificate();
+	if(ret != 0){
+		if(ret != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert("ÀÎÁõ¼­ È¿·ÂÁ¤Áö¸¦ ¿Ï·áÇß½À´Ï´Ù.");
+	return;
+}
+
+function RevokeCert()
+{
+	var ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	ret = document.AxKCASE.RevokeCertificate();
+	if(ret != 0){
+		if(ret != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert("ÀÎÁõ¼­ ÆóÁö¸¦ ¿Ï·áÇß½À´Ï´Ù.");
+	return;
+}
+
+function SignedData_OpenWeb(form)
+{
+	var userAgent = navigator.userAgent;
+	userAgent = userAgent.toLowerCase();
+
+	if ( userAgent.indexOf("safari") != -1 || userAgent.indexOf("chrome") != -1 ) {
+		SignedData_OpenWeb_sa_ch(form);
+	} else {
+		SignedData_OpenWeb_op_fi(form);
+	}
+}
+
+function SignedData_OpenWeb_sa_ch(form)
+{
+	//alert("SignedData_OpenWeb_sa_ch");
+	var signeddata;
+
+	if(!CheckAX_OpenWeb()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	signeddata = AxKCASE.SignedData(form.user_dn.value, "", form.src.value);
+	if((signeddata == null) || (signeddata == ""))
+	{
+		if(AxKCASE.GetErrorCode() != -1)
+			alert(AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signeddata.value = signeddata;
+	return;
+}
+
+function SignedData_OpenWeb_op_fi(form)
+{
+	//alert("SignedData_OpenWeb_op_fi");
+	var signeddata;
+
+	if(!CheckAX_OpenWeb()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	signeddata = document.AxKCASE.SignedData(form.user_dn.value, "", form.src.value);
+	if((signeddata == null) || (signeddata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signeddata.value = signeddata;
+	return;
+}
+
+function SignedData(form)
+{
+	var signeddata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	signeddata = document.AxKCASE.SignedData(form.user_dn.value, "", form.src.value);
+	if((signeddata == null) || (signeddata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = signeddata;
+	return;
+}
+
+function VerifySignedData(form)
+{
+	var srcdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.signed_data.value == null) || (form.signed_data.value == "")){
+		alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+		return;
+	}
+	// srcdata = document.AxKCASE.VerifySignedData(form.signed_data.value, "", 1);
+	srcdata = document.AxKCASE.VerifySignedData(form.signed_data.value, "", 0);
+	if((srcdata == null) || (srcdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert(srcdata);
+	return;
+}
+
+function EnvelopedData(form)
+{
+	var envdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	// envdata = document.AxKCASE.EnvelopedData(form.rec_dn.value, form.src.value, 1);
+	envdata = document.AxKCASE.EnvelopedData(form.rec_dn.value, form.src.value, 0);
+	if((envdata == null) || (envdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = envdata;
+	return;
+}
+
+function DecryptEnvelopedData(form)
+{
+	var srcdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.signed_data.value == null) || (form.signed_data.value == "")) {
+		alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if ((form.user_dn.value == null) || (form.user_dn.value == "")) {
+		if(!SelectCert(form))
+			return;
+	}
+
+	srcdata = document.AxKCASE.DecryptEnvelopedData(form.rec_dn.value, "", form.signed_data.value);
+	if((srcdata == null) || (srcdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert(srcdata);
+	return;
+}
+
+
+function SignedAndEnvelopedData(form)
+{
+	var signandenvdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+	if((form.rec_dn.value == null) || (form.rec_dn.value == "")){
+		alert("recipient dn À» ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	if ((form.user_dn.value == null) || (form.user_dn.value == "")) {
+		if(!SelectCert(form))
+			return;
+	}
+
+	signandenvdata = document.AxKCASE.SignedAndEnvelopedData(form.user_dn.value, "", form.rec_dn.value, form.src.value, 1);
+	if((signandenvdata == null) || (signandenvdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = signandenvdata;
+	return;
+}
+
+function VerifySignedAndEnvelopedData(form) 
+{
+	var srcdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.signed_data.value == null) || (form.signed_data.value == "")){
+		alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	srcdata = document.AxKCASE.VerifySignedAndEnvelopedData(form.rec_dn.value, "", form.signed_data.value, 1);
+	if((srcdata == null) || (srcdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert(srcdata);
+	return;
+}
+
+function EncryptedDigest(form)
+{
+	var encdigetdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	if ((form.user_dn.value == null) || (form.user_dn.value == "")) {
+		if(!SelectCert(form))
+			return;
+	}
+	alert(form.user_dn.value);
+	encdigetdata = document.AxKCASE.EncryptedDigest(form.user_dn.value, "", form.src.value);
+	if((encdigetdata == null) || (encdigetdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = encdigetdata;
+	return;
+}
+
+function VerifyEncryptedDigest(form)
+{
+	var ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	if((form.signed_data.value == null) || (form.signed_data.value == "")){
+		alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if ((form.user_dn.value == null) || (form.user_dn.value == "")) {
+		if(!SelectCert(form))
+			return;
+	}
+alert(form.user_dn.value);
+	ret = document.AxKCASE.VerifyEncryptedDigest(form.user_dn.value, form.src.value, form.signed_data.value, 0);
+	if(ret != 0){
+		if(ret != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert("´Ü¼ø ¸Þ¼¼Áö ÀüÀÚ¼­¸í °ËÁõ¿¡ ¼º°øÇß½À´Ï´Ù.");
+	return;
+}
+
+function SymmEncrypt(form)
+{
+	var key, enckey, envdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+	if((form.rec_dn.value == null) || (form.rec_dn.value == "")){
+		alert("recipient dn À» ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	// Å° »ý¼º 
+	key = document.AxKCASE.GenSymmetricKey("SEED");
+	if((key == null) || (key == "")){
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	// ´ëÄªÅ°´Â ºñ´ëÄª ¾ÏÈ£È­
+	/*enckey = document.AxKCASE.AsymmEncrypt(form.rec_dn.value, key);
+	if((enckey == null) || (enckey == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+	form.symm_enckey.value = enckey;
+*/
+	// ¸Þ¼¼Áö ´ëÄªÅ° ¾ÏÈ£È­
+	envdata = document.AxKCASE.SymmEncrypt("SEED", "M8EVbfFjKaWKlllYVUFFhzj2PUc3deH+o7xXkeZRCDg=", form.src.value);
+	if((envdata == null) || (envdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = envdata;
+	return;
+}
+/*
+function SymmEncrypt(form)
+{
+	var key, enckey, envdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+	if((form.rec_dn.value == null) || (form.rec_dn.value == "")){
+		alert("recipient dn À» ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	// Å° »ý¼º 
+	key = document.AxKCASE.GenSymmetricKey("SEED");
+	if((key == null) || (key == "")){
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	// ´ëÄªÅ°´Â ºñ´ëÄª ¾ÏÈ£È­
+	enckey = document.AxKCASE.AsymmEncrypt(form.rec_dn.value, key);
+	if((enckey == null) || (enckey == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+	form.symm_enckey.value = enckey;
+
+	// ¸Þ¼¼Áö ´ëÄªÅ° ¾ÏÈ£È­
+	envdata = document.AxKCASE.SymmEncrypt("NEAT", key, form.src.value);
+	if((envdata == null) || (envdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = envdata;
+	return;
+}*/
+function TestSymmEncrypt(form)
+{
+    var iv, key, enckey, envdata;
+    var aa;
+
+    if(!CheckAX()) {
+        alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+        return;
+    }
+
+    if((form.src.value == null) || (form.src.value == "")){
+        alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+        return;
+    }
+
+    if((form.Select_SymmAlg.value == null) || (form.Select_SymmAlg.value == "")){
+        alert("´ëÄªÅ° ¾Ë°í¸®ÁòÀ» ¸ÕÀú ¼±ÅÃÇÏ¼¼¿ä.");
+        return;
+    }
+   
+    // Å° »ý¼º
+
+    iv = "0123456789012345";
+    key = document.AxKCASE.BASE64Encode("0123456789012345"+iv);
+  
+    alert("Password : " + key);
+
+    form.symm_enckey.value = key;
+
+    // ¸Þ¼¼Áö ´ëÄªÅ° ¾ÏÈ£È­
+    //envdata = document.AxKCASE.SymmEncrypt("NEAT", key, form.src.value);
+    envdata = document.AxKCASE.SymmEncryptEncoded(form.Select_SymmAlg.value, key, form.src.value);
+    if((envdata == null) || (envdata == ""))
+    {
+        if(document.AxKCASE.GetErrorCode() != -1)
+            alert(document.AxKCASE.GetErrorContent());
+        return;
+    }
+
+    form.signed_data.value = envdata;
+    return;
+}
+function SymmDecrypt(form)
+{
+	var deckey, orgdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.signed_data.value == null) || (form.signed_data.value == "")){
+		alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.rec_dn.value == null) || (form.rec_dn.value == "")){
+		alert("dn À» ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	// ´ëÄªÅ°¸¦ ºñ´ëÄª º¹È£È­
+/*	deckey = document.AxKCASE.AsymmDecrypt(form.rec_dn.value, "8888888888888888", form.symm_enckey.value);
+	if((deckey == null) || (deckey == "")){
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+*/
+	// ¾ÏÈ£¹®Àº ´ëÄªÅ° º¹È£È­ 
+	orgdata = document.AxKCASE.SymmDecrypt("SEED", "M8EVbfFjKaWKlllYVUFFhzj2PUc3deH+o7xXkeZRCDg=", form.signed_data.value);
+	if((orgdata == null) || (orgdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert(orgdata);
+	return;
+}
+function TestSymmDecrypt(form)
+{
+    var iv, key, deckey, orgdata;
+
+    if(!CheckAX()) {
+        alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+        return;
+    }
+
+    if((form.signed_data.value == null) || (form.signed_data.value == "")){
+        alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+        return;
+    }
+
+    if((form.Select_SymmAlg.value == null) || (form.Select_SymmAlg.value == "")){
+        alert("´ëÄªÅ° ¾Ë°í¸®ÁòÀ» ¸ÕÀú ¼±ÅÃÇÏ¼¼¿ä.");
+        return;
+    }
+ 
+   
+    key = "2ygGbrPKIMjLmQ1mvh9CRPcZx4HGMnZqx52RHiSzMN8=";
+
+    alert("Password : " +key);
+
+    // ¾ÏÈ£¹®Àº ´ëÄªÅ° º¹È£È­
+    //orgdata = document.AxKCASE.SymmDecrypt("NEAT", form.symm_enckey.value, form.signed_data.value);
+    //orgdata = document.AxKCASE.SymmDecrypt("SEED", form.symm_enckey.value, form.signed_data.value);
+    orgdata = document.AxKCASE.SymmDecrypt(form.Select_SymmAlg.value, key, form.signed_data.value);
+    if((orgdata == null) || (orgdata == ""))
+    {
+        if(document.AxKCASE.GetErrorCode() != -1)
+            alert(document.AxKCASE.GetErrorContent());
+        return;
+    }
+
+    alert(orgdata);
+    return;
+}
+
+function AsymmEncrypt(form)
+{
+	var envdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+	if((form.rec_dn.value == null) || (form.rec_dn.value == "")){
+		alert("recipient dn À» ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	envdata = document.AxKCASE.AsymmEncrypt(form.rec_dn.value, form.src.value);
+	if((envdata == null) || (envdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = envdata;
+	return;
+}
+function TestAsymmEncrypt(form)
+{
+    var envdata;
+
+    if(!CheckAX()) {
+        alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+        return;
+    }
+
+    if((form.src.value == null) || (form.src.value == "")){
+        alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+        return;
+    }
+    if((form.rec_dn.value == null) || (form.rec_dn.value == "")){
+        alert("recipient dn À» ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+        return;
+    }
+
+    envdata = document.AxKCASE.AsymmEncrpytEncoded(form.rec_dn.value, form.src.value);
+    if((envdata == null) || (envdata == ""))
+    {
+        if(document.AxKCASE.GetErrorCode() != -1)
+            alert(document.AxKCASE.GetErrorContent());
+        return;
+    }
+
+    form.signed_data.value = envdata;
+    return;
+}
+
+function AsymmDecrypt(form) 
+{
+	var srcdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.signed_data.value == null) || (form.signed_data.value == "")){
+		alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+		return;
+	}
+	srcdata = document.AxKCASE.AsymmDecrypt(form.rec_dn.value, "", form.signed_data.value);
+	if((srcdata == null) || (srcdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert(srcdata);
+	return;
+}
+function TestAsymmDecrypt(form)
+{
+    var srcdata;
+
+    if(!CheckAX()) {
+        alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+        return;
+    }
+
+    if((form.signed_data.value == null) || (form.signed_data.value == "")){
+        alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+        return;
+    }
+    srcdata = document.AxKCASE.AsymmDecryptEncoded("", "", form.signed_data.value);
+	if((srcdata == null) || (srcdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert(srcdata);
+	return;
+}
+function MsgDigest(form)
+{
+	var digestdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+	if((form.rec_dn.value == null) || (form.rec_dn.value == "")){
+		alert("recipient dn À» ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	digestdata = document.AxKCASE.MsgDigest("SHA1", form.src.value);
+	if((digestdata == null) || (digestdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = digestdata;
+	return;
+}
+
+function VerifyMsgDigest(form) 
+{
+	var ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.signed_data.value == null) || (form.signed_data.value == "")){
+		alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+		return;
+	}
+	
+	ret = document.AxKCASE.VerifyMsgDigest("SHA1", form.signed_data.value, form.src.value);
+
+	if( ret != 0 )
+	{
+		errmsg = document.AxKCASE.GetErrorContent();
+		alert("VerifyMsgDigest error: "+errmsg );
+		return;
+	}
+
+	alert("VerifyMsgDigest : ÇØ½¬°ª °ËÁõ¿¡ ¼º°øÇÏ¿´½À´Ï´Ù.");
+	return;
+}
+
+function GetRFromKey()
+{
+	var RandomData;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	RandomData = document.AxKCASE.GetRFromKey("", "");
+
+	if( RandomData == null || RandomData == "" )
+	{
+		errmsg = document.AxKCASE.GetErrorContent();
+		alert("GetRFromKey error: "+errmsg );
+		return;
+	}
+
+	alert("GetRFromKey : "+RandomData);
+	document.test.user_rvalue.value = RandomData;
+	return;
+}
+
+function Make_hVID()
+{  
+	var hVID;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	hVID = document.AxKCASE.Make_hVID("", "", "");
+
+	if( hVID == null || hVID == "" )
+	{
+		errmsg = document.AxKCASE.GetErrorContent();
+		alert("Make_hVID error: "+errmsg );
+		return;
+	}
+
+	alert("Make_hVID : "+hVID);
+	document.AxKCASE.value = hVID;
+	document.test.Make_hVID_TEXT.value = hVID;
+	return;
+}
+
+function ValidCert_VID()
+{  
+	var ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+/*
+	if (document.test.user_rvalue.value == null || document.test.user_rvalue.value == "")
+	{
+		alert("»ç¿ëÀÚ R °ªÀÌ ¾ø½À´Ï´Ù.\n¸ÕÀú GetRFromKey À» ½ÇÇàÇÏ¼¼¿ä");
+		return;
+	}
+*/
+	//ret = document.AxKCASE.ValidCert_VID("", document.test.user_rvalue.value, "");
+	ret = document.AxKCASE.ValidCert_VID("", "", "");
+	if( ret != 0 )
+	{
+		errmsg = document.AxKCASE.GetErrorContent();
+		alert("ValidCert_VID error: "+errmsg );
+		return;
+	}
+
+	alert("ValidCert_VID : ÀÎÁõ¼­ÀÇ ½Å¿øÈ®ÀÎ °ËÁõ¿¡ ¼º°øÇÏ¿´½À´Ï´Ù.");
+	return;
+}
+
+function ValidCert_hVID()
+{  
+	var ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if (!document.test.Make_hVID_TEXT.value) {
+		alert("ValidCert_hVID : Make_hVID¸¦ ¸ÕÀú ½ÇÇàÇÏ½Ê½Ã¿ä");
+		return;
+	}
+
+	ret = document.AxKCASE.ValidCert_hVID("", document.test.Make_hVID_TEXT.value);
+	if( ret != 0 )
+	{
+		errmsg = document.AxKCASE.GetErrorContent();
+		alert("ValidCert_hVID error: "+errmsg );
+		return;
+	}
+
+	alert("ValidCert_hVID : ÀÎÁõ¼­ÀÇ ½Å¿øÈ®ÀÎ °ËÁõ¿¡ ¼º°øÇÏ¿´½À´Ï´Ù.");
+	return;
+}
+
+function GetCertInfo()
+{
+	var	ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	ret = document.AxKCASE.GetCertInfo("");
+	if((ret == null) || (ret == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+		alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert(ret);
+	return;
+}
+
+function GenHMACsha1(form)
+{
+	var	ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+	
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // GenHMACsha1(BSTR SrcData, BSTR *retval)      	
+  // HMAC-sha1 »ý¼º				                            
+  // ÀÔ·ÂÀÎÀÚ :									
+  //    1. BSTR SrcData : HMAC°ªÀ» »ý¼ºÇÒ ¿øº» ¹®ÀÚ¿­
+  //    2. BSTR SrcKey : HMAC°ªÀ» »ý¼ºÇÒ Key
+  // Ãâ·ÂÀÎÀÚ :									
+  //    BSTR *retval : Base64·Î ÀÎÄÚµùµÈ HMAC°ª		
+  //////////////////////////////////////////////////////////////////////////////////
+	ret = document.AxKCASE.GenHMACsha1(form.src.value, "KSIGNHMAC");
+	
+	if((ret == null) || (ret == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+		alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = ret;
+
+	return;
+	
+}
+
+function VerifyHMACsha1(form)
+{
+	var	ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+  
+  if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+	
+  if((form.signed_data.value == null) || (form.signed_data.value == "")){
+          alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+          return;
+  }
+  
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // VerifyHMACsha1(BSTR SrcData, BSTR HMACData, int *retval)
+  // HMAC-sha1 °ËÁõ
+  // ÀÔ·ÂÀÎÀÚ :
+  //    1. BSTR SrcData : HMAC°ªÀ» °ËÁõÇÒ ¿øº» ¹®ÀÚ¿­
+  //    2. BSTR SrcKey : HMAC°ªÀ» °ËÁõÇÒ Key
+  //    3. BSTR HMACData : °ËÁõÇÒ HMAC°ª
+  // Ãâ·ÂÀÎÀÚ :						
+  //    int *retval : °ËÁõ °á°ú ( ret == 0 : °ËÁõ¼º°ø )
+  //////////////////////////////////////////////////////////////////////////////////
+	ret = document.AxKCASE.VerifyHMACsha1(form.src.value, "KSIGNHMAC", form.signed_data.value);
+	 
+	if( ret != 0 )
+  {
+       errmsg = document.AxKCASE.GetErrorContent();
+       alert("HMAC °ËÁõ ¿¡·¯: "+errmsg );
+			return;
+	}
+
+	alert("HMAC °ËÁõ¿¡ ¼º°øÇÏ¿´½À´Ï´Ù.");
+	
+	return;
+	
+	
+}
+
+function SignedDataFile(form)
+{
+	var signeddata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	if ((form.user_dn.value == null) || (form.user_dn.value == ""))
+	{
+		if(!SelectCert(form))
+			return;
+	}
+	
+  //////////////////////////////////////////////////////////////////////////////////////////////////////
+  // SignedDataFile(BSTR strUserDN, BSTR strPasswd, BSTR strSrcFile, BSTR strSaveFile, BSTR *retval)
+  // FiledÀÇ ³»¿ëÀ» ÀÐ¾î SignedData »ý¼º
+  // ÀÔ·ÂÀÎÀÚ :
+  //    1. BSTR strUserDN : ¼­¸íÇÒ »ç¿ëÀÚ ÀÎÁõ¼­ÀÇ DN
+  //    2. BSTR strPasswd : ¼±ÅÃÇÑ ÀÎÁõ¼­ÀÇ ÆÐ½º¿öµå
+  //    3. BSTR strSrcFile : ¼­¸íÇÒ ÆÄÀÏ¸í
+  //    4. BSTR strSaveFile : ¼­¸í°á°ú¸¦ ÀúÀåÇÒ ÆÄÀÏ¸í("" ·Î ÁöÁ¤½Ã ¸®ÅÏ°ª¸¸À» Ãâ·Â)
+  // Ãâ·ÂÀÎÀÚ :																							  					           
+  //    BSTR *retval : ¼­¸í°á°ú
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+	signeddata = document.AxKCASE.SignedDataFile(form.user_dn.value, "", "d:\INSTALL.LOG","d:\SignedData.dat");
+	if((signeddata == null) || (signeddata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = signeddata;
+	return;
+}
+
+function VerifySignedDataFile(form)
+{
+	var srcdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.signed_data.value == null) || (form.signed_data.value == "")){
+		alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+		return;
+	}
+  //////////////////////////////////////////////////////////////////////////////////////////////////////
+  // VerifySignedDataFile(BSTR strSignedFile, BSTR strSrcSaveFile, int nVflag, BSTR *retval)
+  // FiledÀÇ ³»¿ëÀ» ÀÐ¾î SignedData »ý¼º
+  // ÀÔ·ÂÀÎÀÚ :
+  //    1. BSTR strSignedFile : °ËÁõÇÒ ÆÄÀÏ¸í
+  //    2. BSTR strSrcSaveFile : °ËÁõ°á°ú¸¦ ÀúÀåÇÒ ÆÄÀÏ¸í
+  //    3. int nVflag : ÀÎÁõ¼­ °ËÁõ ¿É¼Ç(1: °ËÁõ, 0: °ËÁõÇÏÁö ¾ÊÀ½)
+  // Ãâ·ÂÀÎÀÚ :																							  					           
+  //    BSTR *retval : ¼­¸í°ËÁõ°á°ú ( ¿ø¹® )
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+	srcdata = document.AxKCASE.VerifySignedDataFile("d:\SignedData.dat", "", 0);
+	if((srcdata == null) || (srcdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert(srcdata);
+	return;
+}
+
+
+
+function BASE64Encode(form)
+{
+	var	ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+	
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // BASE64Encode(BSTR SrcData, BSTR *retval)      	
+  // HMAC-sha1 »ý¼º				                            
+  // ÀÔ·ÂÀÎÀÚ :									
+  //    1. BSTR SrcData : BASE64 Encode Ã³¸®ÇÒ  ¿øº» ¹®ÀÚ¿­
+  // Ãâ·ÂÀÎÀÚ :									
+  //    BSTR *retval : Base64·Î ÀÎÄÚµùµÈ°ª		
+  //////////////////////////////////////////////////////////////////////////////////
+	ret = document.AxKCASE.BASE64Encode(form.src.value);
+	
+	if((ret == null) || (ret == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+		alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = ret;
+
+	return;
+	
+}
+
+function BASE64Decode(form)
+{
+	var	ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+	
+	 if((form.signed_data.value == null) || (form.signed_data.value == "")){
+	          alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+	          return;
+	  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // BASE64Encode(BSTR SrcData, BSTR *retval)      	
+  // HMAC-sha1 »ý¼º				                            
+  // ÀÔ·ÂÀÎÀÚ :									
+  //    1. BSTR SrcData : BASE64 Encode Ã³¸®ÇÒ  ¿øº» ¹®ÀÚ¿­
+  // Ãâ·ÂÀÎÀÚ :									
+  //    BSTR *retval : Base64·Î ÀÎÄÚµùµÈ°ª		
+  //////////////////////////////////////////////////////////////////////////////////
+	ret = document.AxKCASE.BASE64Decode(form.signed_data.value);
+	
+	if((ret == null) || (ret == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+		alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert(ret);
+
+	return;
+
+}
+function ReadDataFile(form)
+{
+	var	ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+		
+//	 if((form.src.value == null) || (form.src.value == "")){
+//	          alert("ÆÄÀÏÀÇ °æ·Î ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+//	          return;
+//	  }
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // ReadDataFile(BSTR FilePath, BSTR *retval)      	
+  // HMAC-sha1 »ý¼º				                            
+  // ÀÔ·ÂÀÎÀÚ :									
+  //    1. BSTR FilePath : ÀÐÀ» ÆÄÀÏÀÇ °æ·Î
+  // Ãâ·ÂÀÎÀÚ :									
+  //    BSTR *retval : ÆÄÀÏÀÇ ³»¿ë		
+  //////////////////////////////////////////////////////////////////////////////////
+	ret = document.AxKCASE.ReadDataFile("c:\\pki\\temp\\dn.txt");
+	
+	if((ret == null) || (ret == ""))
+	{
+		
+		alert("ÆÄÀÏÀ» ÀÐ´Âµ¥ ½ÇÆÐÇÏ¿´½À´Ï´Ù");
+	}
+
+	form.signed_data.value=ret;
+
+	return;
+}
+function WriteDataFile()
+{
+	var	ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+		
+//	 if((form.src.value == null) || (form.src.value == "")){
+//	          alert("µ¥ÀÌÅÍ ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+//	          return;
+//	  }
+//	if((form.signed_data.value == null) || (form.signed_data.value == "")){
+//	          alert("ÀÔ·ÂÇÒ ³»¿ëÀÌ ¾ø½À´Ï´Ù.");
+//	          return;
+//	  }
+	sessionkey = "1234"; //test
+  //////////////////////////////////////////////////////////////////////////////////
+  // WriteDataFile(BSTR FilePath, BSTR Data, int *retval)      	
+  // HMAC-sha1 »ý¼º				                            
+  // ÀÔ·ÂÀÎÀÚ :									
+  //    1. BSTR FilePath : ¾µ ÆÄÀÏÀÇ °æ·Î
+  //	2. BSTR Data : ¾µ ³»¿ë
+  // Ãâ·ÂÀÎÀÚ :									
+  //    int *retval : °á°ú	
+  //////////////////////////////////////////////////////////////////////////////////
+	ret = document.AxKCASE.WriteDataFile("c:\\pki\\session_id.txt", sessionkey);
+
+	
+	
+	if( ret != 0 )
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+		alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+	alert("ÆÄÀÏ ¾²±â¸¦ ¼º°ø ÇÏ¿´½À´Ï´Ù");
+	
+	return;
+}
+
+function DeleteDataFile()
+{
+	
+	var	ret;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+		
+    ret = document.AxKCASE.DeleteDataFile("c:\\pki\\temp\\dn.txt");
+	  
+	if( ret != 0 )
+	{		
+		alert("ÆÄÀÏ »èÁ¦ ¿¡·¯");
+		return;
+	}
+	alert("ÆÄÀÏÀ» »èÁ¦ ÇÏ¿´½À´Ï´Ù");
+	return;
+}
+function GetUserPassword(form)
+{
+	var ret;
+	  
+	if(!CheckAX()) {
+    	alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+        return;
+    }
+    ret=document.AxKCASE.GetUserPassword();
+    
+  	if((ret == null) || (ret == ""))
+	{
+	
+		alert("¿¡·¯");
+		return;
+	}
+	alert(ret);
+	return;
+
+}
+function AsymmEncryptforServer(form)
+{
+	var envdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+	if((form.signed_data.value == null) || (form.signed_data.value == "")){
+		alert("recipient cert À» ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	envdata = document.AxKCASE.AsymmEncryptforServer(form.src.value, form.signed_data.value);
+	if((envdata == null) || (envdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	document.AxKCASE.WriteDataFile("C:\\test\\encdata.txt",envdata);
+	return;
+}
+
+function FileEncryption(form)
+{
+	var evlData;
+	
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+	if((form.rec_dn.value == null) || (form.rec_dn.value ==""))
+	{
+		alert("!!!!");
+		
+	}
+
+	evlData = document.AxKCASE.EnvelopedDataForFile(form.rec_dn.value,form.input_File.value,form.output_File.value,0);
+	
+	if((evlData == null) || (evlData == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() !=-1)
+		alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+	
+	//alert(form.output_File.value+".enc ·Î ¾ÏÈ£È­ µÇ¾ú½À´Ï´Ù.");
+	alert(evlData+"·Î ¾ÏÈ£È­ µÇ¾ú½À´Ï´Ù.");
+
+	return;
+	
+}
+
+function FileDecryption(form)
+{
+	var decData;
+	
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+	if((form.user_dn.value == null) || (form.user_dn.value ==""))
+	{
+		if(!SelectCert(form))
+			return;		
+	}
+
+	decData = document.AxKCASE.DecryptEnvelopedDataForFile(form.user_dn.value,"",form.input_File.value,form.output_File.value);
+	
+	if((decData == null) || (decData == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() !=-1)
+		alert(document.AxKCASE.GetErrorContent());
+		return;
+	}	
+	
+	// ¾ÏÈ£È­ ÆÄÀÏ »èÁ¦ (OPTION)
+	document.AxKCASE.DeleteDataFile(form.input_File.value);
+	alert(decData+"ÆÄÀÏ·Î º¹È£È­ µÇ¾ú½À´Ï´Ù.");
+	return;	
+}
+
+function SignedDataFile(form)
+{
+	var signeddata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	if ((form.user_dn.value == null) || (form.user_dn.value == ""))
+	{
+		if(!SelectCert(form))
+			return;
+	}
+	
+  //////////////////////////////////////////////////////////////////////////////////////////////////////
+  // SignedDataFile(BSTR strUserDN, BSTR strPasswd, BSTR strSrcFile, BSTR strSaveFile, BSTR *retval)
+  // FiledÀÇ ³»¿ëÀ» ÀÐ¾î SignedData »ý¼º
+  // ÀÔ·ÂÀÎÀÚ :
+  //    1. BSTR strUserDN : ¼­¸íÇÒ »ç¿ëÀÚ ÀÎÁõ¼­ÀÇ DN
+  //    2. BSTR strPasswd : ¼±ÅÃÇÑ ÀÎÁõ¼­ÀÇ ÆÐ½º¿öµå
+  //    3. BSTR strSrcFile : ¼­¸íÇÒ ÆÄÀÏ¸í
+  //    4. BSTR strSaveFile : ¼­¸í°á°ú¸¦ ÀúÀåÇÒ ÆÄÀÏ¸í("" ·Î ÁöÁ¤½Ã ¸®ÅÏ°ª¸¸À» Ãâ·Â)
+  // Ãâ·ÂÀÎÀÚ :																							  					           
+  //    BSTR *retval : ¼­¸í°á°ú
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+//	signeddata = document.AxKCASE.SignedDataForFile(form.user_dn.value, "", "c:\\INSTALL.LOG","c:\\SignedData.dat");
+		signeddata = document.AxKCASE.SignedDataForFile(form.user_dn.value, "", form.input_File.value,form.output_File.value);
+	if((signeddata == null) || (signeddata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = signeddata;
+	alert(form.output_File.value+"·Î ÀüÀÚ¼­¸í µÇ¾ú½À´Ï´Ù.");
+	return;
+}
+
+function VerifySignedDataFile(form)
+{
+	var srcdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.signed_data.value == null) || (form.signed_data.value == "")){
+		alert("result data ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù.");
+		return;
+	}
+  //////////////////////////////////////////////////////////////////////////////////////////////////////
+  // VerifySignedDataFile(BSTR strSignedFile, BSTR strSrcSaveFile, int nVflag, BSTR *retval)
+  // FiledÀÇ ³»¿ëÀ» ÀÐ¾î SignedData »ý¼º
+  // ÀÔ·ÂÀÎÀÚ :
+  //    1. BSTR strSignedFile : °ËÁõÇÒ ÆÄÀÏ¸í
+  //    2. BSTR strSrcSaveFile : °ËÁõ°á°ú¸¦ ÀúÀåÇÒ ÆÄÀÏ¸í
+  //    3. int nVflag : ÀÎÁõ¼­ °ËÁõ ¿É¼Ç(1: °ËÁõ, 0: °ËÁõÇÏÁö ¾ÊÀ½)
+  // Ãâ·ÂÀÎÀÚ :																							  					           
+  //    BSTR *retval : ¼­¸í°ËÁõ°á°ú ( ¿ø¹® )
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+//	srcdata = document.AxKCASE.VerifySignedDataForFile("d:\SignedData.dat", "", 0);
+/* dykim 20060601 VerifySignedDataFile ½Ã ÀüÀÚ¼­¸íµÉ ÁöÁ¤µÈ ÆÄÀÏ ¼±ÅÃ */
+	srcdata = document.AxKCASE.VerifySignedDataForFile(form.signed_data.value,form.output_File.value, 0);
+	if((srcdata == null) || (srcdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert(srcdata);
+	return;
+}		
+function SignAndEnvelopedDataForFile(form)
+{
+	var signandenvdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+
+	if((form.src.value == null) || (form.src.value == "")){
+		alert("source data ¸¦ ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+	if((form.rec_dn.value == null) || (form.rec_dn.value == "")){
+		alert("recipient dn À» ÀÔ·ÂÇÏ½Ê½Ã¿À.");
+		return;
+	}
+
+	if ((form.user_dn.value == null) || (form.user_dn.value == "")) {
+		if(!SelectCert(form))
+			return;
+	}
+
+	signandenvdata = document.AxKCASE.SignedAndEnvelopedDataForFile(form.user_dn.value, "", form.rec_dn.value, form.SignAndEnveloForFile_input.value,form.VerifySignAndEnvelopFile_output.value, 1);
+	if((signandenvdata == null) || (signandenvdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	form.signed_data.value = signandenvdata;
+    alert(form.VerifySignAndEnvelopFile_output.value+"·Î ÀúÀåµÇ¾ú½À´Ï´Ù.");
+	return;
+}
+
+function VerifySignAndEnvelopedDataForFile(form) 
+{
+	var srcdata;
+
+	if(!CheckAX()) {
+		alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		return;
+	}
+/*
+	if((form.VerifySignAndEnvelopFile_output.value == null) || (form.VerifySignAndEnvelopFile_output.value == "")){
+		alert("°ËÁõÇÒ ÆÄÀÏ¸íÀ» ÀÔ·ÂÇÏ¼¼¿ä.");
+		return;
+	}
+	*/
+	if ((form.user_dn.value == null) || (form.user_dn.value == "")) {
+		if(!SelectCert(form))
+			return;
+	}
+
+	srcdata = document.AxKCASE.VerifySignAndEnvelopedDataForFile(form.user_dn.value, "", form.SignAndEnveloForFile_input.value,form.VerifySignAndEnvelopFile_output.value, 1);
+	if((srcdata == null) || (srcdata == ""))
+	{
+		if(document.AxKCASE.GetErrorCode() != -1)
+			alert(document.AxKCASE.GetErrorContent());
+		return;
+	}
+
+	alert(srcdata);
+	return;
+}
+function signedAndEnvelopedData_for_RVID(form)
+{
+    var dn;
+    var signDn;
+    var RandomData;
+    var signenvdata;
+
+    if(!CheckAX()) {
+        alert("Å¬¶óÀÌ¾ðÆ® ÇÁ·Î±×·¥ÀÌ ¼³Ä¡µÇÁö ¾Ê¾Æ ¼öÇàÇÒ ¼ö ¾ø½À´Ï´Ù.");
+        return;
+    }
+
+    if(( form.rec_dn.value == null) || ( form.rec_dn.value == "")){
+        alert("¼ö½ÅÀÚ DNÀ» ÀÔ·ÂÇÏ¼¼¿ä");
+        return;
+    }
+
+    alert("VID °ËÁõÇÒ ÀÎÁõ¼­¸¦ ¼±ÅÃÇÏ¼¼¿ä.");
+    signDn = document.AxKCASE.SelectCert();
+    if ((signDn == null) || (signDn == ""))
+    {
+        if(document.AxKCASE.GetErrorCode() != -1)
+            alert(document.AxKCASE.GetErrorContent());
+        return;
+    }
+
+    RandomData = document.AxKCASE.GetRFromKey(signDn, "");
+    if((RandomData == null) || (RandomData == ""))
+    {
+        if(document.AxKCASE.GetErrorCode() != -1)
+            alert(document.AxKCASE.GetErrorContent());
+        return;
+    }
+
+    signenvdata = document.AxKCASE.SignedAndEnvelopedData(signDn,"", form.rec_dn.value, RandomData, 0);
+    if((signenvdata == null) || (signenvdata == ""))
+    {
+        if(document.AxKCASE.GetErrorCode() != -1)
+            alert(document.AxKCASE.GetErrorContent());
+        return;
+    }
+
+    form.signed_data.value = signenvdata;
+
+}
+àwoÔ‰ì      UH‘ÍUH‘Í;/UHŸÜ   9:http://portal.koreatech.ac.kr/wps/sso/ActiveX/axkcase.js necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:47:56 GMT
+Server: IBM_HTTP_Server
+Last-Modified: Mon, 03 Jun 2013 14:51:33 GMT
+Content-Length: 47808
+Cache-Control: max-age=3600
+Expires: Tue, 05 May 2015 10:47:56 GMT
+Content-Type: application/x-javascript
+Content-Language: en-US
+ uncompressed-len 0   ºÀ

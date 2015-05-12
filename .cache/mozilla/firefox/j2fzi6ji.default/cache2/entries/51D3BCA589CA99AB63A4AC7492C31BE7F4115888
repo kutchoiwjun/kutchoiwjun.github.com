@@ -1,0 +1,668 @@
+/**
+ * 수신확인 관련 Function
+ */
+var receiptFunc = {
+    /**
+     * 수신확인 목록으로 이동한다.
+     * @param cpage 
+     */
+	list:function(cpage){
+		if( cpage ){
+			document.MailReceiptForm.cpage.value = cpage;
+		}else{
+			document.MailReceiptForm.cpage.value = 1;
+		}
+		var url = receiptFunc.getURL();
+		jHistory.load( url );	
+	},
+	getURL:function(){
+		var param = jHistory.form2param( "MailReceiptForm" );
+		return param.serialize()+"&dummy="+sensmail.dummy();
+	},
+	/**
+	 * 수신확인 목록을 갱신한다.
+	 */
+	refreshPage:function(){
+		receiptFunc.list();		
+	},
+	/**
+	 * 수신확인 데이터를 불러온다. 
+	 */
+	load:function(){
+		
+		highlightMenu.selectedMenu("RECEIPT");
+		
+		var url = app.contextPath +"/receipt/json/list.do";		
+		var param = $("#MailReceiptForm").serialize();
+		
+		// ie 6 일때는 동기식 호출, 그외에는 비동기 호출
+		var async = $.browser.msie && $.browser.version > 6 ? true : false;				
+		$.ajax({
+			url: url ,
+			data : param,
+			cache : false , 
+			type : "POST",
+			dataType:"json",
+			async:async,
+			beforeSend:function(){
+				receiptFunc.showLoading();				
+			},
+			error:function(xhr, txt){
+				AjaxUtil.error(xhr);				
+			},
+			success:function( receiptInfo ){			
+
+				var receiptlist = receiptInfo.receiptlist;				
+				var page = receiptInfo.page;				
+				
+				// 페이징
+				var pageHtml = pageInfo( page.cpage , page.pageSize , page.total , '' , 'receiptFunc.list(' );
+				$("#receipt_pagenation").html(pageHtml);
+				
+				// 페이지 목록 수 체크
+				$("#receipt_pagesize li span").removeClass("orange");
+				$("#receipt_pagesize_"+page.pageSize).find("span").addClass("orange");
+				
+				var listdata = [];
+									
+				for(var i = 0 ; i < receiptlist.length ; i++ ){
+					var receiptData = receiptlist[i];
+					listdata[i] = receiptFunc.make_receipt_list_data( receiptData );
+				}
+				$("#rlist").html( listdata.join('') );
+				$("#info_receipt_loading").hide();
+				
+			},complete:function(){
+				receiptFunc.hideLoading();
+			}
+		});
+	},
+	/**
+	 * 수신확인 목록 데이터 생성
+	 * @param receipt
+	 * @returns
+	 */
+	make_receipt_list_data:function( receipt ){
+		
+		var strList = [], n = -1;
+		strList[++n] = "<li class=\"row\" id=\"subReceipt_"+ receipt.ukey +"\">";
+		
+		if( receipt.group ){
+			strList[++n] = "<dl class=\"receipt_list close\">";    
+			strList[++n] = "<dd class=\"list_check\"><input type=\"checkbox\" name=\"ukey[]\" id=\"receipt_"+ receipt.ukey + "\" value=\""+receipt.ukey +"\" onclick=\"receiptFunc.receipt_check_sub( this,'"+receipt.ukey+"');\" style=\"z-index:9999;\"></dd>";
+			strList[++n] = "<dt>"+ message.M0019 +"</dt>";
+			strList[++n] = "<dd class=\"list_send\"><a href=\"javascript:;\" onclick=\"receiptFunc.receipt_sub('"+receipt.ukey+"');return false;\"><span id=\""+receipt.ukey+"_toggle\" class=\"ico_list close\"></span></a> "+receipt.recv_info+"</dd>";
+			
+		}else{
+		    strList[++n] = "<dl class=\"receipt_list none\">";
+			strList[++n] = "<dd class=\"list_check\"><input type=\"checkbox\" name=\"ukey[]\" value=\""+receipt.ukey +"\"/></dd>";
+			var toaddress = receipt.recv_info;
+			var jsToaddress = receipt.full_recv_info;
+			strList[++n] = "<dt>"+ message.M0019 +"</dt>";
+			strList[++n] = "<dd class=\"list_send\"><a href=\"javascript:;\" onclick=\"lst.mail_write('"+jsToaddress+"');return false;\" title=\""+ jsToaddress +"\">"+toaddress+"</a></dd>";
+		}
+		
+		strList[++n] = "<dt>"+ message.M0154 +"</dt>";
+		if( receipt.sendmode == 2 && receipt.state == MailReceiptBean.STATE_RESERVE_CANCEL ){
+
+			strList[++n] = "<dd class=\"list_date\" title=\""+message.M0083+" : "+receipt.reserv_date+"\">"+ receipt.senddate +"("+receipt.reserv_date +")</dd>";
+		
+		}else if( receipt.state == MailReceiptBean.STATE_GROUPMAIL_WAIT ){ // 그룹메일 발송 대기중.
+			
+			strList[++n] = "<dd class=\"list_date\" title=\""+message.M0209+"\">"+ message.M0209 +"</dd>";
+			
+		}else{
+			strList[++n] = "<dd class=\"list_date\" title=\""+receipt.senddate+"\">"+ receipt.senddate +"</dd>";
+		}
+		
+		var seen = '';		
+		if( receipt.seen == 0 ){ // 읽지 않음
+			seen = 'noseen';
+		}else if( receipt.seen == 1 ){ // 읽음,모두 읽음
+
+		}else if( receipt.seen == 2 ){ // 몇명만 읽음
+			seen = 'fewseen';
+		}
+		strList[++n] = "<dt>"+ message.M0155 +"</dt>";
+		strList[++n] = "<dd class=\"list_read "+seen+"\">"+ receipt.read_date +"</dd>";
+		strList[++n] = "<dt>"+ message.M0022 +"</dt>";
+		strList[++n] = "<dd class=\"list_subject\"><a href=\"javascript:;\" onclick=\"lst.preview('"+receipt.mail_key+"');\" title=\""+ message.M0084 +"\">"+ receipt.subject +"</a></dd>";
+		//strList[++n] = "<dd class=\"list_subject\">가나다라마바사아자카타파하가나다라마바사아자카타파하가나다라마바사아자카타파하가나다라마바사아자카타파하가나다라마바사아자카타파하가나다라마바사아자카타파하가나다라마바사아자카타파하가나다라마바사아자카타파하가나다라마바사아자카타파하</dd>";
+		strList[++n] = "<dt>"+ message.M0073 +"</dt>";
+		strList[++n] = "<dd class=\"list_btn\">";
+		
+		if( receipt.group ){ // 동보메일(1명이상에게 보낸 메일)
+			
+			if( receipt.state == MailReceiptBean.STATE_CANCEL_POSSIBLE ){ // 발송 취소 버튼
+			    			
+				strList[++n] = "<button type=\"button\" class=\"btn_bgtxt bk\" style=\"padding:0 10px;\" onclick=\"receiptFunc.sendCancel('A','"+ receipt.mail_key +"');\">"+ message.M0073 +"</button>";
+				
+			}else if( receipt.state == MailReceiptBean.STATE_RESERVE_CANCEL ){ // 예약발송 취소
+				
+				strList[++n] = "<button type=\"button\" class=\"btn_bgtxt bk\" style=\"padding:0 10px;\" onclick=\"receiptFunc.reserveCancel('A','"+ receipt.mail_key +"');\">"+ message.M0156 +"</button>";
+				
+			}else if( receipt.state == MailReceiptBean.STATE_SEND_STOP ){ // 발송중지 버튼
+				
+				strList[++n] = "<button type=\"button\" class=\"btn_bgtxt bk\" style=\"padding:0 10px;\" onclick=\"receiptFunc.send_stop();\">"+ message.M0157 +"</button>";
+				
+			}
+			
+		}else{
+						
+			if( receipt.state == MailReceiptBean.STATE_CANCEL_POSSIBLE ){ // 발송 취소				
+
+				strList[++n] = "<button type=\"button\" class=\"btn_bgtxt bk\" style=\"padding:0 10px;\" onclick=\"receiptFunc.sendCancel('U','"+ receipt.ukey +"');\">"+ message.M0073 +"</button>";				
+
+			}else if( receipt.state == MailReceiptBean.STATE_RESERVE_CANCEL ){ // 예약취소
+
+				strList[++n] = "<button type=\"button\" class=\"btn_bgtxt bk\" style=\"padding:0 10px;\" onclick=\"receiptFunc.reserveCancel('U','"+ receipt.ukey +"');\">"+ message.M0156 +"</button>";
+
+			}else if( receipt.state == MailReceiptBean.STATE_CANCEL_COMPLETE ){ // 취소 완료
+
+				strList[++n] = "<span>"+ message.M0158 +"</span>";
+
+			}else if( receipt.state == MailReceiptBean.STATE_CANCEL_IMPOSSIBLE ){ // 취소 불가능
+
+				strList[++n] = "<span>"+ message.M0159 +"</span>";
+
+			}else if( receipt.state == MailReceiptBean.STATE_SEND_ERROR ){ // 발송 실패
+
+				strList[++n] = "<span>"+ message.M0160 +"</span> <button type=\"button\" class=\"btn help fail_tooltip\" title=\"" + receipt.err_str + "\"></button>";
+
+			}
+		}
+		strList[++n] = "</dd>";
+		strList[++n] = "</dl>";
+		strList[++n] = "</li>";
+		return strList.join('');
+	},
+	/**
+	 * 하위 수신확인 목록 생성 
+	 */
+	make_receipt_list_subdata:function( receipt , i , depth ){
+		
+		var strList = [] , n = -1;
+		strList[++n] = "<li class=\"row section_"+ receipt.pkey+"\ sub_"+receipt.ukey+"\ depth_"+depth+"\" id=\"subReceipt_"+ receipt.ukey +"\" onclick=\"receiptFunc.receipt_check_sub( this,'"+receipt.ukey+"');\">";
+		
+		strList[++n] = "<dl class=\"receipt_list rul\">";		
+		//strList[++n] = "<dd class=\"list_check\"><input type=\"checkbox\" name=\"ukey[]\" id=\"ukey_"+receipt.ukey+"\" value=\""+receipt.ukey +"\" onclick=\"$(this).parent().parent().toggleClass('select_mail');\"/></dd>";
+
+		
+		var toaddress = receipt.recv_info;
+		var jsToaddress = receipt.full_recv_info;
+		
+		if( receipt.group ){
+			var span_title = toaddress.replace("\"","&quot;"); 
+			strList[++n] = "<dd class=\"list_send\"><a href=\"javascript:;\" onclick=\"receiptFunc.receipt_sub('"+receipt.ukey+"', "+depth+" );return false;\"><span id=\""+receipt.ukey+"_toggle\" class=\"ico_list close\"></span></a> <span title=\""+span_title+"\">"+ toaddress +"</span></dd>";
+		}else{
+			strList[++n] = "<dd class=\"list_send\"><a href=\"javascript:;\" onclick=\"lst.mail_write('"+ jsToaddress + "');return false;\" title=\""+jsToaddress+"\">"+ toaddress +"</a></dd>";
+		}
+		if( receipt.state == MailReceiptBean.STATE_GROUPMAIL_WAIT ){ // 그룹메일 발송 대기중.
+			
+			strList[++n] = "<dd class=\"list_date\">"+ message.M0220 +"</dd>";
+			
+		}else{
+			
+			strList[++n] = "<dd class=\"list_date\">"+ receipt.senddate +"</dd>";
+		}
+		
+		var seen = '';		
+		if( receipt.seen == 0 ){ // 읽지 않음
+			seen = 'noseen';
+		}else if( receipt.seen == 1 ){ // 읽음,모두 읽음			
+		}
+		
+		strList[++n] = "<dd class=\"list_read "+seen+"\">"+ receipt.read_date +"</dd>";
+		strList[++n] = "<dd class=\"list_subject\">"+receipt.subject+"</dd>";
+		strList[++n] = "<dd class=\"list_btn\">";
+    
+        if( receipt.group ){
+            
+            if( receipt.state == MailReceiptBean.STATE_CANCEL_POSSIBLE ){ // 취소 가능
+                
+                strList[++n] = "<button type=\"button\" class=\"btn_bgtxt bk\" id=\"img_state_"+receipt.ukey+"\" onclick=\"receiptFunc.sendCancel('G','"+ receipt.pkey +"');\">"+ message.M0073 +"</button>";
+                
+            }else if( receipt.state == MailReceiptBean.STATE_RESERVE_CANCEL ){ // 예약 취소 가능
+                
+                strList[++n] = "<button type=\"button\" class=\"btn_bgtxt bk\" id=\"img_state_"+receipt.ukey+"\" onclick=\"receiptFunc.reserveCancel('G','"+ receipt.pkey +"');\">"+ message.M0156 +"</button>";
+                
+            }
+            
+        }else{
+            
+            //log.debug( "receipt.state = "+ receipt.state );
+    		if ( receipt.state == MailReceiptBean.STATE_CANCEL_POSSIBLE) { // 취소 가능
+    			
+    			strList[++n] = "<button type=\"button\" class=\"btn_bgtxt bk\" onclick=\"receiptFunc.sendCancel('U','"+ receipt.ukey +"');\">"+ message.M0073 +"</button>";
+    			    			
+    		} else if( receipt.state == MailReceiptBean.STATE_RESERVE_CANCEL ){// 예약취소
+    			
+    			//strList[++n] = "<button type=\"button\" id=\"img_state_"+ receipt.ukey +"\" onclick=\"receiptFunc.reserveCancel('"+ receipt.mail_key +"','"+ receipt.ukey +"');\"><img src=\"/sens-static/images/"+sensmail.language+"/btn_reser_can.gif\"/></button>";
+    			
+    		} else if( receipt.state == MailReceiptBean.STATE_CANCEL_COMPLETE ){ // 취소 완료
+    			
+    			strList[++n] = "<span>"+ message.M0158 +"</span>";
+    			
+    		} else if( receipt.state == MailReceiptBean.STATE_CANCEL_IMPOSSIBLE ){ // 취소 불가능
+    			
+    			strList[++n] = "<span>"+ message.M0159 +"</span>";
+    			
+    		} else if( receipt.state == MailReceiptBean.STATE_SEND_ERROR ){ // 발송 실패
+    			
+    			strList[++n] = "<span title=\""+ receipt.err_str +"\">"+ message.M0160 +"</span>";
+    			
+    		}
+    	}
+		
+		strList[++n] = "</dd>";
+		strList[++n] = "</dl>";
+		strList[++n] = "</li>";
+		return strList.join('');
+	},
+	/**
+	 * 하위 수신확인 목록의 toggle 버튼 제어를 하며 하위 그룹 목록을 열거나 닫는다.
+	 */
+	receipt_sub:function( ukey , depth ){
+		
+		if( !depth ) depth = 0;		
+		// 펼침 버튼 - 으로 변경		
+		if( $("#"+ukey+"_toggle").hasClass("close") ){
+			$( "#"+ukey + "_toggle" ).removeClass("close");
+			$( "#"+ukey + "_toggle" ).addClass("open");
+			receiptFunc.loadSub( ukey , depth , 1 );
+		}else{
+			$( "#"+ukey + "_toggle" ).removeClass("open");
+			$( "#"+ukey + "_toggle" ).addClass("close");
+			receiptFunc.closeSub( ukey );
+		}
+	},
+	/**
+	 * 하위그룹 목록 데이터를 가져와 화면에 보여준다.
+	 */
+	loadSub:function( pkey , depth, cpage , searchText ){
+		
+		if( !depth ) depth = 0;
+		
+		if( !cpage ) cpage = 1;
+		
+		if( !searchText ) searchText = "";
+		
+		var parent_checkbox = $("#receipt_"+pkey).is(":checked"); // 부모 창이 선택되었는지 확인
+		var subReceipt = $("#subReceipt_"+pkey);
+		
+		var url = app.contextPath +"/receipt/json/sub/list.do";
+		var param = {
+			"pkey":pkey,
+			"cpage":cpage,
+			"searchText":searchText
+		};
+		$.ajax({
+	    	url:url , 
+	    	data:param,
+	    	type:"post",
+	    	dataType:"json",
+	    	async:true,
+	    	cache : false,
+	    	beforeSend:function(){
+	    		// layer_pkey 가 있는지 조사해서 없다면 새로 생성한다.존재한다면 안의 내용을 모두 삭제한다.
+	    		if( $("#layer_"+pkey).html() == null ){
+	    			$( subReceipt ).after("<ol class=\"receipt_sub_layer\" id=\"layer_"+pkey+"\"></ol>");
+	    			$("#layer_"+pkey).html("<div class=\"sub_load_info\"><img src=\""+app.static_server+"/sens-static/images/common/loading2.gif\" style=\"vertical-align:middle;\"/><span style=\"padding-left:5px;\">"+ message.M0058 +"</span></div>");
+	    		}
+	    	},
+	    	success:function( data ){
+	    		
+	    		$("#layer_"+pkey).empty();
+	    		
+	    		var receiptlist = data.receiptlist;
+	    		var page = data.page;
+	    		
+	    		if( receiptlist.length == 0 ){
+	    			var no_item = "<li class=\"row no_data\">"+ message.M0237 +"</li>";
+	    			$("#layer_"+pkey ).append( no_item );
+	    		}
+	    		
+				for(var i = 0 ; i < receiptlist.length ; i++ ){					
+					var item = receiptFunc.make_receipt_list_subdata( receiptlist[i] , i , eval(depth + 1) );
+					$("#layer_"+pkey ).append( item );					
+				}				
+				// 페이지 수가 2페이지 이상일 경우에만 보여준다.
+				/*
+				if( page.pageSu > 1 ){				
+					var pageHtml = pageInfo( page.cpage , page.pageSize , page.total , '' , 'receiptFunc.loadSub(\''+pkey+'\','+depth+',');
+					$("#layer_"+pkey).append("<div class=\"sub_pageing\" id=\""+pkey+"_receipt_sub_pageinfo\"></div>");
+					$("#"+pkey+"_receipt_sub_pageinfo").html(pageHtml);
+				}
+				*/
+								
+				$("#layer_"+pkey).append("<div class=\"receipt_sub_bottom\" id=\""+ pkey+"_sub_bottom\"></div>");
+				
+				var sub_bottom = [] , n = -1;
+				sub_bottom[++n] = "	<div class=\"sub_pageing\" id=\""+pkey+"_receipt_sub_pageinfo\"></div>";
+				sub_bottom[++n] = "	<div class=\"sub_search\" id=\""+pkey+"_sub_search\">";
+				sub_bottom[++n] = " <form name=\""+pkey+"_search_form\" onsubmit=\"return receiptFunc.sub_search(this);return false;\">";
+				sub_bottom[++n] = "	<input type=\"hidden\" name=\"pkey\" value=\""+ pkey +"\"/>";
+				sub_bottom[++n] = "	<input type=\"hidden\" name=\"depth\" value=\""+ depth +"\"/>";
+				sub_bottom[++n] = "	<input type=\"text\" name=\"searchText\" value=\""+ searchText +"\" class=\"inputText\"/> <button type=\"submit\" class=\"btn_bgtxt wt pd5\"><span>검색</span></button>";
+				// 검색어가 있을 경우 전체목록 버튼을 보여준다.
+				if( searchText.length > 0 ){
+					sub_bottom[++n] = " <button type=\"button\" class=\"btn_bgtxt wt pd5\" onclick=\"receiptFunc.loadSub('"+ pkey +"','"+ depth +"',1);\"><span>전체목록</span></button>";
+				}
+				sub_bottom[++n] = " </form>";
+				sub_bottom[++n] = "	</div>";				
+				$("#"+pkey+"_sub_bottom").append( sub_bottom.join('') );
+				
+				if( page.pageSu > 1 ){
+					var pageHtml = pageInfo( page.cpage , page.pageSize , page.total , '' , 'receiptFunc.loadSub(\''+pkey+'\','+depth+',');
+					$("#"+pkey+"_receipt_sub_pageinfo").html(pageHtml);
+				}
+				
+				if( parent_checkbox ){ // 새로 불러오기전 부모 체크박스가 true 일때 하위도 체크하도록 한다.
+					var ele = document.getElementById("receipt_"+pkey);
+					receiptFunc.receipt_check_sub( ele , pkey , receiptlist.length );
+				}
+			},
+			error:function(xhr){
+				AjaxUtil.error(xhr);
+			}
+		});
+	},
+	/**
+	 * 하위 수신확인 목록을 닫는다.
+	 */
+	closeSub:function(pkey){
+		$("#layer_"+pkey).remove();
+	},
+	/**
+	 * 부모(상위)수신확인의 체크박스 선택여부에 따라 하위 수신확인데이터 체크박스를 제어한다.
+	 * @param ele 선택한 체크박스 객체
+	 * @param pkey 부모 수신확인 키
+	 */
+	receipt_check_sub:function( ele, pkey ){
+				
+		if( ele.checked ){
+			$(".section_"+ pkey ).addClass("select_mail");
+			$(".section_"+ pkey ).find("input[name='ukey[]']").attr("checked",true);
+		}else{
+			$(".section_"+ pkey ).removeClass("select_mail");
+			$(".section_"+ pkey ).find("input[name='ukey[]']").attr("checked",false);
+		}
+		
+	},
+	/**
+	 * 전체선택
+	 */
+	onclick_allchk:function(){
+		$("#all_check_receipt").click();
+		receiptFunc.select_all();
+	},
+	/**
+	 * 수신확인 목록 삭제
+	 */
+	del:function(){
+		
+		var checkedList = receiptFunc.checked_list();		
+		if ( checkedList.length == 0 ){
+			jAlert( message.M0045 );
+			return;
+		}
+				
+		jConfirm( message.M0028 , message.M0075 , function(){
+		
+			var param = {
+				"ukey": checkedList,
+			};			
+			$.ajax({
+				url: app.contextPath +"/receipt/json/delete.do",
+				data : param,
+				cache : false , 
+				type : "POST",
+				dataType:"json",
+				async:true,
+				beforeSend:function(){
+				},
+				error:function(xhr, txt){
+					AjaxUtil.error(xhr);					
+				},
+				success:function( jsonResult ){
+					if( jsonResult.code == JSONResult.SUCCESS ){
+						receiptFunc.refreshPage();
+					}else{
+						jAlert( jsonResult.message );
+					}
+				}
+			});
+		});
+	},
+	/**
+	 * 발송 취소
+	 * @param type : A - 전체 취소 , G - 그룹 취소, U - 개별 취소
+	 * @param key : mail_key or pkey or ukey 
+	 */
+	sendCancel:function( type , key ){
+	    		
+		jConfirm( message.M0073 , message.M0076 , function(){
+			var url = app.contextPath +"/receipt/json/sendcancel.do";
+			var param = {
+				"type":type,
+				"key":key				
+			};
+			$.ajax({
+                url: url,
+                data : param,
+                cache : false , 
+                type : "POST",
+                dataType:"json",
+                async:true,
+                beforeSend:function(){
+                    
+                },
+                error:function(xhr, txt){
+                	AjaxUtil.error(xhr);                    
+                },
+                success:function( jsonData ){
+                    jAlert( jsonData.message ,function(){
+                        if( jsonData.code == JSONResult.SUCCESS ){
+                            receiptFunc.list();
+                        }
+                    });
+                }
+            });
+		});
+	},
+	/**
+     * 예약발송 취소
+     * @param type : A - 전체 취소 , G - 그룹 취소, U - 개별 취소
+     * @param key : mail_key or pkey or ukey 
+     */
+	reserveCancel:function( type, key ){
+	    		
+		jConfirm( message.M0120 , message.M0079 , function(){			
+			var url = app.contextPath +"/receipt/json/reserve/cancel.do";
+			var param = {
+                "type":type,
+                "key":key               
+            };
+            $.ajax({
+                url: url,
+                data : param,
+                cache : false , 
+                type : "POST",
+                dataType:"json",
+                async:true,
+                beforeSend:function(){
+                },
+                error:function(xhr, txt){
+                    AjaxUtil.error(xhr);                    
+                },
+                success:function( jsonData ){
+                    jAlert( jsonData.message ,function(){
+                        if( jsonData.code == JSONResult.SUCCESS ){
+                            receiptFunc.list();
+                        }
+                    });
+                }
+            });
+		});
+	},
+	/**
+	 * 쓰레드 발송중인 메일을 중지한다.
+	 * @param mail_key
+	 * @param sendmode
+	 * @param arg1
+	 * @param arg2
+	 * @param arg3
+	 */
+	send_stop:function( mail_key , sendmode , arg1 , arg2 , arg3 ){
+		
+		var url = "/mail/json/send/stop.do";
+		var param = {
+			"mailkey":mail_key
+		};
+		$.post( url , param , function( rvalue ){
+			rvalue = $.trim( rvalue );			
+			$("#img_state_"+mail_key).html("<img src=\"sens-static/images/"+sensmail.language+"/btn_send_stop_ok.gif\"/>");			
+			jAlert( message.M0081 );
+			if( sendmode == 1 ){ // 발송취소 버튼으로 변경
+				$("#img_state_"+mail_key).html("<button type=\"button\" onclick=\"receiptFunc.senderCancel('"+ arg1 +"','"+ arg2 +"','"+ arg3 +"','"+ mail_key +"');\"><img src=\""+app.static_server +"/sens-static/images/"+sensmail.language+"/btn_send_can.gif\"/></button>");
+			}else if( sendmode == 2 ){ //예약취소 버튼으로 변경
+				$("#img_state_"+mail_key).html("<button type=\"button\" onclick=\"receiptFunc.reserveCancel('"+ mail_key +"','"+ arg2 +"');\"><img src=\""+app.static_server+"/sens-static/images/"+sensmail.language+"/btn_reser_can.gif\"/></button>");
+			}
+		});
+	}
+	/**
+	 * 수신확인용 전체선택
+	 */
+	,select_all:function(){
+		var c = $("#all_check_receipt").is(":checked");	
+		$("#receiptPane input[name='ukey[]']").each(function(){
+			if( c ){
+				$(this).attr("checked",true);
+			}else{
+				$(this).attr("checked",false);
+			}
+		});
+	}
+	/**
+	 * 선택되어있는 데이터를 Array 객체에 담는다.
+	 */
+	,checked_list:function(){
+		var checkedItem = new Array();
+		$("#receiptPane input[name='ukey[]']:checkbox:checked").each( function() {			
+			checkedItem.push( $(this).attr("value") );			
+       });
+       return checkedItem;
+	}
+	/**
+	 * 수신확인 검색 
+	 */
+	,search:function(){
+		var search_text = $("#receipt_search_form input[name='srch_keyword']").val();		
+        if( $.trim( search_text ).length == 0 ){
+            jAlert( message.M0068 );
+            return false;
+        }
+        $("#MailReceiptForm input[name='searchText']").val( search_text );
+        $("#btn_all_rlist").show();
+        toggle("receipt_search");
+        receiptFunc.list(1);
+        return false;
+	}
+	/**
+	 * 서브 그룹 검색
+	 */
+	,sub_search:function( form ){
+		var search_text = form.searchText.value;		
+        if( $.trim( search_text ).length == 0 ){
+            jAlert( message.M0068 );
+            return false;
+        }
+        var pkey = form.pkey.value;
+        var depth = form.pkey.depth;        
+        receiptFunc.loadSub( pkey, depth, 1, search_text);
+        return false;
+	}
+	/**
+	 * 수신확인 전체 목록 
+	 */
+	,allList:function(){
+	    $("#MailReceiptForm input[name='searchText']").val("");
+	    $("#receipt_search_form input[name='srch_keyword']").val("");	    
+	    $("#btn_all_rlist").hide();
+	    toggle("receipt_search");
+		receiptFunc.list(1);
+	}
+	/**
+	 * 수신확인 목록 개수를 변경한다.
+	 */
+	,changePagesize:function(obj,pagesize){	    
+		
+		log.debug("receipt pagesize : " + pagesize);
+		
+		$("#receipt_pagesize li span").removeClass("orange");
+        $(obj).find("span").addClass("orange");
+
+	    sensmail.pagesizeChange( pagesize );
+	    	    		
+		receiptFunc.list(1);
+		toggle("receipt_setting");
+	}
+	,showLoading:function(){
+		$("#receipt_info_loading").show();
+	}
+	,hideLoading:function(){
+		$("#receipt_info_loading").hide();
+	}
+};
+
+/**
+ * 수신확인 메일 상태 
+ */
+var MailReceiptBean = {
+    /**
+     * 발송취소를 할 수 없음
+     */
+    STATE_NONE:0,
+    
+    /**
+     * 발송 취소 가능
+     */
+    STATE_CANCEL_POSSIBLE:1,
+        
+    /**
+     * 예약 취소
+     */
+    STATE_RESERVE_CANCEL:2,
+    
+    /**
+     * 발송취소 불가
+     */
+    STATE_CANCEL_IMPOSSIBLE:4,
+    
+    /**
+     * 발송취소 성공
+     */
+    STATE_CANCEL_COMPLETE:3,    
+    
+    /**
+     * 발송 실패 사유
+     */
+    STATE_SEND_ERROR:5,
+    
+    /**
+     * 발송 중지(쓰레드 발송 중)
+     */
+    STATE_SEND_STOP:6,
+    /**
+     * 그룹메일 발송 대기 중
+     */
+    STATE_GROUPMAIL_WAIT:7
+};�~�:      UH��UH��;/-UIy>   H:http://email.koreatech.ac.kr/sens-static/js/mail/receipt.js?dummy=58413 necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:49:03 GMT
+Server: Apache
+Last-Modified: Tue, 28 Apr 2015 13:18:28 GMT
+Etag: "5f13-514c8b2b9c2ce"
+Accept-Ranges: bytes
+Content-Length: 24339
+Content-Type: application/javascript
+ uncompressed-len 0   _

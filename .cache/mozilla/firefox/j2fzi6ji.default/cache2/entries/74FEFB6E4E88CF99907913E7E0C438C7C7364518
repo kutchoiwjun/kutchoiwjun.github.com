@@ -1,0 +1,1225 @@
+/**
+ * 메일함 타입
+ */
+var FOLDER_TYPE = {
+	MAIL:10,
+	APPROVAL:20,
+	FILTERING:30,
+	RECEIPT:40
+};
+
+/**
+ * - 뷰 타입
+ * 메일 뷰를 어떤 형식으로 호출했는지 알 수 있다.
+ */
+var ViewType = {
+	/**
+	 * 팝업창
+	 */
+	POPUP:1,
+	/**
+	 * VIEW 화면을 AJAX 로 받아와서 화면을 변경해주는 방식
+	 */
+	HTML:5,
+	/**
+	 * 프린트
+	 */
+	PRINT:3,
+	/**
+	 * EML 파일 보기
+	 */
+	EML:4
+};
+
+/**
+ * view 데이터
+ */
+var view = {
+	is_tagcheck:'0',
+	downctrl:'0',
+	browser:'0',
+	cleartime:null,
+	viewType:null,
+	dirkey:null,
+	move_targetmbox:null,
+	use_download_component:false,
+	attachementList:null,
+	/**
+	 * 메일 뷰 화면을 설정한다.
+	 */
+	init:function(){
+		
+		// 뷰타입을 스크립트에 정의한다.
+		this.viewType = $("#viewType").val();
+		
+		log.debug( "viewType : " + this.viewType );
+		
+		// 메일의 메일키를 스크립트에 정의한다
+		view.dirkey = $("#MailViewForm input[name='dirkey']").val();
+
+        $("#view_btn_list").show();
+		// JSON 타입이 아닌 경우 목록 버튼을 제거한다.		
+		if( view.viewType == ViewType.POPUP ){
+			$("#view_btn_list").hide();
+		}else if( view.viewType == ViewType.EML ){				
+			$(".view_header_btn").hide();// 메일의 대한 기능 VIEW ON/OFF ( 헤더보기,저장,프린트 )
+		}
+		
+        //if( view.viewType != ViewType.PRINT ){
+    	//	/* 메일함에 따른 버튼 보임 여부 설정 : start */
+    	//	log.debug("dirkey is "+ view.dirkey );
+    	//	if( view.dirkey == mailbox.SENT ){
+    	//		$("#view_btn_resend").show();
+    	//		$("#view_btn_re").hide();
+    	//		$("#view_btn_forward").removeClass("right");
+    	//		$("#view_btn_move").hide();
+    	//	}else{
+    	//		$("#view_btn_resend").hide();
+    	//		$("#view_btn_re").show();
+         //       $("#view_btn_forward").addClass("right");
+    	//		$("#view_btn_forward").show();
+    	//		$("#view_btn_move").show();
+    	//	}
+    	//	// 삭제 버튼 ( 휴지통에서만 단독 완전삭제를 보여준다 )
+    	//	if( view.dirkey == mailbox.TRASH ){
+    	//		$("#view_btn_delete").hide();
+         //       $("#view_btn_complete_delete").removeClass("right");
+    	//		$("#view_btn_complete_delete").show();
+    	//	}else{
+    	//		$("#view_btn_delete").show();
+         //       $("#view_btn_complete_delete").addClass("right");
+    	//	}
+    	//	// 스팸메일일 경우 스팸으로 분리된 사유를 보여준다.
+         //   if( this.dirkey == mailbox.SPAM ){
+         //       $("#view_spam").show();
+         //   }else{
+         //       $("#view_spam").hide();
+         //   }
+    	//}
+		log.debug("view.dirkey : "+ view.dirkey );
+		if( view.viewType != ViewType.PRINT ) {
+
+			$(".view_menu_line li.content_head_bt.b").hide();
+			$("#view_btn_spam").show();
+			
+			// 일반삭제는 휴지통을 제외한 모든 메일함에서 단독 완전삭제는 휴지통에서만
+			if (view.dirkey != mailbox.TRASH) {
+				$("#view_btn_delete").show();
+				$("#view_btn_complete_delete_group").show();
+			} else {
+				$("#view_btn_complete_delete").show();
+			}
+
+			// 수신허용은 스팸메일함과 휴지통에서만 보이기
+			if (view.dirkey == mailbox.TRASH || view.dirkey == mailbox.SPAM) {
+				$("#view_btn_safe").show();
+			}
+
+
+			// 답장/전달 버튼은 임시보관함,보낸메일함,내게쓴 메일함을 제외한 나머지 메일함에서 보임
+			if (view.dirkey != mailbox.TOME && view.dirkey != mailbox.SENT && view.dirkey != mailbox.DRAFTS) {
+				$("#view_btn_re").show();
+				$("#view_btn_re_all").show();
+				$("#view_btn_forward").show();
+			} else if (view.dirkey == mailbox.SENT) {
+				$("#view_btn_forward_s").show();
+			}
+
+			// 수신거부는 보낸메일함,임시보관함,내게쓴메일함을 제외한 메일함에서 보임
+			if (view.dirkey != mailbox.SENT && view.dirkey != mailbox.DRAFTS && view.dirkey != mailbox.TOME) {
+				$("#view_btn_deny").show();
+			}
+
+			// 메일 이동은 보낸메일함,임시보관함을 제외한 나머지 메일함에서 보임.
+			// 보낸메일함에서도 이동이 가능하도록 수정
+			if (view.dirkey != mailbox.DRAFTS) {
+				$("#view_btn_move").show();
+			}
+
+			// 재발송버튼은 보낸메일함에만 보인다.
+			if (view.dirkey == mailbox.SENT) {
+				$("#view_btn_resend").show();
+			}
+
+			// 읽은표시 기능은 보낸메일함,임시보관함에서만 안보이고 나머지는 다 보인다.
+			if( view.dirkey != mailbox.DRAFTS && view.dirkey == mailbox.SENT ){
+				$("#view_btn_read").show();
+				$("#view_btn_read_more").show();
+			}
+
+			// 저장과 인쇄버튼은 항상 보이도록 한다.
+			$("#view_btn_save").show();
+			$("#view_btn_print").show();
+		}
+		/* 메일함에 따른 버튼 보임 여부 설정 : end */
+
+		// 본문 표시
+        view.viewContent();
+
+        /* EVENT 등록 : START */
+		
+		// 받는 사람,참조,숨은참조 글줄임 폈다 줄였다..토글 설정 : start
+        $("#toggle_view_to").click(function(){
+        	if( $(this).hasClass("not") ){
+				$(this).removeClass("not");
+				$(".recvlist").hide();
+			}else{
+				$(this).addClass("not");
+				$(".recvlist").show();				
+			}
+        });        	
+		// 받는 사람,참조,숨은참조 글줄임 폈다 줄였다..토글 설정 : end
+		
+		// 헤더보기 토글
+		$("#view_header").toggle(
+			function(){
+				$("#mail_header").show();				
+			},
+			function(){
+				$("#mail_header").hide();				
+			}			
+		);
+				
+		// 이미지차단 기능 이벤트 등록
+		$("input[name='blockbody']").change(function(){
+			var blockbody_val = $(this).val();
+			view.blockbody( blockbody_val );
+		});
+		/* EVENT 등록 : END */		
+    }
+	/**
+	 * 설정된 본문차단 설정으로 본문을 보여준다.
+	 */
+	,blockbody:function( val ){
+        // blockbody 값이 undefined 일 경우 이미지표시가 되도록 한다.
+        if( !val ){
+            val = 1;
+        }
+        log.debug("function blockbody call... blockbody value is "+ val);
+
+		var content = "";
+		var view_content = document.getElementById("view_content");
+		if( view_content ) {
+			content = view_content.value;
+
+			//log.debug( content );
+			// 1,2,3단계에서 공통적으로 차단하는 태그
+			if (content) {
+				content = content.replace(/<link (.*?)/gi, "<x-link ");
+				content = content.replace(/<meta (.*?)/gi, "<x-meta ");
+				content = content.replace(/<style[\S\s]*?>*?\/style>/igm, '');
+
+				tempDiv = document.createElement("div");
+				tempDiv.innerHTML = content;
+
+				$(tempDiv).find("head").remove();
+				$(tempDiv).find("script").remove();
+				$(tempDiv).find("iframe").remove();
+				$(tempDiv).find("object").remove();
+				$(tempDiv).find("bgsound").remove();
+				$(tempDiv).find("base").remove();
+				$(tempDiv).find("background").remove();
+				content = tempDiv.innerHTML;
+
+				var folder_type = $("#MailViewForm input[name='folder_type']").val();
+				if (folder_type == FOLDER_TYPE.APPROVAL) {
+					//결재메일의 경우 무조건 이미지 표시됩니다.
+					val = 1;
+				}
+				if (val == 2) { // 이미지 차단
+					// 이미지를 blank.gif 로 모두 치환한다.
+					$(tempDiv).find("img").each(function () {
+						$(this).attr("src", app.static_server + "/sens-static/images/common/blank.gif");
+					});
+					$(tempDiv).find("IMG").each(function () {
+						$(this).attr("src", app.static_server + "/sens-static/images/common/blank.gif");
+					});
+					content = tempDiv.innerHTML;
+				} else if (val == 3) { // 모든 태그 제거
+					// 일단 BR을 /n 을 바꾼뒤 태그를 제거한 후 다시 /n 을 <br/> 로 바꾼다.
+					content = content.replace(/<br>/ig, "\\n");
+
+					var pattern = /[<][^>]*[>]/ig;
+					content = content.replace(pattern, "");
+
+					content = content.replace(/&nbsp;/g, "<br/>");
+
+					// 보통 에디터에서 <br/>로 줄을 띄우는게 아니라 <p>&nbsp;</p> 로 띄우기 때문에 &nbsp; 도 <br/> 로 변경한다.
+					content = content.replace(/\\n/g, "<br/>");
+				}
+				$(tempDiv).remove();
+			}
+		}
+		view.viewBody( content );
+	}
+	/**
+	 * 메일 이동
+	 */
+	,move:function(){
+		// 뷰 방식에 따라 목록의 이동기능을 사용할것인지 뷰에 이동기능을 사용할것인지 정한다.
+		if( view.viewType == ViewType.HTML ){
+			lst.move();
+		}else{
+			view.move_open();
+		}
+	}
+	/**
+	 * 메일이동을 하기위한 모달창을 띄운다.
+	*/
+	,move_open:function(){
+		view.move_targetmbox = null; // 새로 창을 뛰우면 타켓을 리셋한다.		
+		$("#deny_isContinue").attr('checked',false);
+		$("#deny_isAllMove").attr("checked",false);
+		view.move_foldertree();
+		$("#move_folder_tree").dynatree("getRoot").activate();
+        $('#modal_move').dialog('open');	
+	}
+	/**
+	 * 메일이동 확인 버튼 클릭
+	 */
+	,move_action:function(){
+		var ukey = $("#MailViewForm input[name='ukey']").val();
+		var DMail = [];
+		DMail.push( ukey );
+
+		var isAllMove = "0";		
+		var isContinue = "0";
+		var target_mbox = view.move_targetmbox;		
+		if( target_mbox == '0' || target_mbox == '_1' || target_mbox == 'pmbox'){
+			jAlert( msg.get( message.M0060 ) );
+			return;
+		}
+		$("input:checkbox[name='deny_isContinue']").each( function(){
+			isContinue = $(this).attr("checked") ? "1" : "0";					
+		});
+		$("input:checkbox[name='deny_isAllMove']").each( function(){
+			isAllMove = $(this).attr("checked") ? "1" : "0"; 
+		});
+		$("#modal_move").dialog("close");
+		
+		var url = app.contextPath +"/mail/json/move.do";
+		var param = {
+			"isAllMove" : isAllMove ,
+			"isContinue" : isContinue ,
+			"ukey" : ukey,
+			"target_mbox" : target_mbox
+		};
+		$.ajax({
+        	url:url , 
+        	data:param,
+        	type:"POST",
+        	dataType:"json",
+        	async:false,
+        	error:function( xhr , text ){
+        		AjaxUtil.error(xhr);
+        	},
+        	success:function( jsonData ){
+        		if( jsonData.result == 1 ){
+        			
+	        		if( view.viewType == ViewType.HTML ){
+	        			view.list();
+	        			jInfo( message.M0135 );
+	        		}else if( view.viewType == ViewType.POPUP ){
+	        			try{
+	        				opener.lst.refreshPage();
+	        			}catch(e){}
+	        			self.close();	        			
+	        		}
+        		}else if( jsonData.result == -1 ){
+        			jAlert( jsonData.message );
+        		}
+			}
+		});
+	}
+	/**
+	 * 메일이 이동될 대상을 찾는 트리를 만든다.
+	 */
+	,move_foldertree:function(){
+		
+		$("#move_folder_tree").show();		
+		$("#move_folder_tree").dynatree({
+			keyboard : false,
+			persist: false,
+			checkbox : false,
+			clickFolderMode: 1,
+			autoFocus: true,
+			selectMode: 1,
+			activate: true,	      
+			fx: { height: "toggle", duration: 200 },
+			minExpandLevel:2,	
+			initAjax: {
+		    	  url:app.contextPath +"/folder/move.do"
+		    }			
+			,onActivate: function(dtnode) {
+	    	  view.move_targetmbox = dtnode.data.key;
+			}
+		});
+		// 새로 추가된 폴더가 있을 수 있기 때문에 reload 를 한다.
+		$("#move_folder_tree").dynatree("getTree").reload();
+	}	
+	/**
+	 * 유해성태그의 유무에 따라서 경고 문구 보임 ON/OFF 를 설정해서 본문을 보여준다.
+	 */
+	,viewContent:function( val ){
+		if( !val ){
+			val = $("input[name='blockbody']:checked").val();
+		}else{
+			$("input[name='blockbody']:checked").val( val );
+		}
+		view.blockbody( val );
+	},
+	/**
+	 * 본문에 유해성태그를 제거한다.
+	 */
+	tag_interceiption:function( content ){
+		
+		content = content.replace(/<head([\s\S]*)\/head>/gi, "");
+		content = content.replace(/<style .*?>([\s\S]*)\/style>/gi, "");
+	    //content = content.replace(/<img (.*?)>/gi, "<img src=\"/sens-static/images/common/gray.gif\">");
+	    content = content.replace(/<img\s+(.*?)src\s*=\s*[\"|'|]?(.*?)[\"|'|](.*?)>/gi, "<img $1 src=\""+app.static_server+"/sens-static/images/common/gray.gif\" $3>");
+	    content = content.replace(/<iframe (.*?)/gi, "<x-iframe ");
+	    content = content.replace(/<object (.*?)/gi, "<x-object ");
+	    content = content.replace(/<embed (.*?)/gi, "<x-embed ");
+	    content = content.replace(/<link (.*?)/gi, "<x-link ");
+	    content = content.replace(/<input (.*?)/gi, "<x-input ");
+	    content = content.replace(/<bgsound (.*?)/gi, "<x-bgsound ");
+	    content = content.replace(/<base (.*?)/gi, "<x-base ");
+	    content = content.replace(/<background (.*?)/gi, "<x-background ");
+	    content = content.replace(/ style=(.*?)/gi, " x-style=");	// 태그내의 스타일 속성
+	    content = content.replace(/ onclick=(.*?)/gi, " x-onclick=");
+	    content = content.replace(/ onfocus=(.*?)/gi, " x-onfocus=");
+	    content = content.replace(/ onmouseover=(.*?)/gi, " x-onmouseover=");
+	    content = content.replace(/ onmouseout=(.*?)/gi, " x-onmouseout=");
+	    content = content.replace(/ onchange=(.*?)/gi, " x-onchange=");
+	    
+		return content;
+	}
+	/**
+	 * 수신허용목록에 메일주소를 등록한다.
+	 */
+	,add_safelist:function(){
+		
+		var ukey = $("#MailViewForm input[name='ukey']").val();
+		
+		jConfirm( message.M0121 , message.M0047 , function(){
+			var url = app.contextPath +"/mail/json/safelist/add.do";
+			var param = {
+				"ukey" : ukey
+			};
+			
+			// ie 6 일때는 동기식 호출, 그외에는 비동기 호출
+			var async = $.browser.msie && $.browser.version > 6 ? true : false;
+			
+			$.ajax({
+				url: url,
+				data : param,
+				cache : false , 
+				type : "POST",
+				dataType:"json",
+				async: async,
+				timeout:5000,
+				error:function(xhr, txt){
+					AjaxUtil.error(xhr);					
+				},
+				success:function( jsonData ){
+					if( jsonData.result == -1 ){ // 등록 실패시 메세지를 보여준다.
+						jAlert( jsonData.message );
+					}
+					$("#tag_warn").hide();
+					view.blockbody(1);
+				}
+			});
+		});
+	}
+	/**
+	 * 수신거부
+	 */
+	,add_deny:function(){
+		
+		var ukey = $("#MailViewForm input[name='ukey']").val();
+					
+		jConfirm( message.M0031 , message.M0051 , function(){
+			
+			var url = app.contextPath +"/mail/json/deny.do";
+			var param = {
+				"ukey" : ukey
+			};
+			// ie 6 일때는 동기식 호출, 그외에는 비동기 호출
+			var async = $.browser.msie && $.browser.version > 6 ? true : false;
+			
+			$.ajax({
+				url: url,
+				data : param,
+				cache : false , 
+				type : "POST",
+				dataType:"json",
+				async: async,
+				timeout:5000,
+				error:function(xhr, txt){
+					AjaxUtil.error( xhr );
+				},
+				success:function( jsonData ){
+					if( jsonData.result == 1 ){
+						jAlert( jsonData.message , function(){
+							if( view.viewType == ViewType.HTML ){
+								view.list();
+							}else if( view.viewType == ViewType.POPUP ){
+								try{
+									opener.lst.refreshPage();
+								}catch(e){}
+								self.close();
+							}
+						});					
+					}else if( jsonData.result == -1 ){ // 등록 실패시 메세지를 보여준다.
+						jAlert( jsonData.message );
+					}
+				}
+			});
+		});
+	}
+	/**
+	 * 주소록 추가
+	 */
+	,add_address:function(){
+		var ukey = $("#MailViewForm input[name='ukey']").val();
+		var url = app.contextPath +"/mail/popup/address/add.do?ukey="+ukey;
+		window.open(  url , 'insertaddress','toolbar=no,width=600,height=230,directories=no,status=no,scrollbars=no,resize=no,menubar=no,border=no');		
+	}
+	/**
+	 * 받는사람/참조도 주소록에 저장할 수 있도록 한다.
+	 */
+	,add_receiver:function(chkFlag){
+		
+		var ukey = $("#MailViewForm input[name='ukey']").val();
+		var url = app.contextPath +"/mail/popup/address/receiver/add.do?chkFlag="+chkFlag+"&ukey="+ukey;
+		window.open( url,"insertReceiveraddress","scrollbars=yes,toolbar=no,width=600,height=230,directories=no,status=yes,resize=yes,menubar=no,border=no");		
+		
+	}
+	/**
+	 * 본문 DIV 에 데이터를 등록한다.
+	 */
+	,viewBody:function( content ){
+
+        // IE8 에서는 내용이 긴 HTML 문서를 jquery.HTML() 으로 가져오질 못한다..
+		var viewArea = document.getElementById("viewArea");
+		if( viewArea ){
+			viewArea.innerHTML = content;
+		}
+
+		// 모든 링크를 새창으로 열리도록 한다.
+		try {
+			$("#viewArea a").each(function(){
+			    var href = $(this).attr("href");
+			    // mailto 를 내부 메일쓰기 폼으로 변경
+			    if( href.indexOf("mailto") > -1 ){
+			        href = href.replaceAll("mailto:",app.contextPath +"/mail/popup/write.do?to=");
+			        $(this).attr("href",href);
+			    }
+				$(this).attr("target","_blank");
+			});
+		}catch(e){}
+
+		$("#viewArea").show();
+	}
+	/**
+	 * 메일본문에 메일주소가 있을 경우 새창으로 메일작성창을 불러온다.
+	 * ( 이것이 작동되기 위해선 Controller 단에서 처리가 되어있어야 한다. )
+	 */
+	,mailto:function(to){
+		if( opener ){
+			opener.sensmail.open_mailwrite(to);
+		}else{
+			sensmail.common_write(to);
+		}
+	}
+	/**
+	 * 메일을 인쇄한다.
+	 */
+	,print:function(){
+	    
+	    var folder_type = $("#MailViewForm input[name='folder_type']").val();
+	    
+	    if( folder_type == FOLDER_TYPE.APPROVAL ){
+	        approval_view.print();
+	    }else{	    
+	        var ukey = $("#MailViewForm input[name='ukey']").val();
+	        var dirkey = $("#MailViewForm input[name='dirkey']").val();
+	        var mindex = $("#MailViewForm input[name='mindex']").val();
+	        
+    		if( view.viewType == ViewType.EML ){
+    			window.open(app.contextPath +"/mail/print/eml/view.do?mail_key="+ukey+"&mindex="+mindex , 'view_mail' ,'toolbar=no,width=900,height=500,directories=no,status=yes,scrollbars=yes,resizable=yes,menubar=no');
+    		}else{
+    		    var url = app.contextPath +"/mail/print/view.do?ukey="+ukey+"&dirkey="+dirkey;                
+                window.open( url , 'view_mail' ,'toolbar=no,width=900,height=500,directories=no,status=yes,scrollbars=yes,resizable=yes,menubar=no');
+    		}
+        }		
+	}
+	/**
+	 * 이전 메일 보기
+	 */
+	,prev_mail:function( ukey ){
+
+        if( ukey == '-1' ){
+            jAlert( msg.get( message.M0056 ) );
+            return;
+        }
+
+        if( view.viewType == ViewType.HTML ){
+            lst.view(ukey);
+        }else{
+            location.href = app.contextPath + "/mail/popup/view.do?ukey=" + ukey;
+        }
+	}
+	/**
+	 * 다음 메일 보기
+	 */
+	,next_mail:function( ukey ){
+        if( ukey == '-1' ){
+            jAlert( msg.get( message.M0057 ) );
+            return;
+        }
+        if( view.viewType == ViewType.HTML ){
+            lst.view(ukey);
+        }else {
+            location.href = app.contextPath + "/mail/popup/view.do?ukey=" + ukey;
+        }
+	}
+	/**
+	 * 목록을 돌아가기 ( viewStyle 이 STYLE_N 일 경우에만 보인다. )
+	 */
+	,list:function(){
+		if( layout.style == layout.STYLE_N ){
+			if( lst.detail_search ){
+				lst.detailsearch();
+			}else{
+				lst.list();
+			}
+		}
+	}
+	/**
+	 * 스팸신고
+	 */
+	,spam_report:function(){
+		var ukey = $("#MailViewForm input[name='ukey']").val();
+		if( view.viewType == ViewType.HTML ){
+			lst.view_write( 9 , ukey );
+		}else{
+			location.href = app.contextPath +"/mail/popup/write.do?first=9&ukey="+ukey;
+		}
+	}
+	/**
+	 * 답장
+	 */
+	,reply:function(){
+		var ukey = $("#MailViewForm input[name='ukey']").val();
+		if( view.viewType == ViewType.HTML ){
+			lst.view_write( 1 , ukey );
+		}else{
+			location.href = app.contextPath +"/mail/popup/write.do?first=1&ukey="+ukey;
+		}
+	}
+	/**
+	 * 전체답장
+	 */
+	,total_reply:function(){	    
+        var ukey = $("#MailViewForm input[name='ukey']").val();
+		if( view.viewType == ViewType.HTML ){
+			lst.view_write( 4 , ukey );			
+		} else {
+			location.href = app.contextPath +"/mail/popup/write.do?first=4&ukey="+ukey;
+		}
+	}
+	/**
+	 * 전달
+	 */
+	,forward:function(){
+	    var ukey = $("#MailViewForm input[name='ukey']").val();
+		if( view.viewType == ViewType.HTML ){
+			lst.view_write( 2 , ukey );
+		} else {
+			location.href = app.contextPath +"/mail/popup/write.do?first=2&ukey="+ukey;
+		}
+		
+	}
+	/**
+	 * 첨부 전달
+	 */
+	,forward_attach:function(){
+	    var ukey = $("#MailViewForm input[name='ukey']").val();
+		if( view.viewType == ViewType.HTML ){			
+			lst.view_write( 5 , ukey );
+		} else {
+			location.href = app.contextPath +"/mail/popup/write.do?first=5&DMail="+ukey;
+		}
+	}
+	/**
+	 * 재발송
+	 */
+	,resend:function(){
+		var ukey = $("#MailViewForm input[name='ukey']").val();
+		if( view.viewType == ViewType.HTML ){
+			lst.view_write( 7 , ukey );
+		} else {
+			location.href = app.contextPath +"/mail/popup/write.do?first=7&ukey="+ukey;
+		}
+	}
+	/**
+	 * 메일 삭제
+	 */
+	,del:function(){
+		
+		var ukey = $("#MailViewForm input[name='ukey']").val();
+		var async = true;
+		var url = app.contextPath +"/mail/json/delete.do";
+		var param = {
+				"ukey":ukey	
+		};
+		$.ajax({
+			url: url ,
+			data : param ,
+			cache : false , 
+			type : "POST",
+			dataType:"json",
+			async: async,
+			timeout:5000,
+			error:function(xhr, txt){
+				AjaxUtil.error(xhr);				
+			},
+			success:function( jsonData ){
+				if( jsonData.result == 1 ){
+					if( view.viewType == ViewType.HTML ){
+						view.list();
+						jInfo( message.M0131 ); //메일이 삭제되었습니다.				
+					}else{						
+						try{
+							opener.lst.refreshPage();							
+						}catch(e){}
+						self.close();
+					}
+				}
+			}
+		});
+	}
+	/**
+	 * 영구 삭제(완전삭제)
+	 */
+	,completelyDelete:function(){
+						
+		jConfirm( message.M0028 , message.M0054 , function(){
+		    var ukey = $("#MailViewForm input[name='ukey']").val();
+			var param = {
+					"ukey" : ukey
+			};
+			var url = app.contextPath +"/mail/json/completelyDelete.do";		
+			$.ajax({
+				url: url ,
+				data : param ,
+				cache : false ,
+				type : "POST",
+				dataType:"json",
+				async: false,
+				timeout:30000,
+				error:function( xhr , txt ){
+					AjaxUtil.error(xhr);
+				},
+				success:function(){
+					
+					if( view.viewType == ViewType.HTML ){
+						view.list();
+						jInfo( message.M0132 );
+					}else{
+						try{
+							opener.lst.refreshPage();
+						}catch(e){}
+						self.close();
+					}
+				}
+			});		
+		});
+	}
+	/**
+	 * 메일파일(EML) 다운로드
+	 * @param ukey
+	 */
+	,save:function(){
+		var ukey = $("#MailViewForm input[name='ukey']").val();
+		var url = app.contextPath +"/mail/download.do?ukey="+ukey;
+		jDownload( url );
+	}
+	/**
+	 * 첨부파일의 다중 다운로드
+	 */
+	,multiDownload:function(){
+		$("input[name='attach']:checked").each(function(){			
+			var filelist = $(this).attr("id")+":"+$(this).attr("value");
+		});		
+	}
+	/**
+	 * 이미지 첨부파일 미리 보기
+	 * @param depth
+	 * @param attach_key
+	 * @param mindex
+	 * @param aindex
+	 */
+	,attachPreview:function( mail_key, mindex , aindex ){
+		
+		var url = app.contextPath +"/mail/popup/preview_pic.do?mail_key="+mail_key+"&mindex="+mindex+"&aindex="+aindex;
+		
+		window.open( url , 'imgpreview','toolbar=no,width=400,height=329,top=100,left=200,directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no');
+	}	
+	/**
+	 * EML 첨부파일 내용을 보는 페이지 호출
+	 * @param filenum
+	 */
+	,emlView:function( mail_key , mindex , aindex ){
+	    		
+		// EML 보기는 mindex 값으로 현재 메일의 첨부파일 index 를 넣는다.		
+		window.open(app.contextPath +"/mail/eml/view.do?ukey="+mail_key+"&mindex="+aindex,"","toolbar=no,width=800,height=600,directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no");
+	}
+	/**
+	 * 첨부파일 다운로드
+	 * @param depth
+	 * @param attach_key
+	 * @param mindex
+	 * @param aindex
+	 */
+	,attachDownload:function( mail_key , mindex , aindex ){
+		var sName,url;		
+		//var ext = $("#"+attach_key).attr("fileext");
+		var ext = "";						
+		
+		url = app.contextPath +"/mail/attach/download.do?mail_key="+mail_key+"&mindex="+mindex+"&aindex="+aindex;
+		
+		if( ext == 'html' || ext == 'htm' || ext == 'xml'){
+			window.open( url , '' , '' );
+		}else{
+			jDownload( url );
+		}
+	}
+	,attachCheckVir:function(filenum, attachkey, mailkey){
+		var url = app.contextPath +"/mail/popup/virus/check.do?attkey="+attachkey+"&filenum="+filenum+"&mailkey="+mailkey;
+				
+		window.open( url , 'virview','toolbar=no,width=400,height=250,top=100,left=200,directories=no,status=no,scrollbars=no,resizable=yes,menubar=no');
+	}
+	/**
+	 * 모든 첨부파일을 압축파일(zip) 형식으로 다운로드
+	 * @param mailkey
+	 */
+	,doZipDown:function(){
+		var subject = $("#subject").val();
+		var mailkey = $("#MailViewForm input[name='ukey']").val();
+		var url = app.contextPath +"/mail/attach/zip/download.do?mailkey="+mailkey;
+		jDownload( url );
+	}
+	/**
+	 * 첨부파일 삭제 function
+	 * @param mailkey
+	 * @param ukey
+	 */
+	,attachDelete:function( mailkey , filenum ){
+	    
+		jConfirm( message.M0028, message.M0052, function(){
+		    			
+    		var url = app.contextPath +"/mail/json/attach/delete.do";
+    		var param = {
+    			"mailkey" : mailkey,
+    			"filenum" : filenum
+    		};
+    		$.ajax({
+                url:url , 
+                data:param,
+                type:"POST",
+                dataType:"json",
+                async:false,
+                beforeSend:function(){              
+                },
+                complete:function(){                
+                },
+                error:function( xhr , status ){
+                    AjaxUtil.error(xhr);
+                },
+                success:function( attachementList ){
+                    $("#attachlist").hide();
+                    $("#attachlist table tbody").empty();
+                                    
+                    var attachLength = attachementList.length;
+                    if( attachementList && attachLength > 0 ){                    
+                        for(var i = 0 ; i < attachLength ; i++ ){
+                            var attach = attachementList[i];    
+                            var html = view.drawAttach( attach );
+                            $("#attachlist table tbody").append( html );
+                        }
+                        $("#attachlist").show();
+                    }else{
+                        $("#attachlist").hide();
+                    }
+                }
+            });
+        });
+	}
+	/**
+	 * 첨부파일을 웹하드에 저장한다.
+	 * @param mail_key 메일키 
+	 * @param aindex 해당 메세지의 첨부파일 인덱스 번호
+	 */
+	,attachSaveWebhard:function( mail_key , mindex , aindex ){
+		
+		var url = app.contextPath +"/mail/popup/webhard/save.do?mail_key="+mail_key+"&mindex="+mindex+"&aindex="+aindex;
+		
+		window.open( url , 'filemove','toolbar=no,width=400,height=329,top=100,left=200,directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no');
+	}
+	,getFileExtension:function( filePath ){
+	    var lastIndex = -1;
+	    
+	    lastIndex = filePath.lastIndexOf('.');
+	    var extension = "";
+
+		if ( lastIndex != -1 )
+		{
+		    extension = filePath.substring( lastIndex+1, filePath.len );
+		} else {
+		    extension = "";
+		}
+	    return extension.toLowerCase();
+	}
+	/*
+	attachFix:function( mailkey ){
+		var url = "Mail?act=MAIL_ATTACH_FIX";
+		var param = {
+			"mailkey" : mailkey
+		};
+		//jAlert(url);
+		$.getJSON( url , param , function(data, textStatus){
+			//if( data == 1 ){
+			$("#attach_list").html("");
+			if(textStatus == 'success'){
+				//var str = "<li><strike>"+filename+"</strike></li>";
+				//$("#"+ukey+"_attach").html( str);
+				//location.reload();
+				var str = "";
+				for(var i = 0 ; i < data.length ; i++ ){
+					var ext = data[i].ext;
+					str += "<ul>";
+					if( view.downctrl == 1 && view.browser == 0 ){
+						str += "<li>";
+						str += "<input type=\"checkbox\" name=\"attach\" value=\""+data[i].filenum+"\" title=\""+data[i].filename+"\" id=\""+data[i].ukey+","+data[i].size+"\"";
+						if( data[i].isdel == 1 ) str += " readonly disabled ";
+						str += "/></li>";
+					}
+					if( data[i].isdel == 1 ) {
+						str += "<li><strike>" +data[i].filename+ "</strike></li>";
+					} else {
+						str += "<li><a href=\"#attach\" onclick=\"javascript:attachDownload('"+data[i].filenum+"','"+data[i].ukey+"');return false;\">"+data[i].filename+" ("+data[i].size2+")</a></li>";
+						if( ext != null && ext != '' && (ext == "jpeg" || ext == "jpg" || ext == "gif" || ext == "bmp") ) {
+							str += "<li><a href=\"#btn_file_pre\" onclick=\"javascript:attachPreview('"+data[i].filenum+"','"+data[i].ukey+"');return false;\"><img src=\"/sens-static/images/"+sensmail.language+"/btn_file_pre.gif\" id=\"btn_file_pre\" alt=\""+bundle.getString("202")+"\"/></a></li>";
+						}
+						str += "<li><a href=\"#btn_down\" onclick=\"javascript:attachDownload('"+data[i].filenum+"','"+data[i].ukey+"')\"><img src=\"/sens-static/images/"+sensmail.language+"/btn_down.gif\" id=\"btn_down\" alt=\""+bundle.getString("1402")+"\"/></a></li>";
+						//str += "<li><a href=\"#btn_webhard_save\" onclick=\"javascript:attachSaveWebhard('"+data[i].filenum+"','"+data[i].ukey+"');return false;\"><img src=\"/sens-static/images/"+sensmail.language+"/btn_webhard_save.gif\" id=\"btn_webhard_save\" alt=\""+bundle.getString("335")+"\"/></a></li>";
+						
+						if( view.isshare ='false' ){
+							str += "<li><a href=\"#btn_file_del\" onclick=\"javascript:attachDelete('"+view.ukey+"','"+data[i].ukey+"','"+data[i].filenum+"');return false;\"><img src=\"/sens-static/images/"+sensmail.language+"/btn_file_del.gif\" id=\"btn_file_del\" alt=\""+bundle.getString("334")+"\"/></a></li>";
+						}
+					}
+					str += "</ul>";
+				}
+				$("#attach_list").html(str);
+			}else{
+				jAlert( data );
+			}
+		});		
+	};	
+	*/
+	/**
+	 * 첨부파일 목록에 대한 HTML 을 생성한다.
+	 */
+	,drawAttach:function( attach ){
+		var str = [], n = -1;					
+		str[++n] = "<tr>";
+		str[++n] = "<td class=\"addfile check\">";
+		str[++n] = "<p>";
+		if( view.use_download_component ){
+		    str[++n] = '<input type="checkbox" name="attach" id="'+ attach.fileKey +'" value="'+ attach.aindex +'" filename="'+ attach.fileName +'" filesize="'+ attach.fileSize +'" fileext="'+ attach.fileExtension+'"/>';		    
+		}
+		str[++n] = "<a href=\"javascript:;\" onclick=\"view.attachDownload('" + attach.mail_key + "' , '" + attach.mindex + "','" + attach.aindex + "');\">" + attach.fileName +" (" + attach.fileSize.byteFormat(2) + ")</a>";
+		str[++n] = "</p>";
+		str[++n] = "<ul>";
+		if( attach.attachType == 3 ){
+		    str[++n] = "<li><button type=\"button\" class=\"btn_bgtxt nobg\" onclick=\"view.attachPreview('" + attach.mail_key +"','" + attach.mindex +"','"+ attach.aindex +"');\">" + message.M0169 +"</button></li>";
+		}
+		if( attach.attachType == 1 ){
+		    str[++n] = "<li><button type=\"button\" class=\"btn_bgtxt nobg\" onclick=\"view.emlView('" + attach.mail_key +"','" + attach.mindex +"','"+ attach.aindex +"');\">" + message.M0170 +"</button></li>";	
+		}
+		
+		str[++n] = "<li><button type=\"button\" class=\"btn_bgtxt nobg\" onclick=\"view.attachDownload('" + attach.mail_key + "','" + attach.mindex +"','" + attach.aindex + "');\">" + message.M0171 +"</button></li>";
+		str[++n] = "<li><button type=\"button\" class=\"btn_bgtxt nobg\" onclick=\"view.attachSaveWebhard('" + attach.mail_key + "','" + attach.mindex +"','" + attach.aindex + "');\">" + message.M0172 +"</button></li>";
+		str[++n] = "<li><button type=\"button\" class=\"btn_bgtxt nobg\" onclick=\"view.attachDelete('" + attach.mail_key +"','" + attach.aindex + "');\">" + message.M0028 +"</button></li>";
+		str[++n] = "</ul>";
+		str[++n] = "</td>";
+		str[++n] = "</tr>";
+		return str.join('');
+	}
+	,starcheck:function(){
+		var ukey = $("#MailViewForm input[name='ukey']").val();
+		var star = $("#view_star").attr("value");
+		star = eval(star) + 1; // 다음 색깔로 변경
+		
+		if( star > 4 ){ // 1 더한 값이 5가 되면 0으로 변경한다.
+			star = 0;
+		}
+		
+		var url = app.contextPath +"/mail/json/starCheck.do";
+		var param = {
+			"ukey" : ukey ,
+			"star" : star
+		};
+		$.ajax({
+        	url:url , 
+        	data:param,
+        	type:"POST",
+        	dataType:"json",
+        	async:false,
+        	beforeSend:function(){        		
+        	},
+        	complete:function(){        		
+        	},
+        	error:function( xhr , status ){
+        		AjaxUtil.error(xhr);
+        	},
+        	success:function( jsonData ){
+   				view.starimg( star );
+   				
+   				// 목록의 별표시도 변경한다.
+   				if( opener ){
+   					lst = opener.lst;
+   				}
+   				if( lst ){
+   					lst.starimg( ukey , star );
+   				}
+			}
+		});	
+	}
+	/**
+	 * 별 이미지의 색을 변경한다.
+	 * @param {} ukey
+	 * @param {} star
+	 * @returns {} 
+	 */
+	,starimg:function( star ){
+		$("#view_star").removeClass("r");
+		$("#view_star").removeClass("g");
+		$("#view_star").removeClass("y");
+		$("#view_star").removeClass("b");
+		$("#view_star").removeClass("n");		
+		$("#view_star").attr("value",star);
+				
+		if( star == 0 ){						
+			$("#view_star").addClass("n");
+		}else if( star == 1 ){
+			$("#view_star").addClass("y");
+		}else if( star == 2 ){
+			$("#view_star").addClass("b");
+		}else if( star == 3 ){
+			$("#view_star").addClass("r");
+		}else if( star == 4 ){
+			$("#view_star").addClass("g");
+		}
+	},
+	/**
+	 * 메뉴 버튼 설정 
+	 */
+	setMenu:function( folder_type ){
+		$(".view_menu_line").hide();// 모든 기능의 메뉴를 감춘다.		
+		if( folder_type == FOLDER_TYPE.MAIL ){
+			$("#view_menu_btn_mail").show();			
+		}else if( folder_type == FOLDER_TYPE.APPROVAL ){
+			$("#view_menu_btn_approval").show();			
+		}else if( folder_type == FOLDER_TYPE.FILTERING ){
+			$("#view_menu_btn_filtering").show();
+		}else if( folder_type == FOLDER_TYPE.RECEIPT ){
+			$("#view_menu_btn_receipt").show();
+		}
+	},
+	/**
+	 * 첨부파일 모두 선택/해제 
+	 */
+	all_check:function( obj ){
+		if( obj.checked ){
+			$("input[name='attach']").attr("checked",true);
+		}else{
+			$("input[name='attach']").attr("checked",false);
+		}
+	},
+	/**
+	 * 원본 그대로 보기 link , css 적용 
+	 */
+	viewOriginalBody:function(){
+		var url = app.static_server +"/sens-static/html/view.html";
+		var dummy = sensmail.dummy();
+		var vw = window.open( url , 'vw1' ,'toolbar=no,width=900,height=700,directories=no,status=yes,scrollbars=yes,resizable=yes,menubar=no');
+		var content = $("#view_content").val();
+		vw.document.write( content );
+		vw.document.title = $("#view_subject_txt").text();
+	},
+	/**
+	 * 선택된 메일의 읽음 상태를 변경한다.
+	 * @param isseen 0 = 읽지 않음 , 1 = 읽음
+	 */
+	read:function( isseen ){
+		var ukey = $("#MailViewForm input[name='ukey']").val();
+		var DMail = [];
+		DMail[0] = ukey;
+		var url = app.contextPath +"/mail/json/readCheck.do";
+		var param = {
+			"DMail[]" : DMail ,
+			"isseen" : isseen
+		};
+		$.ajax({
+			url : url ,
+			data : param,
+			cache : false,
+			type : "POST",
+			dataType:"text",
+			async : false,
+			error:function(xhr, txt){
+				AjaxUtil.error( xhr );
+			},
+			success:function(){
+				sensmail.reloadinfo(sensmail.MAIL);
+				//for(var i = 0 ; i < DMail.length ; i++ ){
+				//	var ukey = DMail[i];
+				//	lst.readcheck( ukey , isseen );
+				//}
+			}
+		});
+	},
+};
+
+/**
+ * 간편답장 기능
+ */
+var easyReply = {
+    
+    /**
+     * 간편답장 발송 
+     */
+	send:function(){
+	    
+	    // 메일 내용 입력 확인
+	    if( $.trim( $("#easy_body").val() ).length == 0){
+	        jAlert( message.M0193 );
+	        return;
+	    }
+	    	    		
+		var url = app.contextPath +"/mail/json/easy/send.do";
+		var param = $("#easyWriteForm").serialize();		
+		$.ajax({
+			url: url ,
+			data : param,
+			cache : false , 
+			type : "post",
+			dataType:"json",
+			async: false,
+			beforeSend:function(){
+			},
+			error:function(xhr, txt){
+				AjaxUtil.error(xhr);				
+			},
+			success:function( jsonData ){
+				 if( jsonData.code == JSONResult.SUCCESS ){
+				 	jAlert( jsonData.message );
+				 }else if( jsonData.code == JSONResult.FAIL ){
+				 	jAlert( jsonData.message );
+				 }
+			}
+		});
+	},
+	/**
+	 * 감추기/펼치기 
+	 */
+    toggle:function(){
+        if( $("#btn_simple_reply_toggle").hasClass("show") ){
+            $("#btn_simple_reply_toggle_text").text( message.M0191);
+            $("#btn_simple_reply_toggle").removeClass("show");
+            $("#btn_simple_reply_toggle").addClass("hide");
+            $("#simple_reply_inputarea").hide();
+        }else{
+            $("#btn_simple_reply_toggle_text").text( message.M0192);
+            $("#btn_simple_reply_toggle").removeClass("hide");
+            $("#btn_simple_reply_toggle").addClass("show");            
+            $("#simple_reply_inputarea").show();            
+        }
+    }
+};
+
+/**
+ * 모달창 관련 기능
+ */
+var view_modal = {
+	/**
+	 * 사용가능한 모달을 등록한다.
+	 */	
+	init:function(){
+		// 메일 이동 모달 창 등록
+		$("#modal_move").dialog({
+			bgiframe: true,
+			autoOpen: false,
+			height: 550,
+			width: 500,
+			modal: true,		
+			resizable:false,
+			buttons: [
+			    {
+					text : message.M0064,
+					click:function(){
+						view.move_action();
+					}
+				},
+				{
+					text: message.M0065,
+					click:function(){
+						$("#modal_move").dialog("close");
+					}
+				}
+			]		
+		});
+	}
+};
+
+//다중 다운로드
+function doMultiDown(){
+	
+	var objFileDown = document.getElementById("objFileDown");
+	if(!objFileDown) return;
+	
+	var count = 0;
+	
+	$("input[name='attach']:checked").each(function(){
+		
+		var sAttKey = $(this).attr("id");
+		var sName = $(this).attr("filename");
+		var sSize = $(this).attr("filesize");
+		var fileNum = $(this).val();
+		log.debug("sAttKey : "+ sAttKey );
+		log.debug("sName : "+ sName );
+		log.debug("sSize : "+ sSize );
+		log.debug("userid : "+ sensmail.userid );
+		objFileDown.AddDownFile(sAttKey,sName,sensmail.userid,sSize);
+		count++;
+	});
+	if( count == 0 ){
+		jAlert( message.M0173 );
+		return;
+	}
+	log.debug("mhost : "+ sensmail.mhost );
+	objFileDown.AddParam("mailkey", $("#MailViewForm input[name='ukey']").val() );
+	objFileDown.AddParam("mhost", sensmail.mhost );
+	objFileDown.StartDownLoad();
+}�<��      UH��UH��;/-UIy>   E:http://email.koreatech.ac.kr/sens-static/js/mail/view.js?dummy=58413 necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:49:03 GMT
+Server: Apache
+Last-Modified: Tue, 28 Apr 2015 13:18:28 GMT
+Etag: "96f5-514c8b2b9ca9e"
+Accept-Ranges: bytes
+Content-Length: 38645
+Content-Type: application/javascript
+ uncompressed-len 0   ��

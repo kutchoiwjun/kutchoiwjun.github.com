@@ -1,0 +1,817 @@
+/**
+ * 결재메일에 대한 function
+ */
+var approval = {
+	list:function( cpage , apType ){		
+		if( cpage ){
+			$("#ApprovalForm input[name='cpage']").val( cpage );
+		}		
+		if( apType ){			
+			$("#ApprovalForm input[name='apType']").val( apType );
+		}		
+		var url = approval.getURL();
+		jHistory.load(url);
+	},
+	getURL:function(){
+		var param = jHistory.form2param("ApprovalForm");
+		return param.serialize();
+	},
+	select_all:function(){
+		var c = $("#all_check_approval").is(":checked");		
+		$("#approvalPane input[name='ukey[]']").each(function(){
+			if( c ){
+				$(this).attr("checked",true);
+			}else{
+				$(this).attr("checked",false);
+			}
+		});		
+	},
+	onclick_allchk:function(){
+		$("#all_check_approval").click();
+		approval.select_all();
+	},
+	
+	checked_list:function(){
+		var checkedItem = new Array();
+		$("input[name='ukey[]']:checkbox:checked").each( function() {
+			if( $(this).attr("id") == null || $(this).attr("id").indexOf("receipt_") == -1 ) {
+				checkedItem.push( $(this).attr("value") );
+			}
+       });
+		return checkedItem;
+	},
+	changeState:function( code ){
+	    $("#ApprovalForm input[name='stateType']").val( code );
+		approval.list( 1 );
+		toggle("state_layer");
+	},
+	changePagesize:function( obj, pagesize ){
+	    $("#ap_setting li span").removeClass("orange");
+        $(obj).find("span").addClass("orange");        
+		sensmail.pagesizeChange( pagesize );
+		$("#ApprovalForm input[name='pagesize']").val( pagesize );
+		approval.list( 1 );
+		toggle("ap_setting");
+	},
+	refreshPage:function(){
+		approval.load();
+	},
+	/**
+	 * 목록 가져오기
+	 */
+	load:function(){
+		
+		var apType = $("#ApprovalForm input[name='apType']").val();		
+		$("#approval_search_type").emptySelect();		
+		if( apType == 'SEND' ){			
+			$("#approval_tit_name").html( message.M0096 );
+			$("#ap_cancel_btn").show(); //결재요청 취소 버튼
+			$("#head_drafter").hide(); // 기안자 열
+			$("#approval_search_type").appendOption2( message.M0022 , "ap_subject");
+		}else if( apType == 'RECEIVER' ){
+			$("#approval_tit_name").html( message.M0097 );
+			$("#ap_cancel_btn").hide(); //결재요청 취소 버튼
+			$("#head_drafter").show(); // 기안자 열
+			$("#approval_search_type").appendOption2( message.M0022 ,"ap_subject");
+			$("#approval_search_type").appendOption2( message.M0094 ,"ap_drafter_name");
+			$("#approval_search_type").appendOption2( message.M0095 ,"ap_drafter");
+		}
+				
+		var url = app.contextPath +"/approval/json/list.do";
+		var param = $("#ApprovalForm").serialize();		
+		var sync = false;
+		// ie 6 일때는 동기식 호출, 그외에는 비동기 호출
+		if($.browser.msie && $.browser.version > 6) sync = true;
+		
+		$.ajax({
+			url: url ,
+			data : param ,
+			cache : false , 
+			type : "POST",
+			dataType:"json",
+			async:sync,
+			beforeSend:function(){
+				$("#info_approval_empty").hide();
+				approval.showLoading();
+			},
+			error:function(xhr, txt){
+				AjaxUtil.error(xhr);
+			},
+			success:function( jsonData ){
+				
+				if( jsonData.code == JSONResult.SUCCESS ){
+					
+					var jdata = jsonData.data;
+					
+					var approvalList = jdata.list;
+					var page = jdata.pageInfo;				
+					var apType = jdata.apType;
+					
+					$("#apType").val(apType);
+					$("#total_mail_count").html( page.total );
+					
+					// 페이징
+					var pageHtml = pageInfo( page.cpage , page.pageSize , page.total , '' , 'approval.list(' );
+					 
+					$("#approval_pagenation").html(pageHtml);
+					
+					var listdata = [];										
+					for(var i = 0 ; i < approvalList.length ; i++ ){
+						var approvalData = approvalList[i];						
+						listdata[i] = approval.make_list_data( approvalData );
+					}					
+					$("#aplist").html( listdata.join('') );
+					
+					// 목록건수가 없다면..
+					if( approvalList.length == 0 ){
+						$("#info_approval_empty").show();
+					}
+					
+				}else if( jsonData.code == JSONResult.FAIL ){
+					
+					jAlert( jsonData.message );
+					
+				}
+			},complete:function(){
+				approval.hideLoading();				
+			}
+		});		
+	},
+	/**
+	 * 결재메일함 목록을 생성한다.
+	 * @param {} item
+	 * @returns {} 
+	 */
+	make_list_data:function( item ){
+		
+		var strList = [], n = -1;
+		
+		var stateType = "";
+        if( item.ap_flag == '01' ){
+            
+            stateType = message.M0089;
+            
+        }else if( item.ap_flag == '02' ){
+            
+            stateType = message.M0090;
+                
+        }else if( item.ap_flag == '03' ){
+            
+            stateType = message.M0091;
+            
+        }else if( item.ap_flag == '04' ){
+            
+            stateType = message.M0092;
+            
+        }else if( item.ap_flag == '08' ){
+            
+            stateType = message.M0093;
+            
+        }
+		
+		// 결재대기 항목은 굵게 표시한다.
+		if( item.ap_flag == '02'){
+		    strList[++n] = "<li class=\"row strong\">";
+		}else{
+		    strList[++n] = "<li class=\"row\">";
+		}
+		strList[++n] = "<dl>";
+		strList[++n] = "<dd class=\"list_check\"><input type=\"checkbox\" name=\"ukey[]\" value=\""+item.ap_key +"\" flag=\""+ item.ap_flag+"\"/></dd>";
+		strList[++n] = "<dt>"+ message.M0022 +"</dt>";
+		strList[++n] = "<dd class=\"list_subject\">";
+		strList[++n] = "<a href=\"javascript:;\" onclick=\"approval.view('"+ item.ap_key +"');\">"+ item.ap_subject +"</a>";
+		
+		if( item.comment_cnt > 0 ){
+			strList[++n] = " <span class=\"comment_cnt\">["+ item.comment_cnt +"]</span>";
+		}
+		strList[++n] = "</dd>";
+		
+				
+		
+		strList[++n] = "<dt>"+ message.M0138 +"</dt>";
+		strList[++n] = "<dd class=\"list_stat\">"+ stateType +"</dd>";
+		
+		var apType = $("#ApprovalForm input[name='apType']").val();	
+		if( apType == 'SEND' ){
+		
+			strList[++n] = "<dt>"+ message.M0139+"</dt>";			
+			strList[++n] = "<dd class=\"list_approver\">"+ item.ap_now_name + "["+ item.ap_now +"]</dd>";
+			
+		}else if( apType == 'RECEIVER' ){
+			
+			// 현재결재자
+			strList[++n] = "<dt>"+ message.M0139 +"</dt>";
+			strList[++n] = "<dd class=\"list_approver\">"+ item.user_name + "["+ item.ap_now +"]</dd>";
+			// 기안자
+			strList[++n] = "<dt>"+ message.M0140 +"</dt>";
+			strList[++n] = "<dd class=\"list_drafter\">"+ item.ap_drafter_name+" ["+ item.ap_drafter+"]</dd>";
+		}
+		
+		strList[++n] = "<dt>"+ message.M0021+ "</dt>";
+		strList[++n] = "<dd class=\"list_date\">"+  item.ap_time +"</dd>";
+		
+		strList[++n] = "</dl>";
+		strList[++n] = "</li>";		
+		return strList.join('');
+	},
+	search:function(){
+		var search_text = $("#approval_search_form input[name='srch_keyword']").val();
+		if( $.trim( search_text ).length == 0 ){
+			jAlert( message.M0068 );//검색어를 입력해주세요
+			return false;
+		}
+		$("#ApprovalForm input[name='search_text']").val( search_text );
+		$("#btn_all_list_approval").show();
+		approval.list(1);
+		return false;
+	}
+	/**
+	 * 전체목록
+	 */
+	,alllist:function(){
+		$("#ApprovalForm input[name='search_text']").val("");
+		$("#ApprovalForm input[name='cpage']").val("1");
+		$("#approval_search_form input[name='srch_keyword']").val("");
+		$("#btn_all_list_approval").hide();
+		approval.list(1);
+	},	
+	view:function( ap_key ){
+		$("#ApprovalForm input[name='apKey']").val( ap_key );
+		var apType = $("#ApprovalForm input[name='apType']").val();		
+		var url = "act=APPROVAL_VIEW&apType="+apType+"&ap_key="+ap_key;
+		//layout.setScrollLocation();		
+		jHistory.load(url);
+	},
+	/**
+	 * 결재메일 뷰
+	 */
+	view_action:function( apType, ap_key ){
+                
+		var param ={
+			"apType":apType,
+			"ap_key":ap_key
+		};
+
+		$.ajax({
+            url: app.contextPath +"/approval/html/view.do",
+            data : param,
+            cache : false , 
+            type : "POST",
+            dataType:"html",
+            async: false,
+            timeout:5000,
+            beforeSend:function(){
+                approval.showLoading();
+            },
+            error:function(xhr, txt , opt){
+                AjaxUtil.error( xhr );
+                history.back();                  
+            },
+            success:function( view_content ){
+                
+                var tempDiv = document.createElement("div");
+                tempDiv.innerHTML = view_content;
+                                
+                content = tempDiv.innerHTML;
+                                
+                document.getElementById("splitterViewPane").innerHTML = "";
+                document.getElementById("viewPane").innerHTML = content;
+                                
+                //$("#splitterViewPane").empty();
+                //$("#viewPane").html( view_content );
+                
+                approval_view.init();
+                
+                $("#view_tit_name").html( $("#approval_tit_name").html() );
+                layout.mode( menu.APPROVAL_VIEW );
+            },
+            complete:function(){
+                approval.hideLoading();
+            }
+        });
+	},
+	/**
+	 * 결재요청 취소
+	 */
+	cancel:function(){
+		
+		var ApMail = new Array();
+		
+		var validCheck = true;
+		$("#ApprovalForm input[name='ukey[]']:checkbox:checked").each( function() {
+			var flag = $(this).attr("flag");
+			if( flag != '02' ){ //결재대기중인 메일만 취소할 수 있다. 대기외의 메일이 있을 경우 경고!!
+				jAlert( message.M0099 );
+				validCheck = false;
+				return false;
+			}
+			ApMail.push( $(this).attr("value") );
+		});		
+		if( !validCheck ){
+			return;
+		}
+		if ( ApMail.length == 0 ){
+        	jAlert( message.M0045 );
+			return;
+		}
+		
+		var param = {			
+			"ApMail[]" : ApMail
+		};
+		var async = true;
+		
+		var url = app.contextPath +"/approval/json/cancel.do";
+		$.ajax({
+			url: url ,
+			data : param ,
+			cache : false , 
+			type : "POST",
+			dataType:"json",
+			async: async,
+			timeout:5000,
+			error:function(xhr, txt){
+				AjaxUtil.error( xhr );
+			},
+			success:function( jsonData ){
+				
+				if( jsonData.code == JSONResult.SUCCESS ){					
+					approval.load();					
+				}else{					
+					jAlert( jsonData.message );
+				}
+			}
+		});
+	},
+	/**
+	 * 결재메일 삭제
+	 */
+	del:function(){		
+		var ApMail = new Array();	
+		var validCheck = true;
+		$("#ApprovalForm input[name='ukey[]']:checked").each( function() {
+			var flag = $(this).attr("flag");
+			if( flag == '02' ){
+				jAlert( msg.get( message.M0098 ) );
+				validCheck = false;
+				return false;
+			}
+			ApMail.push( $(this).attr("value") );
+		});
+		
+		if( !validCheck ){
+			return;
+		}
+		
+		if ( ApMail.length == 0 ){
+        	jAlert( msg.get( message.M0045 ) );
+			return;
+		}
+		
+		jConfirm( message.M0028 , message.M0070 , function(){
+		
+			var apType = $("#ApprovalForm input[name='apType']").val();
+			
+			var async = true;
+			var url = app.contextPath +"/approval/json/delete.do";
+			var param = {
+				"ApMail[]" : ApMail,
+				"apType" : apType
+			};
+			
+			$.ajax({
+				url: url ,
+				data : param ,
+				cache : false , 
+				type : "POST",
+				dataType:"json",
+				async: async,
+				timeout:5000,
+				error:function(xhr, txt){
+					AjaxUtil.error(xhr);					
+				},
+				success:function( jsonData ){				
+					if( jsonData.code == JSONResult.SUCCESS ){
+						approval.load();
+					}else{
+						jAlert( jsonData.message );					
+					}				
+				}
+			});
+		});
+	}
+	/**
+	 * 승인 메일만 보는 메일함 목록에서 메일 상태별로 보는 기능
+	 */
+	,sel_view:function(){
+		var s_view = "";
+		$("#MailListForm input[name='select_agreemail']:checked").each(function(){			
+			if( s_view != '' ) s_view += ",";
+			s_view += $(this).val(); 
+		});
+		$("#MailListForm input[name='sel_view']").val( s_view );
+		this.drawMailList();
+	}
+	/**
+	 * 페이지 로딩 시작
+	 */
+	,showLoading:function(){		
+		$(".info_loading").show();
+	}
+	/**
+	 * 페이지 로딩 완료
+	 */
+	,hideLoading:function(){
+		$(".info_loading").hide();
+	}
+};
+var approval_view = {
+	attachDownload:function( drafter_id , mail_key , mindex , aindex ){
+		var sName,url;		
+		var ext = "";						
+		
+		url = app.contextPath +"/approval/attach/download.do?drafter_id="+drafter_id+"&mail_key="+mail_key+"&mindex="+mindex+"&aindex="+aindex;
+		
+		if( ext == 'html' || ext == 'htm' || ext == 'xml'){
+			window.open( url , '' , '' );
+		}else{
+			jDownload( url );
+		}
+	},
+	attachPreview:function( drafter_id , mail_key, mindex , aindex ){
+		var url = app.contextPath +"/approval/popup/preview_pic.do?drafter_id="+drafter_id+"&mail_key="+mail_key+"&mindex="+mindex+"&aindex="+aindex;
+		window.open( url , 'imgpreview','toolbar=no,width=400,height=329,top=100,left=200,directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no');
+
+	},
+	emlView:function( drafter , mail_key , mindex , aindex ){
+		// EML 보기는 mindex 값으로 현재 메일의 첨부파일 index 를 넣는다.		
+		window.open(app.contextPath +"/mail/eml/view.do?drafter_id="+drafter_id+"&ukey="+mail_key+"&mindex="+aindex,"","toolbar=no,width=800,height=600,directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no");
+	},
+	attachSaveWebhard:function( mail_key , mindex , aindex ){
+		
+		var url = app.contextPath +"/mail/popup/webhard/save.do?mail_key="+mail_key+"&mindex="+mindex+"&aindex="+aindex;
+		window.open( url , 'filemove','toolbar=no,width=400,height=329,top=100,left=200,directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no');
+	},
+	list:function(){
+	    var cpage = $("#ApprovalForm input[name='cpage']").val();
+	    approval.list( cpage );
+	},
+	mailsend:function(){
+		jConfirm( message.M0122, message.M0102 , function(){
+			var url = app.contextPath +"/approval/json/sendmail.do";
+			var param = {
+				"ap_key" : $("#ApprovalForm input[name='apKey']").val()
+			};
+			$.ajax({
+				url: url,
+				data : param,
+				cache : false , 
+				type : "POST",
+				dataType:"json",
+				async:true,
+				beforeSend:function(){
+				},
+				error:function(xhr, txt){
+					AjaxUtil.error(xhr);					
+				},
+				success:function( jsonData ){
+					if( jsonData.result == 1 ){
+						jAlert( msg.get( message.M0104 ) );
+					}else if( jsonData.result == -1 ){
+						jAlert( jsonData.message );
+					}
+				}
+			});
+		});
+	},
+	/**
+	 * 승인요청 취소
+	 */
+	cancel:function(){
+		jConfirm( cmessage.CM0015, message.M0100 , function(){
+			var url = app.contextPath +"/approval/json/cancel.do";
+			var param = {
+				"ap_key" : $("#ApprovalForm input[name='apKey']").val()
+			};
+			$.ajax({
+				url: url,
+				data : param,
+				cache : false , 
+				type : "POST",
+				dataType:"json",
+				async:true,
+				beforeSend:function(){
+				},
+				error:function(xhr, txt){
+					AjaxUtil.error(xhr);					
+				},
+				success:function( jsonData ){
+					if( jsonData.result == 1 ){
+						jAlert( message.M0109 , function(){
+							approval.list();	
+						});						
+					}else if( jsonData.result == -1 ){
+						jAlert( jsonData.message );
+					}
+				}
+			});
+		});		
+	},
+	/**
+	 * 삭제
+	 */
+	del:function(){
+		jConfirm( message.M0028 , message.M0070 , function(){
+			var url = app.contextPath +"/approval/json/delete.do";
+			var param_obj = new Array();
+			param_obj.push($("#ApprovalForm input[name='apKey']").val());
+			var param = {
+					"ApMail[]" : param_obj,
+					"apType" : $("#ApprovalForm input[name='apType']").val()
+				};
+			$.ajax({
+				url: url,
+				data : param,
+				cache : false , 
+				type : "POST",
+				dataType:"json",
+				async:true,
+				beforeSend:function(){
+				},
+				error:function(xhr, txt){
+					AjaxUtil.error(xhr);					
+				},
+				success:function( jsonData ){
+					if( jsonData.code == JSONResult.SUCCESS ){
+						jAlert( msg.get( message.M0101 ) ,function(){
+							approval.list();	
+						});						
+					}else if( jsonData.code == JSONResult.FAIL ){
+						jAlert( jsonData.message );
+					}
+				}
+			});			
+		});		
+	},
+	/**
+	 * 결재승인
+	 */
+	approval:function( approval_reason ){		
+		
+		var url = app.contextPath +"/approval/json/approve.do";
+		var param = {
+			"ap_key" : $("#ApprovalForm input[name='apKey']").val(),
+			"approval_reason" : approval_reason
+		};
+		$.ajax({
+			url: url,
+			data : param,
+			cache : false , 
+			type : "POST",
+			dataType:"json",
+			async:true,
+			error:function(xhr, txt){
+				AjaxUtil.error(xhr);				
+			},
+			success:function( jsonData ){
+				if( jsonData.code == JSONResult.SUCCESS ){
+					$("#approval_reason").val("");
+					$("#div_approval_reason").dialog("close");
+					jAlert( msg.get( message.M0110 ) ,function(){
+						approval.list();	
+					});					
+				}else if( jsonData.code == JSONResult.FAIL ){
+					jAlert( jsonData.message );
+				}
+			}
+		});
+	},
+	
+	/**
+	 * 전결처리
+	 */
+	submit:function( submit_reason ){		
+		var url = app.contextPath +"/approval/json/submit.do";
+		var param = {
+			"ap_key" : $("#ApprovalForm input[name='apKey']").val(),
+			"submit_reason" : submit_reason
+		};
+		
+		$.ajax({
+			url: url,
+			data : param,
+			cache : false , 
+			type : "POST",
+			dataType:"json",
+			async:true,
+			beforeSend:function(){
+			},
+			error:function(xhr, txt){
+				AjaxUtil.error(xhr);				
+			},
+			success:function( jsonData ){				
+				if( jsonData.result == 1 ){
+					$("#submit_reason").empty();
+					$("#div_submit_reason").dialog("close");
+					jAlert( msg.get( message.M0093 ) , function(){
+						approval.list();	
+					});					
+				}else if( jsonData.result == -1 ){
+					jAlert( jsonData.message );
+				}
+			}
+		});		
+	},
+	
+	/**
+	 * 반려처리
+	 */
+	reject:function( reject_reason ){		
+		var url = app.contextPath +"/approval/json/reject.do";
+		
+		var param = {
+			"ap_key" : $("#ApprovalForm input[name='apKey']").val(),
+			"reject_reason" : reject_reason
+		};
+		
+		$.ajax({
+			url: url,
+			data : param,
+			cache : false , 
+			type : "POST",
+			dataType:"json",
+			async:true,
+			beforeSend:function(){
+			},
+			error:function(xhr, txt){
+				AjaxUtil.error(xhr);
+			},
+			success:function( jsonData ){	
+				
+				$("#reject_reason").empty();
+				$("#div_reject_reason").dialog("close");				
+				if( jsonData.result == 1 ){
+					jAlert( msg.get( message.M0111 ) ,function(){
+						approval.list();	
+					});					
+				}else if( jsonData.result == -1 ){
+					jAlert( jsonData.message );
+				}
+			}
+		});		
+	}
+	,print:function(){
+		var apType = $("#ApprovalForm input[name='apType']").val();
+		var ap_key = $("#ApprovalForm input[name='apKey']").val();
+		window.open(app.contextPath +"/approval/print/view.do?apType="+apType+"&ap_key="+ap_key ,'view_mail' ,'toolbar=no,width=900,height=500,directories=no,status=yes,scrollbars=yes,resizable=yes,menubar=no');
+	},	
+	init:function(){
+	    
+	    //view.init();
+	    		
+		// 결재 모달창 초기화        
+        ap_dialog.init();
+		
+		// 메뉴를 변경한다.
+		view.setMenu( FOLDER_TYPE.APPROVAL );
+	
+		// 메뉴 처리 끝 수신거부/주소록추가 기능 제거
+		$("#from_function").hide();
+				
+		// 컨텐츠 설정 : start
+		$("#tag_warn").hide();
+		
+		// 본문처리
+		view.viewContent(2); // 결재메일은 항상 2단계	
+	}
+};
+
+var ap_dialog = {
+		
+	init:function(){
+		
+		/* 승인 모달 창 */
+		$("#div_approval_reason").dialog({
+			
+			title: message.M0107,
+			bgiframe: false,
+			autoOpen: false,
+			height: 250,
+			width: 400,
+			modal: true,
+			resizable:false,
+			draggable:false,
+			buttons: [
+			    {
+					text : msg.get( message.M0064 ),
+					click:function(){
+						var approval_reason = $.trim( $("#approval_reason").val() );
+						approval_view.approval( approval_reason );
+					}
+				},
+				{
+					text: msg.get( message.M0065 ),
+					click:function(){
+						$("#div_reason").empty();
+						$("#div_approval_reason").dialog("close"); 
+					}
+				}
+			]			
+		});
+		/* 전결 모달창 */
+		$("#div_submit_reason").dialog({
+			
+			title: msg.get( message.M0106 ),
+			bgiframe: false,
+			autoOpen: false,
+			height: 250,
+            width: 400,
+			modal: true,
+			resizable:false,
+			draggable:false,
+			buttons: [
+			    {
+					text : msg.get( message.M0064 ),
+					click:function(){
+						var submit_reason = $.trim( $("#submit_reason").val() );
+						approval_view.submit( submit_reason );
+					}
+				},
+				{
+					text: msg.get( message.M0065 ),
+					click:function(){
+						$("#div_reason").empty();
+						$("#div_submit_reason").dialog("close"); 
+					}
+				}
+			]			
+		});
+		/* 반려 모달 창 */
+		$("#div_reject_reason").dialog({
+			
+			title: msg.get( message.M0105 ),
+			bgiframe: false,
+			autoOpen: false,
+			height: 250,
+            width: 400,
+			modal: true,
+			resizable:false,
+			draggable:false,
+			buttons: [
+			    {
+					text : msg.get( message.M0064 ),
+					click:function(){
+						var reject_reason = $.trim( $("#reject_reason").val() );
+						if( reject_reason.length == 0 ){
+							jAlert( message.M0108 );							
+						}else{
+							approval_view.reject( reject_reason );	
+						}						
+					}
+				},
+				{
+					text: msg.get( message.M0065 ),
+					click:function(){
+						$("#div_reason").empty();
+						$("#div_reject_reason").dialog("close"); 
+					}
+				}
+			]			
+		});
+	},
+	/**
+	 * 전결에 코맨트를 입력하는 Modal을 띄운다.
+	 */
+	submit:function(){
+		jConfirm( cmessage.CM0015, message.M0103 , function(){
+		    $("#submit_reason").empty();
+			$("#div_submit_reason").dialog("open");
+		});
+	},
+	/**
+	 * 반려코맨트를 입력하는 Modal을 띄운다.
+	 */
+	reject:function(){
+		jConfirm( cmessage.CM0015, message.M0072 , function(){
+		    $("#reject_reason").empty();
+			$("#div_reject_reason").dialog("open");	
+		});	
+	},
+	/**
+	 * 승인 결재코맨트를 입력하는 MODAL 을 띄운다.
+	 */
+	approval:function(){
+		jConfirm( cmessage.CM0015, message.M0071 , function(){
+			$("#approval_reason").val("");
+			$("#div_approval_reason").dialog("open");
+		});		
+	}
+};
+{p~��x      UH��UH��;/-UIy>   I:http://email.koreatech.ac.kr/sens-static/js/mail/approval.js?dummy=58413 necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:49:03 GMT
+Server: Apache
+Last-Modified: Tue, 28 Apr 2015 13:18:28 GMT
+Etag: "56b8-514c8b2b9c2ce"
+Accept-Ranges: bytes
+Content-Length: 22200
+Content-Type: application/javascript
+ uncompressed-len 0   V�

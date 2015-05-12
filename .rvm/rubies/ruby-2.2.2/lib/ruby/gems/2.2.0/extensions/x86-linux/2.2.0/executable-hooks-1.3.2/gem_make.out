@@ -1,0 +1,12 @@
+/home/cwj/.rvm/rubies/ruby-2.2.2/bin/ruby -r ./siteconf20150505-23886-rukyml.rb extconf.rb
+rake 10.4.2
+rdoc 4.2.0
+
+make "DESTDIR=" clean
+make: *** 타겟 `clean'를 만들 규칙이 없음.  멈춤.
+
+make "DESTDIR="
+make: `all'를 위해 할 일이 없습니다
+
+make "DESTDIR=" install
+make: `install'를 위해 할 일이 없습니다

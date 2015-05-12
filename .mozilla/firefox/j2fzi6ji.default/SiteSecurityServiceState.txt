@@ -1,0 +1,5 @@
+services.addons.mozilla.org:HSTS	1	16567	1462973292142,1,0
+github.com:HSTS	0	16567	1462976125894,1,1
+blocklist.addons.mozilla.org:HSTS	1	16567	1462975206682,1,0
+collector.githubapp.com:HSTS	0	16567	1462976128570,1,0
+avatars2.githubusercontent.com:HSTS	0	16567	1462997723960,1,0

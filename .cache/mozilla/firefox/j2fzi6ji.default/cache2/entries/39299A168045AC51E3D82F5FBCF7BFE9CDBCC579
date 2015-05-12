@@ -1,0 +1,769 @@
+/*
+ * jQuery UI Tag-it!
+ *
+ * @version v2.0 (06/2011)
+ *
+ * Copyright 2011, Levy Carneiro Jr.
+ * Released under the MIT license.
+ * http://aehlke.github.com/tag-it/LICENSE
+ *
+ * Homepage:
+ *   http://aehlke.github.com/tag-it/
+ *
+ * Authors:
+ *   Levy Carneiro Jr.
+ *   Martin Rehfeld
+ *   Tobias Schmidt
+ *   Skylar Challand
+ *   Alex Ehlke
+ *
+ * Maintainer:
+ *   Alex Ehlke - Twitter: @aehlke
+ *
+ * Modified:
+ * 	IMOXION : webmaster@imoxion.com
+ *
+ * Dependencies:
+ *   jQuery v1.4+
+ *   jQuery UI v1.8+
+ */
+(function($) {
+
+    $.widget('ui.tagit', {
+        options: {
+            allowDuplicates   : false,
+            caseSensitive     : true,
+            fieldName         : 'tags',
+            placeholderText   : null,   // Sets `placeholder` attr on input field.
+            readOnly          : false,  // Disables editing.
+            removeConfirmation: true,  // Require confirmation to remove tags.
+            tagLimit          : null,   // Max number of tags allowed (null for unlimited).
+
+            // Used for autocomplete, unless you override `autocomplete.source`.
+            //availableTags     : [],
+            availableTags     : null,
+
+            // When enabled, quotes are unneccesary for inputting multi-word tags.
+            allowSpaces: true,
+
+            // The below options are for using a single field instead of several
+            // for our form values.
+            //
+            // When enabled, will use a single hidden field for the form,
+            // rather than one per tag. It will delimit tags in the field
+            // with singleFieldDelimiter.
+            //
+            // The easiest way to use singleField is to just instantiate tag-it
+            // on an INPUT element, in which case singleField is automatically
+            // set to true, and singleFieldNode is set to that element. This
+            // way, you don't need to fiddle with these options.
+            singleField: false,
+
+            // This is just used when preloading data from the field, and for
+            // populating the field with delimited tags as the user adds them.
+            singleFieldDelimiter: ',',
+
+            // Set this to an input DOM node to use an existing form field.
+            // Any text in it will be erased on init. But it will be
+            // populated with the text of tags as they are created,
+            // delimited by singleFieldDelimiter.
+            //
+            // If this is not set, we create an input node for it,
+            // with the name given in settings.fieldName.
+            singleFieldNode: null,
+
+            //Whether the tags are sorteable
+            sorteable: true,
+
+            //Whether the tags are sorteable
+            editable: true,
+
+            // Whether to animate tag removals or not.
+            animate: false,
+
+            // Optionally set a tabindex attribute on the input that gets
+            // created for tag-it.
+            tabIndex: null,
+
+            // Event callbacks.
+            beforeTagAdded      : null,
+            afterTagAdded       : null,
+
+            beforeTagRemoved    : null,
+            afterTagRemoved     : null,
+
+            onSortChange        : null,
+
+            onTagClicked        : null,
+            onTagLimitExceeded  : null,
+
+            onEditTag: null,
+
+            // DEPRECATED:
+            //
+            // /!\ These event callbacks are deprecated and WILL BE REMOVED at some
+            // point in the future. They're here for backwards-compatibility.
+            // Use the above before/after event callbacks instead.
+            onTagAdded  : null,
+            onTagRemoved: null,
+            // `autocomplete.source` is the replacement for tagSource.
+            tagSource: null,
+            // Do not use the above deprecated options.
+
+            // 자동완성 레이어가 붙을 아이디
+            autocompleteAreaAppendObj: null,
+            autocompleteArea: 'actbAddrArea'
+        },
+
+        _create: function() {
+            // for handling static scoping inside callbacks
+            var that = this;
+
+            // There are 2 kinds of DOM nodes this widget can be instantiated on:
+            //     1. UL, OL, or some element containing either of these.
+            //     2. INPUT, in which case 'singleField' is overridden to true,
+            //        a UL is created and the INPUT is hidden.
+            if (this.element.is('input')) {
+                this.tagList = $('<ul></ul>').insertAfter(this.element);
+                this.options.singleField = true;
+                this.options.singleFieldNode = this.element;
+                this.element.css('display', 'none');
+            } else {
+                this.tagList = this.element.find('ul, ol').andSelf().last();
+            }
+
+            this.tagInput = $('<textarea style="overflow:hidden;" onfocus="actb.mail(this, \''+this.options.autocompleteAreaAppendObj+'\');" />').addClass('ui-widget-content').attr("autocomplete","off").addClass("tagit_input");
+
+            if (this.options.readOnly) this.tagInput.attr('disabled', 'disabled');
+
+            if (this.options.tabIndex) {
+                this.tagInput.attr('tabindex', this.options.tabIndex);
+            }
+
+            if (this.options.placeholderText) {
+                this.tagInput.attr('placeholder', this.options.placeholderText);
+            }
+
+            if (this.options.sorteable){
+                var sortable_options = {
+                    items: "li.tagit-choice",
+                    delay: 150,
+                    placeholder: "highlight-sorteable",
+                    deactivate: function(){ that.onChangeOrder(); }
+                };
+                this.tagList.sortable(sortable_options);
+            }
+
+
+            this.tagList
+                .addClass('tagit')
+                .addClass('ui-widget ui-widget-content')
+                // Create the input field.
+                .append($('<li class="tagit-new"></li>').append(this.tagInput))
+                .click(function(e) {
+                    var target = $(e.target);
+                    if (target.hasClass('tagit-label')) {
+                        var tag = target.closest('.tagit-choice');
+                        if (!tag.hasClass('removed')) {
+                            that._trigger('onTagClicked', e, {tag: tag, tagLabel: that.tagLabel(tag)});
+                        }
+
+                    } else if(!target.hasClass('edit-input') && !target.hasClass('tagit-edit')
+                        && !target.hasClass('ui-icon')){
+                        // Sets the focus() to the input field, if the user
+                        // clicks anywhere inside the UL. This is needed
+                        // because the input field needs to be of a small size.
+                        that.tagInput.focus();
+                    }
+                });
+
+            // Single field support.
+            var addedExistingFromSingleFieldNode = false;
+            if (this.options.singleField) {
+                if (this.options.singleFieldNode) {
+                    // Add existing tags from the input field.
+                    var node = $(this.options.singleFieldNode);
+                    //var tags = node.val().split(this.options.singleFieldDelimiter);
+                    var tags = [];
+                    if(node.val()){
+                        tags = node.val().match(/(?:"[^"]*"|[^,])+/g);
+                    }
+
+                    node.val('');
+                    $.each(tags, function(index, tag) {
+                        that.createTag(tag, null, true);
+                        addedExistingFromSingleFieldNode = true;
+                    });
+                } else {
+                    // Create our single field input after our list.
+                    this.options.singleFieldNode = $('<input type="hidden" style="display:none;" value="" name="' + this.options.fieldName + '" />');
+                    this.tagList.after(this.options.singleFieldNode);
+                }
+            }
+
+            // Add existing tags from the list, if any.
+            if (!addedExistingFromSingleFieldNode) {
+                this.tagList.children('li').each(function() {
+                    if (!$(this).hasClass('tagit-new')) {
+                        that.createTag($(this).text(), $(this).attr('class'), true);
+                        $(this).remove();
+                    }
+                });
+            }
+
+            // hidden값(실제 메일 발송시 넘기는 값)이 변하는 지 감시해서 tag에 넣어준다.
+            this.options.singleFieldNode.bind('change', function() {
+                //log.debug("===>> " + $(this).val());
+                var vals = $(this).val();
+                var tags = that.assignedTags();
+                //log.debug("tags.length : " + tags.length);
+                that.removeAll();
+                $(this).val(vals);
+
+                $.each(tags, function(index, tag) {
+                    //that.createTag(tag, null, true);
+                    //log.debug(tag);
+                    that.createTag(tag, null, true, true);
+                    addedExistingFromSingleFieldNode = true;
+                });
+            });
+
+            // Events.
+            this.tagInput
+                .autoGrowInput({comfortZone: 20, minWidth: 100, maxWidth: 500})
+                .bind('paste', null, function() {
+                    setTimeout( function() {
+                        var text = $.trim(that.tagInput.val());
+                        text = text.replaceAll("\r\n",",").replaceAll("\n",",");
+                        //var tags = text.split(',');
+
+                        var tags = [];
+                        if(text){
+                            tags = text.match(/(?:"[^"]*"|[^,;])+/g);
+                        }
+
+                        //node.val('');
+                        $.each(tags, function(index, tag) {
+                            that.createTag(tag, null, true);
+                            addedExistingFromSingleFieldNode = true;
+                        });
+                    }, 100);
+                })
+                .keydown(function(event) {
+                    //log.debug("keydown " + event.which + " : " + event.ctrlKey);
+                    // Backspace is not detected within a keypress, so it must use keydown.
+                    // 바로 앞에 있는 값 삭제
+                    if (event.which == $.ui.keyCode.BACKSPACE && that.tagInput.val() === '') {
+                        var tag = that._lastTag();
+                        if (!that.options.removeConfirmation || tag.hasClass('remove')) {
+                            // When backspace is pressed, the last tag is deleted.
+                            that.removeTag(tag);
+                        } else if (that.options.removeConfirmation) {
+                            tag.addClass('remove ui-state-highlight');
+                        }
+                        // 탭키로 다음 element 로 이동
+                    } else if (event.which == $.ui.keyCode.TAB && that.tagInput.val() === '') {
+                        try {
+                            setTimeout(function(){
+                                $("#subject").focus();
+                            }, 50);
+                        } catch(e){}
+                    } else if (that.options.removeConfirmation) {
+                        //that._lastTag().removeClass('remove ui-state-highlight');
+                        // Control + A 키 : 65 (전체선택)
+                        if(event.ctrlKey && event.which === 65){
+                            var tags = that.assignedTags();
+                            $.each(tags, function(index, name) {
+                                tag = that._findTagByLabel(name);
+                                tag.addClass("remove");
+                            });
+                            // Control + C 키 : 67 (복사)
+                        } else if(event.ctrlKey && event.which === 67 && that.tagInput.val() === ''){
+                            var tags = that._remove_tags();
+                            //log.debug("copy " + tags.length);
+                            var tag_labels = '';
+                            $.each(tags, function(index, tag) {
+                                tag_labels += that.tagLabel(tag) + ',';
+                            });
+                            //log.debug(tag_labels);
+
+                            try { $("#clipContainer").remove(); }catch(e){}
+                            // width를 0으로 하면 크롬에서 카피가 안됨
+                            var clipInput = $('<textarea id="clipInput">').css("width","1px").css("height","0px");
+                            var clipContainer = $('<div id="clipContainer">').css({position: "absolute", width:"0px", height:"0px",'z-index':"-100"});
+                            that.tagInput.after(clipContainer.append(clipInput));
+                            clipContainer.css("display","");
+                            $("#clipInput").val(tag_labels).focus().select();
+                            // Control + X 키 : 88 (잘라내기)
+                        } else if(event.ctrlKey && event.which === 88 && that.tagInput.val() === ''){
+                            var tags = that._remove_tags();
+                            //log.debug("copy " + tags.length);
+                            var tag_labels = '';
+                            $.each(tags, function(index, tag) {
+                                tag_labels += that.tagLabel(tag) + ',';
+                                that.removeTag(tag);
+                            });
+                            //log.debug(tag_labels);
+
+                            try { $("#clipContainer").remove(); }catch(e){}
+                            // width를 0으로 하면 크롬에서 카피가 안됨
+                            var clipInput = $('<textarea id="clipInput">').css("width","1px").css("height","0px");
+                            var clipContainer = $('<div id="clipContainer">').css({position: "absolute", width:"0px", height:"0px",'z-index':"-100"});
+                            that.tagInput.after(clipContainer.append(clipInput));
+                            clipContainer.css("display","");
+                            $("#clipInput").val(tag_labels).focus().select();
+
+                            // Delete 키 : 46 (삭제)
+                        } else if(event.which === $.ui.keyCode.DELETE && that.tagInput.val() === ''){
+                            var tags = that._remove_tags();
+                            //log.debug("delete " + tags.length);
+                            $.each(tags, function(index, tag) {
+                                that.removeTag(tag);
+                            });
+                        } else {
+                            if(!event.ctrlKey){
+                                var tags = that._remove_tags();
+                                $.each(tags, function(index, tag) {
+                                    $(tag).removeClass("remove");
+                                });
+                            }
+                        }
+                    }
+
+                    // Comma/Space/Enter are all valid delimiters for new tags,
+                    // except when there is an open quote or if setting allowSpaces = true.
+                    // Tab will also create a tag, unless the tag input is empty,
+                    // in which case it isn't caught.
+                    // event.which === 186 : SemiColon
+                    if (
+                        (event.which === $.ui.keyCode.COMMA && event.shiftKey === false) ||
+                        event.which === $.ui.keyCode.ENTER || event.which === 186 ||
+                        (
+                        event.which == $.ui.keyCode.TAB &&
+                        that.tagInput.val() !== ''
+                        ) ||
+                        (
+                        event.which == $.ui.keyCode.SPACE &&
+                        that.options.allowSpaces !== true &&
+                        (
+                        $.trim(that.tagInput.val()).replace( /^s*/, '' ).charAt(0) != '"' ||
+                        (
+                        $.trim(that.tagInput.val()).charAt(0) == '"' &&
+                        $.trim(that.tagInput.val()).charAt($.trim(that.tagInput.val()).length - 1) == '"' &&
+                        $.trim(that.tagInput.val()).length - 1 !== 0
+                        )
+                        )
+                        )
+                    ) {
+                        var nQuot = 0;
+                        try{ nQuot = that.tagInput.val().match(/\"/gi).length; }catch (e){}
+                        // 따옴표가 있고 쉼표가 있으면 여기로 안들어감: 따옴표 없고 쉼표가 있을때만 들어감
+                        if(nQuot == 0){
+                            // Enter submits the form if there's no text in the input.
+                            if (!(event.which === $.ui.keyCode.ENTER && that.tagInput.val() === '')) {
+                                event.preventDefault();
+                            }
+
+                            // Autocomplete will create its own tag from a selection and close automatically.
+                            //if (!that.tagInput.data('autocomplete-open')) {
+                            if($("#"+that.options.autocompleteArea).css("display") == "none"){
+                                that.createTag(that._cleanedInput());
+                                // comma or semicolon
+                            }else if (event.which === $.ui.keyCode.COMMA || event.which === 186){
+                                that.createTag(that._cleanedInput());
+                            }
+                        }
+                        //log.debug("keyup event.which2 : " + event.which);
+                    }
+                })
+                // <- 이자리에 keydown 이 있었음
+                /*
+                 .keyup(function(event) {
+                 log.debug("keyup");
+                 // Backspace is not detected within a keypress, so it must use keydown.
+                 if (event.which == $.ui.keyCode.BACKSPACE && that.tagInput.val() === '') {
+                 var tag = that._lastTag();
+                 if (!that.options.removeConfirmation || tag.hasClass('remove')) {
+                 // When backspace is pressed, the last tag is deleted.
+                 that.removeTag(tag);
+                 } else if (that.options.removeConfirmation) {
+                 tag.addClass('remove ui-state-highlight');
+                 }
+                 } else if (that.options.removeConfirmation) {
+                 that._lastTag().removeClass('remove ui-state-highlight');
+                 }
+
+                 // Comma/Space/Enter are all valid delimiters for new tags,
+                 // except when there is an open quote or if setting allowSpaces = true.
+                 // Tab will also create a tag, unless the tag input is empty,
+                 // in which case it isn't caught.
+                 if (
+                 (event.which === $.ui.keyCode.COMMA && event.shiftKey === false) ||
+                 event.which === $.ui.keyCode.ENTER ||
+                 (
+                 event.which == $.ui.keyCode.TAB &&
+                 that.tagInput.val() !== ''
+                 ) ||
+                 (
+                 event.which == $.ui.keyCode.SPACE &&
+                 that.options.allowSpaces !== true &&
+                 (
+                 $.trim(that.tagInput.val()).replace( /^s* /, '' ).charAt(0) != '"' ||
+                 (
+                 $.trim(that.tagInput.val()).charAt(0) == '"' &&
+                 $.trim(that.tagInput.val()).charAt($.trim(that.tagInput.val()).length - 1) == '"' &&
+                 $.trim(that.tagInput.val()).length - 1 !== 0
+                 )
+                 )
+                 )
+                 ) {
+                 //log.debug("keydown event.which : " + event.which);
+                 // Enter submits the form if there's no text in the input.
+                 if (!(event.which === $.ui.keyCode.ENTER && that.tagInput.val() === '')) {
+                 event.preventDefault();
+                 }
+                 //log.debug("keydown event.which2 : " + event.which);
+                 // Autocomplete will create its own tag from a selection and close automatically.
+                 if (!that.tagInput.data('autocomplete-open')) {
+                 that.createTag(that._cleanedInput());
+                 } else if (event.which === $.ui.keyCode.COMMA){
+                 that.createTag(that._cleanedInput());
+                 }
+                 }
+                 })*/
+                .blur(function(e){
+
+                    // Create a tag when the element loses focus.
+                    // If autocomplete is enabled and suggestion was clicked, don't add it.
+                    //if (!that.tagInput.data('autocomplete-open')) {
+                    if($("#"+that.options.autocompleteArea).css("display") == "none"){
+                        that.createTag(that._cleanedInput());
+                    }
+                });
+        },
+
+        _cleanedInput: function() {
+            // Returns the contents of the tag input, cleaned and ready to be passed to 
+            //return $.trim(this.tagInput.val().replace(/^"(.*)"$/, '$1'));
+            return $.trim(this.tagInput.val());
+        },
+
+        _lastTag: function() {
+            return this.tagList.find('.tagit-choice:last:not(.removed)');
+        },
+
+        _tags: function() {
+            return this.tagList.find('.tagit-choice:not(.removed)');
+        },
+
+        _remove_tags: function() {
+            return this.tagList.find('.remove');
+        },
+
+        assignedTags: function() {
+            // Returns an array of tag string values
+            var that = this;
+            var tags = [];
+            if (this.options.singleField) {
+                //tags = $(this.options.singleFieldNode).val().split(this.options.singleFieldDelimiter);
+                if( $(this.options.singleFieldNode).val()){
+                    tags = $(this.options.singleFieldNode).val().match(/(?:"[^"]*"|[^,])+/g);
+                }
+
+                if (tags[0] === '') {
+                    tags = [];
+                }
+            } else {
+                this._tags().each(function() {
+                    tags.push(that.tagLabel(this));
+                });
+            }
+            return tags;
+        },
+
+        _updateSingleTagsField: function(tags) {
+            // Takes a list of tag string values, updates this.options.singleFieldNode.val to the tags delimited by this.options.singleFieldDelimiter
+            //$(this.options.singleFieldNode).val(tags.join(this.options.singleFieldDelimiter)).trigger('change');
+            $(this.options.singleFieldNode).val(tags.join(this.options.singleFieldDelimiter));
+        },
+
+        _subtractArray: function(a1, a2) {
+            var result = [];
+            for (var i = 0; i < a1.length; i++) {
+                if ($.inArray(a1[i], a2) == -1) {
+                    result.push(a1[i]);
+                }
+            }
+            return result;
+        },
+
+        tagLabel: function(tag) {
+            // Returns the tag's string label.
+            if (this.options.singleField) {
+                return $(tag).find('.tagit-label:first').text();
+            } else {
+                return $(tag).find('input:first').val();
+            }
+        },
+
+        _findTagByLabel: function(name) {
+            var that = this;
+            var tag = null;
+            this._tags().each(function(i) {
+                if (that._formatStr(name) == that._formatStr(that.tagLabel(this))) {
+                    tag = $(this);
+                    return false;
+                }
+            });
+            return tag;
+        },
+
+        _isNew: function(name) {
+            return !this._findTagByLabel(name);
+        },
+
+        _formatStr: function(str) {
+            if (this.options.caseSensitive) {
+                return str;
+            }
+            return $.trim(str.toLowerCase());
+        },
+
+        _effectExists: function(name) {
+            return Boolean($.effects && ($.effects[name] || ($.effects.effect && $.effects.effect[name])));
+        },
+
+        /**
+         * bNoUpdate 가 true 이면 tags 에 값을 넣지 않고, hidden값을 업데이트 하지 않는다.
+         * 기본은 값이 없음(singleFieldNode.bind('change'... 일경우에만 true가 옴)
+         */
+        createTag: function(value, additionalClass, duringInitialization, bNoUpdate) {
+            var that = this;
+
+            value = $.trim(value);
+
+            if(this.options.preprocessTag) {
+                value = this.options.preprocessTag(value);
+            }
+
+            if (value === '') {
+                return false;
+            }
+
+            // 중복이 있으면 반짝반짝
+            if (!this.options.allowDuplicates && !this._isNew(value)) {
+                var existingTag = this._findTagByLabel(value);
+                if (this._trigger('onTagExists', null, {
+                        existingTag: existingTag,
+                        duringInitialization: duringInitialization
+                    }) !== false) {
+                    if (this._effectExists('highlight')) {
+                        existingTag.effect('highlight',{color: '#FFB2D9'});
+                    }
+                }
+                return false;
+            }
+
+            /*if (this.options.tagLimit && this._tags().length >= this.options.tagLimit) {
+             this._trigger('onTagLimitExceeded', null, {duringInitialization: duringInitialization});
+             return false;
+             }*/
+
+            var label = $(this.options.onTagClicked ? '<a class="tagit-label"></a>' : '<span class="tagit-label"></span>').text(value);
+
+            // Create tag.
+            var tag = $('<li></li>')
+                .addClass('tagit-choice ui-widget-content ui-state-default')
+                .addClass(additionalClass)
+                .append(label);
+
+            if (!this.options.readOnly && this.options.editable){
+                var editinput = $('<textarea style="overflow:hidden;" onfocus="actb.mail(this, \''+that.options.autocompleteAreaAppendObj+'\');" />')
+                    .addClass('edit-input')
+                    .attr('autocomplete','off')
+                    .hide()
+                    .blur(function(e) {
+                        var old_text = tag.children(":first").text();
+                        var new_text = tag.children(".edit-input").show().val();
+                        tag.children(".edit-input").hide();
+                        tag.children(":first").text(new_text);
+                        tag.children(":first").show();
+                        tag.children(".tagit-edit").show().focus();
+                        $(this).hide();
+                        that._tagUpdate();
+                        that._trigger('onEditTag', null, {
+                            old_tag: old_text,
+                            new_tag: new_text
+                        });
+                    });
+
+                tag.append(editinput);
+
+                label.click(function(e){	// 태그를 한번 클릭할때
+                    if(tag.hasClass("remove"))tag.removeClass("remove");
+                    else tag.addClass("remove");
+                    // 입력창에 포커스를 준다.- 복사나 자르기 가능함
+                    that.tagInput.focus();
+                })
+                    .dblclick(function(e) {	// 태그를 더블클릭할때
+                        var text = tag.children(":first").text();
+                        tag.children(":first").hide();
+                        tag.children(".edit-input").show().val(text).autoGrowInput({comfortZone: 20, minWidth: 100, maxWidth: 500}).focus();
+                    });
+
+            }
+
+
+            if (this.options.readOnly){
+                tag.addClass('tagit-choice-read-only');
+            } else {
+                tag.addClass('tagit-choice-editable');
+                // Button for removing the tag.
+                var removeTagIcon = $('<span></span>');
+                //.addClass('ui-icon ui-icon-close');
+                var removeTag = $('<a><span class="text-icon">\xd7</span></a>') // \xd7 is an X
+                    .addClass('tagit-close')
+                    .append(removeTagIcon)
+                    .click(function(e) {
+                        // Removes a tag when the little 'x' is clicked.
+                        that.removeTag(tag);
+                    });
+                tag.append(removeTag);
+            }
+
+            // Unless options.singleField is set, each tag has a hidden input field inline.
+            if (!this.options.singleField) {
+                var escapedValue = label.html();
+                tag.append('<input type="hidden" style="display:none;" value="' + escapedValue + '" name="' + this.options.fieldName + '" />');
+            }
+
+            if (this._trigger('beforeTagAdded', null, {
+                    tag: tag,
+                    tagLabel: this.tagLabel(tag),
+                    duringInitialization: duringInitialization
+                }) === false) {
+                return;
+            }
+
+            if (this.options.singleField && !bNoUpdate) {
+                var tags = this.assignedTags();
+                tags.push(value);
+                this._updateSingleTagsField(tags);
+            }
+
+            // DEPRECATED.
+            //this._trigger('onTagAdded', null, tag);
+
+            this.tagInput.val('');
+
+            // Insert tag.
+            this.tagInput.parent().before(tag);
+
+            this._trigger('afterTagAdded', null, {
+                tag: tag,
+                tagLabel: this.tagLabel(tag),
+                duringInitialization: duringInitialization
+            });
+
+            // 엔터 이후 포커스가 바로 가지 않아서 약간의 지연을 줌
+            setTimeout(function(){
+                that.tagInput.focus();
+            }, 50);
+
+        },
+        onChangeOrder: function() {
+            this._tagUpdate();
+            this._trigger('onSortChange', null);
+        },
+        _tagUpdate: function(){
+            var tags = [];
+            var that = this;
+            this._tags().each(function() {
+                tags.push(that.tagLabel(this));
+            });
+            this._updateSingleTagsField(tags);
+        },
+        removeTag: function(tag, animate) {
+            animate = typeof animate === 'undefined' ? this.options.animate : animate;
+
+            tag = $(tag);
+
+            // DEPRECATED.
+            //this._trigger('onTagRemoved', null, tag);
+
+            if (this._trigger('beforeTagRemoved', null, {tag: tag, tagLabel: this.tagLabel(tag)}) === false) {
+                return;
+            }
+
+            if (this.options.singleField) {
+                var tags = this.assignedTags();
+                var removedTagLabel = this.tagLabel(tag);
+                tags = $.grep(tags, function(el){
+                    return el != removedTagLabel;
+                });
+                this._updateSingleTagsField(tags);
+            }
+
+            if (animate) {
+                tag.addClass('removed'); // Excludes this tag from _tags.
+                var hide_args = this._effectExists('blind') ? ['blind', {direction: 'horizontal'}, 'fast'] : ['fast'];
+
+                var thisTag = this;
+                hide_args.push(function() {
+                    tag.remove();
+                    thisTag._trigger('afterTagRemoved', null, {tag: tag, tagLabel: thisTag.tagLabel(tag)});
+                });
+
+                tag.fadeOut('fast').hide.apply(tag, hide_args).dequeue();
+            } else {
+                tag.remove();
+                this._trigger('afterTagRemoved', null, {tag: tag, tagLabel: this.tagLabel(tag)});
+            }
+
+        },
+
+        removeTagByLabel: function(tagLabel, animate) {
+            var toRemove = this._findTagByLabel(tagLabel);
+            if (!toRemove) {
+                throw "No such tag exists with the name '" + tagLabel + "'";
+            }
+            this.removeTag(toRemove, animate);
+        },
+
+        // 모든 태그를 삭제
+        removeAll: function() {
+            // Removes all tags.
+            var that = this;
+            this._tags().each(function(index, tag) {
+                that.removeTag(tag, false);
+            });
+        },
+
+        // "나에게"가 체크될때
+        disableEdit: function() {
+            this.tagInput.attr('disabled', 'disabled');
+            $(".edit-input").attr('disabled', 'disabled');
+            $(".tagit-label").attr('disabled', 'disabled');
+            $(".tagit-close").hide();
+        },
+        // "나에게"가 체크해제될때
+        enableEdit: function() {
+            this.tagInput.removeAttr('disabled');
+            $(".edit-input").removeAttr('disabled');
+            $(".tagit-label").removeAttr('disabled');
+            $(".tagit-close").show();
+        }
+
+    });
+})(jQuery);
+
+61
+�4�      UH��UH��;/-UIy>   G:http://email.koreatech.ac.kr/sens-static/plugin/jquery/jquery.tagit.js necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:49:03 GMT
+Server: Apache
+Last-Modified: Tue, 28 Apr 2015 13:18:27 GMT
+Etag: "80aa-514c8b2ad0516"
+Accept-Ranges: bytes
+Content-Length: 32938
+Content-Type: application/javascript
+ uncompressed-len 0   ��

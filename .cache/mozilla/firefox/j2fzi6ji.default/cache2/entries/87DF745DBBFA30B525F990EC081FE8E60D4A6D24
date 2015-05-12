@@ -1,0 +1,2698 @@
+
+
+
+
+
+
+
+
+
+
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*this file contains theme style adjustments for dojo widgets*/
+/*these override/add to the styles in dijit.css*/
+/*companion file to dojo.css*/
+/******************************/
+/*** D O J O   S T Y L E S ****/
+/******************************/
+
+/*** A C T I O N   M E N U S    A N D   T Y P E   A H E A D ***/
+/*this is the dojo version of our action menus*/
+.dijitMenu{border-color:#919090 !important;/*need !important because dijitReset comes after dijitMenu in the list of classes*/}
+.dijitMenuTable{background-image:url(../images/actionMenuBkgd.png);}
+.dijitMenuItemHover{background-color:#2e5a90;color:#fff;}
+.dijitMenuSeparatorTop{border-bottom-color:#C0C1C1;}
+/*menu icon classes*/
+.dijitMenu .lotusCheckmark{background-image:url(../images/checkmark.png);}
+/*type ahead styles*/
+ul.dijitMenu{border-color:#999 !important}
+li.dijitMenuItemHover{background-color:#fefebb;color:#000}
+
+/*[sprite]*/
+.lotusSpritesOn .dijitMenu .lotusCheckmark{background-image:url(themeImages/lotusSprite-8bit.png);background-position:4px -1026px}
+/*[/sprite]*/
+
+/***********************************************************/
+
+/*** C A L E N D A R / D A T E   P I C K E R ***/
+.dijitCalendarContainer{border-color:#ccc;background-color:#fff}
+.dijitCalendarContainer thead{background-color:#eee;}
+.dijitCalendarPreviousMonth .dijitCalendarDateLabel, .dijitCalendarNextMonth .dijitCalendarDateLabel{color:#ccc;}
+.dijitCalendarCurrentMonth .dijitCalendarDateLabel{color:#000;}
+.dijitCalendarBodyContainer .dayFlagPersonalTask,
+.dijitCalendarBodyContainer .dayFlagTeamTask,
+.dijitCalendarBodyContainer .dayFlagOverdueTask,
+.dijitCalendarBodyContainer .dayFlagTodayTask{border-bottom-color:#fff;border-right-color:#fff;}
+.dijitCalendarBodyContainer .dayFlagPersonalTask{background-color:#c7e1fa;}
+.dijitCalendarBodyContainer .dayFlagTeamTask{background-color:#ccffaa;}
+.dijitCalendarBodyContainer .dayFlagOverdueTask{background-color:#f99;}
+.dijitCalendarBodyContainer .dayFlagTodayTask{background-color:#ffa;}
+.dijitCalendarYearLabel{background-color:#eee;}
+.dijitCalendarYearLabel .dijitCalendarPreviousYear, .dijitCalendarYearLabel, .dijitCalendarNextYear{color:#105cb6;}
+.dijitCalendarYearLabel .dijitCalendarSelectedYear{color:#999;}
+.dijitCalendarIncrease{background-color:transparent;background-image:url(../images/calArrowRight.png)}
+.dijitCalendarDecrease{background-color:transparent;background-image:url(../images/calArrowLeft.png)}
+.dijit_a11y .dijitCalendarIncrease, .dijit_a11y .dijitCalendarDecrease{border-color:#999}/*for an outline, when images are turned off*/
+/***********************************************************/
+
+/*** D I S A B L E D   E L E M E N T S ***/
+.dijitButtonDisabled .dijitButtonNode, .dijitToggleButtonDisabled .dijitButtonNode, .dijitDropDownButtonDisabled .dijitButtonNode, .dijitComboButtonDisabled .dijitButtonNode, .dijitComboBoxDisabled, .dijitSpinnerDisabled, .dijitSpinnerDisabled .dijitButtonNode {
+opacity:0.6;
+}
+/***********************************************************/
+
+/*** I N P U T   F I E L D S ***/
+.dijitTextBox, .dijitTextBox input, .dijitComboBox input, .dijitSpinner input{background-color:#fff !important;}
+.dijitTextBox,.dijitComboBox,.dijitSpinner{border-color:#A5AEB5;}
+/***********************************************************/
+
+/*** R I C H   T E X T   E D I T O R ***/
+.dijitToolbar .dijitToolbarSeparator{background-image:url(../images/rteToolbar.png);}
+.dijitEditorIcon{background-image:url(../images/rteToolbar.png);}
+.dijitEditorIconSep{background-position:0px;}
+.dijitEditorIconBackColor{background-position:-18px;}
+.dijitEditorIconBold{background-position:-36px;}
+.dijitEditorIconCancel{background-position:-54px;}
+.dijitEditorIconCopy{background-position:-72px;}
+.dijitEditorIconCreateLink{background-position:-90px;}
+.dijitEditorIconCut{background-position:-108px;}
+.dijitEditorIconDelete{background-position:-126px;}
+.dijitEditorIconForeColor{background-position:-144px;}
+.dijitEditorIconHiliteColor{background-position:-162px;}
+.dijitEditorIconHTML{background-position:-702px;}
+.dijitEditorIconIndent{background-position:-180px;}
+.dijitEditorIconInsertHorizontalRule{background-position:-198px;}
+.dijitEditorIconInsertImage{background-position:-216px;}
+.dijitEditorIconInsertOrderedList{background-position:-234px;}
+.dijitEditorIconInsertTable{background-position:-252px;}
+.dijitEditorIconInsertUnorderedList{background-position:-270px;}
+.dijitEditorIconItalic{background-position:-288px;}
+.dijitEditorIconJustifyCenter{background-position:-306px;}
+.dijitEditorIconJustifyFull{background-position:-324px;}
+.dijitEditorIconJustifyLeft{background-position:-342px;}
+.dijitEditorIconJustifyRight{background-position:-360px;}
+.dijitEditorIconLeftToRight{background-position:-378px;}
+.dijitEditorIconListBulletIndent{background-position:-396px;}
+.dijitEditorIconListBulletOutdent{background-position:-414px;}
+.dijitEditorIconListNumIndent{background-position:-432px;}
+.dijitEditorIconListNumOutdent{background-position:-450px;}
+.dijitEditorIconOutdent{background-position:-468px;}
+.dijitEditorIconPaste{background-position:-486px;}
+.dijitEditorIconRedo{background-position:-504px;}
+.dijitEditorIconRemoveFormat{background-position:-522px;}
+.dijitEditorIconRightToLeft{background-position:-540px;}
+.dijitEditorIconSave{background-position:-558px;}
+.dijitEditorIconSpace{background-position:-576px;}
+.dijitEditorIconStrikethrough{background-position:-594px;}
+.dijitEditorIconSubscript{background-position:-612px;}
+.dijitEditorIconSuperscript{background-position:-630px;}
+.dijitEditorIconUnderline{background-position:-648px;}
+.dijitEditorIconUndo{background-position:-666px;}
+.dijitEditorIconWikiword{background-position:-684px;}
+.dijitEditorIconToggleDir{background-position:-540px;}
+.RichTextEditable .dijitButtonNode, .RichTextEditable button{background-color:transparent;}
+.RichTextEditable .dijitToolbar{background-image:url(../images/titleBkgd.png);border-bottom-color:#999}
+.RichTextEditable{border-color:#999;background-color:#fff}
+.RichTextEditable .dijitButtonNode .dijitArrowButtonInner{background-image:url(../images/btnDropDown.png);}
+/*to support hover and checked states*/
+.RichTextEditable .dijitToolbar .dijitButtonHover,
+.RichTextEditable .dijitToolbar .dijitToggleButtonHover,
+.RichTextEditable .dijitToolbar .dijitDropDownButtonHover{background-color:#abc1e5; border:1px solid #316ac5}
+.RichTextEditable .dijitToolbar .dijitButtonChecked, 
+.RichTextEditable .dijitToolbar .dijitToggleButtonChecked{background-color:#D4DFF2;border:1px solid #316AC5;}
+/*[sprite]*/
+.lotusSpritesOn .RichTextEditable .dijitToolbar{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 -900px}
+/*[/sprite]*/
+/***********************************************************/
+
+
+/*** S L I D E R ***/
+.dijit_a11y div.dijitSliderImageHandle, .dijitSliderImageHandle{background-image:url(../images/tagSliderHandle.png)}
+.dijitSliderProgressBar{background-color:#8bbce8;}
+.dijitSliderRemainingBar{background-color:#e3e3e3;}
+.dijitSliderBottomBumper, .dijitSliderLeftBumper{background-color:#a5c0ec;}
+/***********************************************************/
+
+/*** T O O L T I P ***/
+.dijitTooltipContainer{border-color:#c5c5c5;background-color:#f0f0f0;background-image:url(../images/accentBkgd.png)}
+/*[sprite]*/
+.lotusSpritesOn .dijitTooltipContainer{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 -450px}
+/*[/sprite]*/
+/***********************************************************/
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/******************************************************************************
+defaultTheme.css is created by including content from the following files, which must be in the order specified:
+baseTheme.css
+componentsTheme.css
+sprites.css (contains styles for creating image sprites using background images)
+layoutTheme.css (this is the layout, with overrides to component styles based on where they sit on the page)
+
+companion files are
+base.css
+components.css
+layout.css
+******************************************************************************/
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*this file contains contains namespaced default styles*/
+/*companion file is base.css*/
+/******************************/
+/*** B A S E   S T Y L E S ****/
+/******************************/
+
+/*** R E S E T ***/
+
+/*redefinitions*/
+.lotusui a{color:#105cb6}
+.lotusui a:hover, .lotusui a:focus, .lotusui a:active{color:#05386b}
+.lotusui dt{background-color:#eee;font-weight:bold}/*used in metrics screen*/
+.lotusui h1, .lotusui h2{color:#444}
+/***********************************************************/
+
+/*** S P E C I A L   L I N K S ***/
+a.lotusPerson, a.lotusPerson:visited{color:#578cca;}/*person links pop up a related menu*/
+.lotusTags a:link, .lotusTags a:visited, a.lotusTag:link, a.lotusTag:visited{color:#578cca;}/*tag*/
+.lotusRelatedTags a{background-image:url(../images/iconRelatedTag.png);border-color:transparent/*to keep related tags from jumping*/}
+.lotusui_ie6 .lotusRelatedTags a{border-color:#fff}/*ie6 doesn't support transparent border color*/
+/*[sprite]*/
+.lotusSpritesOn .lotusRelatedTags a{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -2987px}
+/*[/sprite]*/
+/*my links indicate bookmarks you have created - add this onto people and tag class links*/
+a.lotusMyLink, a.lotusMyLink:visited, .lotusMyLinks a, .lotusMyLinks a:visited{color:#44a244 !important}
+a.lotusDelete{background-image:url(../images/iconDelete.png);}
+/*[sprite]*/.lotusSpritesOn a.lotusDelete{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -2331px}/*[/sprite]*/
+/*link hover styles*/
+.lotusTags a:hover, .lotusTags a:focus, .lotusTags a:active, a.lotusTag:hover, a.lotusTag:focus, a.lotusTag:active, a.lotusPerson:hover, a.lotusPerson:focus, a.lotusPerson:active{border-bottom-color:#05386b;color:#05386b;}
+a.lotusMyLink:hover, a.lotusMyLink:focus, .lotusMyLinks a:hover, .lotusMyLinks a:focus {color:#05386b !important;border-bottom-color:#05386b;}
+/*single and group action links*/
+/*this is to provide a class for overriding link colors in groups of links to indicate that the link is an action link (like the "Tag this" link in a tag group*/
+a.lotusAction, a.lotusAction:visited{color:#105cb6 !important;}
+a.lotusAction:hover, a.lotusAction:focus, a.lotusAction:active, .lotusActions a:hover, .lotusActions a:focus, .lotusActions a:active, .lotusTags a.lotusAction:hover, .lotusTags a.lotusAction:focus, .lotusTags a.lotusAction:active{color:#05386b !important;}
+/*to assign an icon to an action link, you need to assign a unique id to the link and give it a background image.  The rest of the code is in this css declaration*/
+.lotusActions a, .lotusActions a:visited{color:#105cb6;}
+a.lotusDropDown, a.lotusDropDown:visited, a.lotusDropDown:active{background-color:transparent;background-image: url(../images/btnDropDown.png)}
+/*[sprite]*/
+a.lotusDropDown, a.lotusDropDown:visited, a.lotusDropDown:active{background-color:transparent;background-image: url(themeImages/lotusSprite-8bit.png);background-position:0 -728px}
+/*[/sprite]*/
+a.lotusDelete:hover, a.lotusDelete:active{background-image:url(../images/iconDeleteHover.png);}
+/*[sprite]*/.lotusSpritesOn a.lotusDelete:hover, a.lotusDelete:active{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -2383px}/*[/sprite]*/
+/*general class for 16 pixel icons created as background images, where a link surrounds blank.gif*/
+/*NOTES: 
+assign the lotusIcon16 class along with one of the following classes to your link tag
+classes match the icon graphic name with a lotus prefix*/
+.lotusIconShow{background-image:url(../images/iconShow.png)}
+.lotusIconHide{background-image:url(../images/iconHide.png)}
+/*[sprite]*/
+.lotusSpritesOn .lotusIcon16{background-image:url(themeImages/lotusSprite-8bit.png);}
+.lotusSpritesOn .lotusIconShow{background-position:0 -3257px}
+.lotusSpritesOn .lotusIconHide{background-position:0 -2547px}
+/*[/sprite]*/
+/***********************************************************/
+
+/*** G E N E R A L   S T Y L E S ***/
+.lotusui .lotusBorderTop, .lotusui .lotusBorderBottom{border-color:#e5e5e5}
+.lotusui .lotusLoading{background-image:url(../images/loading.gif)}
+.lotusui .lotusRequired{color:#efa229}
+.lotusui .lotusMeta{color:#666}
+.lotusui .lotusHighlighted{color:#f00}/*red*/
+.lotusui .lotusInactive{color:#999}
+.lotusui .lotusLogo, .lotusLoginLogo{height:18px;width:126px;background-image:url(../images/logo.png);background-repeat:no-repeat;}/*height, width values are in this file to aid in retheming*/
+.lotusui .lotusIBMLogo {width:94px;height:37px;background-image:url(../images/ibmLogo.png);background-repeat:no-repeat;}/*height, width values are in this file to aid in retheming*/
+.lotusImagesOff .lotusIBMLogo {display:none}
+.lotusui .lotusIBMLogoFooter {width:66px;height:28px;background-image:url(../images/ibmLogoFooter.png);background-repeat:no-repeat;}/*height, width values are in this file to aid in retheming*/
+.lotusImagesOff .lotusIBMLogoFooter {display:none}
+/*[sprite]*/
+.lotusSpritesOn .lotusIBMLogo {background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -1782px}
+.lotusSpritesOn .lotusIBMLogoFooter {background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -1859px}
+/*[/sprite]*/
+/***********************************************************/
+
+/*** I N L I N E   L I S T S ***/ 
+.lotusui .lotusInlinelist li{border-color:#ccc;}
+/***********************************************************/
+
+/*** A R R O W S ***/
+/*drop-down arrows*/
+.lotusDropDownSprite{background-image:url(../images/btnDropDown.png)}
+.lotusDropDownActionSprite{background-image:url(../images/btnDropDownAction.png)}
+/*scrolling arrows*/
+.lotusScrollUp{background-image:url(../images/arrowScrollUp.png)}
+.lotusScrollDown{background-image:url(../images/arrowScrollDown.png)}
+/*[sprite]*/
+.lotusSpritesOn .lotusDropDownSprite{background-position:0 -728px}
+.lotusSpritesOn .lotusDropDownActionSprite{background-position:0 -814px}
+.lotusSpritesOn .lotusScrollUp{background-position:0 -683px}
+.lotusSpritesOn .lotusScrollDown{background-position:0 -638px}
+/*[/sprite]*/
+
+/***********************************************************/
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/******************************************************************************
+This file contains styles for components
+
+componentsTheme.css is created by including content from css files located in the
+components directory.
+
+companion file is components.css
+******************************************************************************/
+/****************************************/
+/*** C O M P O N E N T   S T Y L E S ****/
+/****************************************/
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for drop-down menus*/
+/*companion file is actionMenu.css*/
+/*****************************/
+/*** A C T I O N   M E N U ***/
+/*****************************/
+ul.lotusActionMenu{background-color:#fff;border-color:#919090;background-image:url(../images/actionMenuBkgd.png)}
+ul.lotusActionMenu.lotusPlain{background-image:none}
+.lotusActionMenu li{background-color:transparent}
+.lotusActionMenu li.lotusSelected a{background-image:url(../images/checkmark.png);}
+.lotusActionMenu li.lotusMenuSeparator{border-top-color:#C0C1C1 !important}
+.lotusActionMenu a{color:#000;}
+.lotusActionMenu a:hover, .lotusActionMenu a:focus, .lotusActionMenu a:active{color:#fff !important;background-color:#2e5a90;}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusActionMenu li.lotusSelected a,
+.lotusSpritesOn .lotusActionMenu li.lotusSelected a:visited,
+.lotusSpritesOn .lotusActionMenu li.lotusSelected a:hover,
+.lotusSpritesOn .lotusActionMenu li.lotusSelected a:active,
+.lotusSpritesOn .lotusActionMenu li.lotusSelected a:focus
+{background-image:url(themeImages/lotusSprite-8bit.png);background-position:4px -1026px}
+/*[/sprite]*/
+
+/***********************************************************/
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for breadcrumbs*/
+/*companion file is breadcrumbs.css*/
+/*** B R E A D C R U M B S ***/
+.lotusBreadcrumbs .lotusDivider{background-image:url(../images/arrowClosedLight.png)}
+.lotusBreadcrumbs .lotusDivider:hover, .lotusBreadcrumbs .lotusDivider:focus, .lotusBreadcrumbs .lotusDivider:active{background-image:url(../images/arrowClosedDark.png);}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusBreadcrumbs .lotusDivider{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -232px}
+.lotusSpritesOn .lotusBreadcrumbs .lotusDivider:hover, .lotusSpritesOn .lotusBreadcrumbs .lotusDivider:focus, .lotusSpritesOn .lotusBreadcrumbs .lotusDivider:active{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -116px}
+/*[/sprite]*/
+/***********************************************************/
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for buttons*/
+/*companion file is buttons_bidi.css*/
+/*** B U T T O N S ***/
+/*form buttons are the same style right now as the special buttons*/
+/*action buttons (lotusActionBtn) just use the lotusBtn style now, if you want them to look different you can define a style*/
+/*lotusButton is a set width version of the button that goes in the left column*/
+/*our regular buttons*/
+
+/*2010 09 15 Sue */
+/*.lotusBtn, .lotusButton{border-color:#c0c7cd;}default button outside border*/
+.lotusBtn, .lotusButton{border-color:#D2D2D4;} /*default button outside border*/
+
+/*.lotusBtn a, .lotusBtn a:visited, .lotusButton a, .lotusButton a:visited{border-color:#dedede;}span buttons have an inside border*/
+.lotusBtn a, .lotusBtn a:visited, .lotusButton a, .lotusButton a:visited{border-color:#D2D2D4;}/*span buttons have an inside border*/
+
+/*2010 09 15 Sue ƒ¡≈Ÿ√˜ √ﬂ∞° πˆ∆∞*/
+/*.lotusBtn a, .lotusBtn a:visited, .lotu∆∞Button a, .lotusButton a:visited, input.lotusBtn, button.lotusBtn{color:#222;background-color:#dedede;background-image:url(../images/btnBkgd.png);}*/
+.lotusBtn a, .lotusBtn a:visited, .lotusButton a, .lotusButton a:visited, input.lotusBtn, button.lotusBtn{background-color:#FFFFFF;width:130px;height:22px !important;color:#222222;background-image:url('/wps/images/KOR/button/btn1.gif');}
+
+/*form and other blue buttons*/
+/*.lotusBtnSpecial, .lotusFormButton, .lotusBtnImg{border-color:#2f76b9}*/
+.lotusBtnSpecial, .lotusFormButton, .lotusBtnImg{border-color:#FFFFFF}
+
+/*∆˜≈ª º≥¡§»ƒ ¿˙¿Â ∞¸∑√ πˆ∆∞*/
+/*.lotusBtnSpecial a, .lotusBtnSpecial a:visited, .lotusBtnImg img, .lotusBtnImg input{color:#fff;border-color:#6cacf1;}*/ /*span buttons have an inside border*/
+.lotusBtnSpecial a, .lotusBtnSpecial a:visited, .lotusBtnImg img, .lotusBtnImg input{color:#fff;border-color:#858585;} 
+
+
+/*2010 09 15 º≥¡§∫Ø∞ÊΩ√ ¿˙¿Âπˆ∆∞*/
+/*.lotusBtnSpecial a, .lotusBtnSpecial a:visited, input.lotusBtnSpecial, button.lotusBtnSpecial, .lotusFormButton, .lotusBtnImg{color:#ffffff;background-color:#2c86eb;background-image:url(themeImages/btnSpecialBkgd.png);}*/
+.lotusBtnSpecial a, .lotusBtnSpecial a:visited, input.lotusBtnSpecial, button.lotusBtnSpecial, .lotusFormButton{width:60px;height:22px;color:#7E7E7E;border-color:#D2D2D4;background-image:url('/wps/images/KOR/button/btn1.gif');}
+
+/*hover states*/
+/*default buttons*/
+.lotusButton:hover, .lotusButton:focus, .lotusBtn:hover, .lotusBtn:focus, .lotusBtn:active{border-color:#8e8e8e;}
+.lotusBtn a:hover, .lotusBtn a:focus, .lotusBtn a:active{color:#222;}
+
+/*2010 09 15 Sue πˆ∆∞ ∏∂øÏΩ∫ø¿πˆ*/
+/*form and blue buttons*/
+/*¿˙¿Âπˆ∆∞ ∞¸∑√*/
+/*.lotusBtnSpecial:hover, .lotusBtnSpecial:focus, .lotusBtnSpecial:active, .lotusFormButton:hover, .lotusFormButton:focus, .lotusBtnImg:hover, .lotusBtnImg:focus, .lotusBtnImg:active{border-color:#10395f}*/
+.lotusBtnSpecial:hover, .lotusBtnSpecial:focus, .lotusBtnSpecial:active, .lotusFormButton:hover, .lotusFormButton:focus, .lotusBtnImg:hover, .lotusBtnImg:focus, .lotusBtnImg:active{border-color:#FFFFFF} 
+.lotusBtnSpecial a:hover, span.lotusBtnSpecial a:focus, .lotusBtnSpecial a:active, .lotusImagesOff  a.lotusBtnImg, .lotusImagesOff  a.lotusBtnImg:visited, .lotusImagesOff  a.lotusBtnImg:hover, .lotusImagesOff  a.lotusBtnImg:focus, .lotusImagesOff  a.lotusBtnImg:active{color:#ffffff}/*to make sure color sticks when images are turned off, etc.*/
+
+/*disabled button - styles need to be at the end of all our button styles so they are picked up.  Uses regular button styles and a grayed out text color*/
+/*2010 09 15 Sue ¿˙¿Âπˆ∆∞ ∫Ò»∞º∫»≠  ≈◊µŒ∏Æ*/
+/*.lotusBtnDisabled{border-color:#c0c7cd !important;}*//*we don't want disabled button border color to change on hover*/
+.lotusBtnDisabled{width:60px;height:22px !important;border-color:#D2D2D4 !important;background-image:url('/wps/images/KOR/button/btn1.gif')}/*we don't want disabled button border color to change on hover*/
+/*.lotusBtnDisabled a, .lotusBtnDisabled a:visited{border-color:#dedede;}*//*span buttons have an inside border*/
+.lotusBtnDisabled a, .lotusBtnDisabled a:visited{border-color:#FFFFFF;}/*span buttons have an inside border*/
+/*.lotusBtnDisabled a, .lotusBtnDisabled a:visited, input.lotusBtnDisabled, button.lotusBtnDisabled{color:#b0b0b0 !important;background-color:#dedede;background-image:url(../images/btnBkgd.png);}*/
+.lotusBtnDisabled a, .lotusBtnDisabled a:visited, input.lotusBtnDisabled, button.lotusBtnDisabled{color:#b0b0b0 !important;background-color:#FFFFFF;}
+
+/*miscellaneous*/
+.lotusBtnDivider{border-color:#e0e0e0}/*add this as an additional container class when you need a bottom divider for the buttons*/
+/*not implemented in the prototype yet.*/
+.lotusAdd img{background-image:url(../images/iconAdd16.png)}
+.lotusClose img{background-image:url(../images/iconClose16.png)}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusBtn a,.lotusSpritesOn .lotusButton a,.lotusSpritesOn input.lotusBtn,.lotusSpritesOn button.lotusBtn,
+.lotusSpritesOn .lotusBtn a:hover,.lotusSpritesOn .lotusButton a:hover,.lotusSpritesOn input.lotusBtn:hover,.lotusSpritesOn button.lotusBtn:hover,
+.lotusSpritesOn .lotusBtn a:focus,.lotusSpritesOn .lotusButton a:focus,.lotusSpritesOn input.lotusBtn:focus,.lotusSpritesOn button.lotusBtn:focus,
+.lotusSpritesOn .lotusBtn a:active,.lotusSpritesOn .lotusButton a:active,.lotusSpritesOn input.lotusBtn:active,.lotusSpritesOn button.lotusBtn:active,
+.lotusSpritesOn .lotusBtn a:visited,.lotusSpritesOn .lotusButton a:visited,.lotusSpritesOn input.lotusBtn:visited,.lotusSpritesOn button.lotusBtn:visited
+{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 0}
+
+.lotusSpritesOn .lotusBtnDisabled a,.lotusSpritesOn input.lotusBtnDisabled,.lotusSpritesOn button.lotusBtnDisabled,
+.lotusSpritesOn .lotusBtnDisabled a:hover,.lotusSpritesOn input.lotusBtnDisabled:hover,.lotusSpritesOn button.lotusBtnDisabled:hover,
+.lotusSpritesOn .lotusBtnDisabled a:focus,.lotusSpritesOn input.lotusBtnDisabled:focus,.lotusSpritesOn button.lotusBtnDisabled:focus,
+.lotusSpritesOn .lotusBtnDisabled a:active,.lotusSpritesOn input.lotusBtnDisabled:active,.lotusSpritesOn button.lotusBtnDisabled:active,
+.lotusSpritesOn .lotusBtnDisabled a:visited,.lotusSpritesOn input.lotusBtnDisabled:visited,.lotusSpritesOn button.lotusBtnDisabled:visited
+{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 0}
+
+.lotusSpritesOn .lotusBtnSpecial a,.lotusSpritesOn input.lotusBtnSpecial,.lotusSpritesOn button.lotusBtnSpecial,.lotusSpritesOn .lotusFormButton,.lotusSpritesOn .lotusBtnImg,
+.lotusSpritesOn .lotusBtnSpecial a:hover,.lotusSpritesOn input.lotusBtnSpecial:hover,.lotusSpritesOn button.lotusBtnSpecial:hover,.lotusSpritesOn .lotusFormButton:hover,.lotusSpritesOn .lotusBtnImg:hover,
+.lotusSpritesOn .lotusBtnSpecial a:focus,.lotusSpritesOn input.lotusBtnSpecial:focus,.lotusSpritesOn button.lotusBtnSpecial:focus,.lotusSpritesOn .lotusFormButton:focus,.lotusSpritesOn .lotusBtnImg:focus,
+.lotusSpritesOn .lotusBtnSpecial a:active,.lotusSpritesOn input.lotusBtnSpecial:active,.lotusSpritesOn button.lotusBtnSpecial:active,.lotusSpritesOn .lotusFormButton:active,.lotusSpritesOn .lotusBtnImg:active,
+.lotusSpritesOn .lotusBtnSpecial a:visited,.lotusSpritesOn input.lotusBtnSpecial:visited,.lotusSpritesOn button.lotusBtnSpecial:visited,.lotusSpritesOn .lotusFormButton:visited,.lotusSpritesOn .lotusBtnImg:visited
+{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 -1350px}
+
+.lotusSpritesOn .lotusAdd img{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -2107px}
+.lotusSpritesOn .lotusClose img{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -2275px}
+/*[/sprite]*/
+/****************************************************************/
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for captions*/
+/*companion file is caption.css*/
+/*** C A P T I O N ***/
+.lotusCaption{background-color:#f3f3f3;border-color:#f3f3f3}
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for comments*/
+/*companion file is comments.css*/
+/*** C O M M E N T ***/
+/*plain comments*/
+.lotusAddComment{background-color:#E8EDF3;}
+.lotusui .lotusAddComment a.lotusCommentInput, .lotusui .lotusAddComment a.lotusCommentInput:hover, .lotusui .lotusAddComment a.lotusCommentInput:focus{background-color:#fff;border-color:#BDC7DB !important;}/*important is to keep this from clashing with lotusActions classes, if applied*/
+/*update status "comment"*/
+.lotusUpdateStatus{background-color:#b4d5fc;}
+.lotusUpdateStatus .lotusPostStatusControl{background-color:#fff;}
+/*comment containers*/
+ul.lotusCommentList li{border-top-color:#e3e2e2}
+/*style adjustments for comments on the board/wall*/
+.lotusBoard .lotusPost{border-top-color:#E8EDF3}
+.lotusBoard ul.lotusCommentList li.lotusFirst{background-image:url(../images/commentPointBubble.png);}
+/*[sprite]*/
+.lotusSpritesOn .lotusBoard ul.lotusCommentList li.lotusFirst{background-image:url(themeImages/lotusSprite-8bit.png);background-position:15px -1137px}
+/*[/sprite]*/
+.lotusBoard .lotusCommentList .lotusPost, .lotusBoard .lotusCommentList .lotusAddComment{background-color:#ededed;}
+.lotusBoard .lotusCommentPaging { background-color:#E8EDF3; }
+/*styles for comments in a discussion forum*/
+.lotusForum .lotusPost{background-color:#B4D5FC;}
+.lotusForum .lotusPostAuthorInfo .lotusPostAvatar{background-image:url(../images/commentPointForum.png)}
+/*[sprite]*/
+.lotusSpritesOn .lotusForum .lotusPostAuthorInfo .lotusPostAvatar{background-image:url(themeImages/lotusSprite-8bit.png);background-position:100% -1373px}
+/*[/sprite]*/
+.lotusForum .lotusPostContent{background-color:#fff}
+.lotusForum ul.lotusCommentList .lotusPost{background-color:#ededed}
+.lotusForum ul.lotusCommentList .lotusChild{background-image: url(../images/commentIndent.png);}
+.lotusForum .lotusPostDetails blockquote{color:#545454;background-color:#ededed;border-color:#DFE4E9;}
+/*simple comment bubble*/
+.lotusCommentBubble{background-image: url(../images/commentPointBubble.png);}
+/*[sprite]*/
+.lotusSpritesOn .lotusCommentBubble{background-image: url(themeImages/lotusSprite-8bit.png);background-position:15px -1137px}
+/*[/sprite]*/
+.lotusCommentBubbleBody{background-color:#ededed;}
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for legal*/
+/*companion file is legal.css*/
+/*** C O P Y R I G H T **/
+div.lotusLegal .lotusLicense{background-image: url(../images/ibmLogo.png);}
+.lotusLegal .lotusLicense{color:#666;}
+.lotusLegal .lotusBuild{color:#000}
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for dialogs*/
+/*companion file is dialogs.css*/
+/*** D I A L O G ***/
+.lotusDialogBorder{border-color:#aaa;}
+.lotusDialog{background-color:#fff;}
+.lotusDialog h1{border-bottom-color:#E2EBF1;background-image:url(../images/titleBkgd.png)}
+.lotusDialog .lotusDialogContent{border-bottom-color:#E2EBF1;}
+.lotusDialog .lotusDialogFooter{background-color:#E2EBF1;}
+.lotusDialog .lotusFormTable,
+.lotusDialog .lotusFormTable td{background-color:#fff;}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusDialog h1{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 -900px}
+/*[/sprite]*/
+
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for display controls*/
+/*companion file is views.css*/
+/***************************************/
+/*** D I S P L A Y   C O N T R O L S ***/
+/***************************************/
+.lotusViewControl div{background-color:#fff;background-image:url(../images/btnBkgd.png);border-color:#c0c7cd}
+.lotusDetailsOff {background-image:url(../images/viewDetails.png)}
+.lotusDetailsOff:hover, .lotusDetailsOff:focus{background-image:url(../images/viewDetailsHover.png)}
+.lotusDetailsOn {background-image:url(../images/viewDetailsSelected.png)}
+.lotusSummaryOff {background-image:url(../images/viewSummary.png)}
+.lotusSummaryOff:hover, .lotusSummaryOff:focus {background-image:url(../images/viewSummaryHover.png)}
+.lotusSummaryOn {background-image:url(../images/viewSummarySelected.png)}
+.lotusTreeOff {background-image:url(../images/viewTree.png)}
+.lotusTreeOff:hover, .lotusTreeOff:focus {background-image:url(../images/viewTreeHover.png)}
+.lotusTreeOn {background-image:url(../images/viewTreeSelected.png)}
+.lotusTileOff {background-image:url(../images/viewThumbnail.png)}
+.lotusTileOff:hover, .lotusTileOff:focus {background-image:url(../images/viewThumbnailHover.png)}
+.lotusTileOn {background-image:url(../images/viewThumbnailSelected.png)}
+.lotusFolderOff {background-image:url(../images/viewFolder.png)}
+.lotusFolderOff:hover, .lotusFolderOff:focus {background-image:url(../images/viewFolderHover.png)}
+.lotusFolderOn {background-image:url(../images/viewFolderSelected.png)}
+
+/*sprites on*/
+/*[sprite]*/
+.lotusSpritesOn .lotusViewControl div{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 0}
+.lotusSpritesOn .lotusViewControl a.lotusView{background-image:url(themeImages/lotusSprite-8bit.png)}
+.lotusSpritesOn .lotusDetailsOff {background-position:0 -6438px}
+.lotusSpritesOn .lotusDetailsOff:hover, .lotusSpritesOn .lotusDetailsOff:focus{background-position:0 -6558px}
+.lotusSpritesOn .lotusDetailsOn {background-position:0 -6678px}
+.lotusSpritesOn .lotusSummaryOff {background-position:0 -7158px}
+.lotusSpritesOn .lotusSummaryOff:hover, .lotusSpritesOn .lotusSummaryOff:focus {background-position:0 -7218px}
+.lotusSpritesOn .lotusSummaryOn {background-position:0 -7278px}
+.lotusSpritesOn .lotusTreeOff {background-position:0 -7518px}
+.lotusSpritesOn .lotusTreeOff:hover, .lotusSpritesOn .lotusTreeOff:focus {background-position:0 -7578px}
+.lotusSpritesOn .lotusTreeOn {background-position:0 -7638px}
+.lotusSpritesOn .lotusTileOff {background-position:0 -7338px}
+.lotusSpritesOn .lotusTileOff:hover, .lotusSpritesOn .lotusTileOff:focus {background-position:0 -7398px}
+.lotusSpritesOn .lotusTileOn {background-position:0 -7458px}
+.lotusSpritesOn .lotusFolderOff {background-position:0 -6798px}
+.lotusSpritesOn .lotusFolderOff:hover, .lotusSpritesOn .lotusFolderOff:focus {background-position:0 -6918px}
+.lotusSpritesOn .lotusFolderOn {background-position:0 -7038px}
+/*[/sprite]*/
+/***********************************************************/
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for feeds*/
+/*companion file is feeds.css*/
+/*** F E E D S **/
+/*the feed links under the content*/
+.lotusFeeds a.lotusFeed{background-image:url(../images/iconFeed.png)}
+/*[sprite]*/
+.lotusSpritesOn .lotusFeeds a.lotusFeed{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -2435px}
+/*[/sprite]*/
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for forms*/
+/*companion file is forms.css*/
+/*** F O R M S ***/
+.lotusFormTable, .lotusFormTable td{background-color:#F0F4F7;}
+.lotusFormPlain .lotusTable, .lotusFormPlain .lotusFormTable td{background-color:#fff;}/*for a form that is always on the page and not inline*/
+.lotusFieldBorder{background-color:#E9E9E9;}
+.lotusFormError, .lotusFormRequired {color:#FF0000;}
+.lotusFormErrorField, .lotusFormErrorSummary td {background-color:#fffabc;}
+.lotusFormTable .lotusFormFooter {background-color:#E2EBF1;}
+/* form button element styles can be found in the button component */
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for header*/
+/*companion file is header.css*/
+/*** H E A D E R ***/
+.lotusHeader .lotusDetails p{color:#666}
+.lotusFilters a.lotusFilter{background-color:#f4f7fc;border-color:#c4d8f2}
+.lotusFilters a .lotusClose{color:#c4d8f2}
+.lotusFilters a:hover .lotusClose{color:#999999}
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for help*/
+/*companion file is help.css*/
+/*** I N F O   B O X ***/ /*this is used for help and tips*/
+.lotusInfoBox, .portlet-msg{background-color:#fef6ab;border-color:#e2c15a;}
+.lotusInfoBox h3, .portlet-msg h3{color:#b47429;}
+.lotusInfoBox h3 img, .portlet-msg h3 img{border-color:#d79846}
+.lotusInfoBox h3 img:hover, .portlet-msg h3 img:hover, .lotusInfoBox h3 img:focus, .portlet-msg h3 img:focus{border-color:#b8711c}
+.lotusHelp{background-color:#e0e0e0}
+.lotusHelp .lotusInfoBox{border-color:#c5c5c5;background-color:#f0f0f0;background-image:url(../images/accentBkgd.png)}
+.lotusHelp h3{color:#222}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusHelp .lotusInfoBox{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 -450px}
+/*[/sprite]*/
+
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for lists*/
+/*companion file is lists.css*/
+/*** L I S T S ***/ /*use in conjuction with sections if you want a more complex list*/
+ul.lotusList li.lotusSelected{background-color:#CFECFF}
+ul.lotusList li.lotusSelected a{color:#000;}
+.lotusList a, ul.lotusList li.lotusSelected a{border-color:transparent}
+/*delete icon for editable list*/
+ul.lotusEditable a.lotusDelete:hover{border-bottom-color:transparent}
+/*IE 6 hack. Need to use tag and person classes here and accommodate gray and white backgrounds*/
+.lotusui_ie6 .lotusList a{border-bottom-color:#f1f5fa}
+.lotusui_ie6 ul.lotusList li.lotusSelected a{border-bottom-color:#cfecff}
+.lotusui_ie6 ul.lotusEditable a.lotusDelete:hover{border-bottom-color:#f1f5fa}
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for menu*/
+/*companion file is menu.css*/
+/*** M E N U ***/
+.lotusMenu, .portlet-menu{background-color:#eefee1;border-color:#ccebb5}
+.lotusMenu .lotusMenuSection{border-bottom-color:#ccebb5;}
+.lotusMenu h3{color:#4f9815}
+.lotusMenu h3.selected, .portlet-menu h3.selected{color:#fff;background-color:#73be59;border-color:#73be59;}
+.lotusMenu li.lotusSelected a, .lotusMenu li.lotusSelected a:visited, .lotusMenu li.lotusSelected a:active, .portlet-menu li.lotusSelected a, .portlet-menu li.lotusSelected a:visited, .portlet-menu li.lotusSelected a:active{color:#fff !important;background-color:#73be59;border-color:#73be59;}
+/*menu arrows are created as CSS sprites, using the lotusArrow class found in baseTheme.css*/
+.lotusTwistyOpenMenu{background-image:url(../images/arrowOpenAlt.png)}/*the section is selected*/
+.lotusTwistyClosedMenu{background-image:url(../images/arrowClosedAlt.png)}
+.lotusMenu h3.selected .lotusTwistyOpenMenu{background-image:url(../images/arrowOpenReversed.png)}/*the section is selected*/
+.lotusMenu h3.selected .lotusTwistyClosedMenu{background-image:url(../images/arrowClosedReversed.png)}
+.lotusMenu .lotusArrow, .lotusMenu .lotusArrow:hover, .lotusMenu .lotusArrow:focus{color:#fff;text-decoration:none}/*for alt text +/- icons*/
+
+/*[sprite]*/
+.lotusSpritesOn .lotusTwistyOpenMenu{background-position:0 -464px}
+.lotusSpritesOn .lotusTwistyClosedMenu{background-position:0 0}
+.lotusSpritesOn .lotusMenu h3.selected .lotusTwistyOpenMenu{background-image:url(themeImages/lotusSprite-32bit.png);background-position:0 -580px}/*the section is selected*/
+.lotusSpritesOn .lotusMenu h3.selected .lotusTwistyClosedMenu{background-position:0 -348px}
+/*[/sprite]*/
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for messages*/
+/*companion file is messages.css*/
+/*** M E S S A G E S ***/
+.lotusMessage{background-color:#fcc;border-color:#c66;}/*error message*/
+.lotusWarning{background-color:#ffffbc;border-color:#f7c455;}/*use iconWarning16.png*/
+.lotusInfo{background-color:#d8eaff;border-color:#6295d6;}/*use iconInfo16.png*/
+.lotusConfirm{background-color:#dcfcc4;border-color:#80d047;}/*use iconConfirmation16.png*/
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for paging*/
+/*companion file is paging.css*/
+/*** P A G I N G ***/
+.lotusPaging{color:#848484;background-color:#f1f3f5;}
+.lotusPaging ul li, .lotusPaging div{color:#848484;}
+.lotusPaging input{color:#848484;}
+.lotusPaging .lotusInlinelist li{border-color:#8d8d8d;}
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for the customization palette*/
+/*companion file is paletteTheme.css*/
+/*** P A L E T T E ***/
+/*this is the palette that opens under the place bar to allow users to customize the UI */
+/*2010 09 15 Sue ∆˜≈ªº≥¡§ Body*/
+/*.lotusPalette{background-color:#7a7f84;border-bottom-color:#676b6f}*/
+.lotusPalette{width:1022px;background-color:#F2F2F5;border-style:solid;border-width:1px;border-color:#C1C1C3;}
+
+.lotusPalette .lotusLoading{background-image:url(../images/loadingDark.gif)}
+
+/*2010 09 15 Sue Header¥¬ º˚±Ë√≥∏Æ*/
+.lotusPaletteHeader{background-color:#62656a;color:#fff;border-top-color:#62656a;border-bottom-color:#777b81}
+.lotusPaletteHeader h2, .lotusPaletteHeader a, .lotusPaletteHeader a, .lotusPaletteHeader a:hover, .lotusPaletteHeader a:focus, .lotusPaletteHeader .lotusTabs li a:hover, .lotusPaletteHeader .lotusTabs li a:focus{color:#fff}
+.lotusPaletteHeader .lotusTabs li, .lotusPaletteHeader .lotusTabs li.lotusSelected{background-color:transparent}
+.lotusPaletteHeader .lotusTabs li.lotusSelected a, .lotusPaletteHeader .lotusTabs li.lotusSelected a:visited{color:#fff;background-color:#105cb6;}
+/* Header¥¬ º˚±Ë√≥∏Æ */
+
+
+/* 2010 09 15 ∆»∑π∆Æ øÏ√¯ º≥¡§*/
+/*.lotusPaletteBody{background-color:#414648;border-top-color:#222;border-bottom-color:#222;}*/
+.lotusPaletteBody{color:#767676;background-color:#FFFFFF;margin-bottom:15px;margin-top:6px;margin-left:13px;margin-right:12px;border-width:1px;border-color:#D6D6D6;}
+
+/*.lotusPaletteNav{background-color:transparent;background-image:url(../images/paletteNavShadow.png)} ¡¬øÏ ≥™¥©¥¬ ¿ÃπÃ¡ˆ */
+.lotusPaletteNav{width:175px;background-color:transparent;background-image:url('/wps/images/KOR/ptbox/division2.gif');}
+
+
+/*2010 09 15 Sue ¡¬√¯ ƒ¡≈Ÿ√˜ ¡¶∏Ò */
+/*.lotusPaletteNav h3{color:#fff}*/
+.lotusPaletteNav h3{color:#767676;font-size:11px;font-weight:normal;}
+.lotusPaletteNav h3 img{background-image:url(../images/iconArrowBack16.png);color:#fff}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusPaletteNav h3 .lotusBtnImg img{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -2163px}
+/*[/sprite]*/
+
+/*2010 09 15 ∆»∑π∆Æ ¡¬√¯ ∞Àªˆ*/
+/*.lotusPalette .lotusSearch input.lotusText{background-color:#fff;color:#222;border-color:#fff}*/
+.lotusPalette .lotusSearch input.lotusText{width:120px;font-size:10pt;border-color:#D6D6D6;background-color:#fff;color:#222;}
+
+/*2010 09 15 ∆»∑π∆Æ ¡¬√¯ ∆‰¿Ã¡ˆ ¿Ã∏ß ∏Ò∑œ*/
+/*.lotusPalette .lotusMenu{background-color:#232426;}*/
+.lotusPalette .lotusMenu{width:155px;color:#767676;background-color:#F2F2F5;border-color:#D6D6D6;border-style:solid;} 
+/*.lotusPalette .lotusMenu li a, .lotusPalette .lotusMenu li a:visited, .lotusPalette .lotusMenu li a:hover, .lotusPalette .lotusMenu li a:focus{color:#fff;background-color:transparent;}*/
+.lotusPalette .lotusMenu li a, .lotusPalette .lotusMenu li a:visited, .lotusPalette .lotusMenu li a:hover, .lotusPalette .lotusMenu li a:focus{font-size:9pt;color:#848484;background-color:transparent;}
+/*.lotusPalette .lotusMenu li.lotusSelected, .lotusPalette .lotusMenu li.lotusSelected a, .lotusPalette .lotusMenu li.lotusSelected a:visited, .lotusPalette .lotusMenu li.lotusSelected a:active{background-color:#105cb6}*/
+.lotusPalette .lotusMenu li.lotusSelected, .lotusPalette .lotusMenu li.lotusSelected a, .lotusPalette .lotusMenu li.lotusSelected a:visited, .lotusPalette .lotusMenu li.lotusSelected a:active{color:#FFFFFF;background-color:#4B4B4E}
+.lotusPalette .lotusMenu li.lotusMore a{background-image:url(../images/paletteMoreArrow.png)}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusPalette .lotusMenu li.lotusMore a{background-image:url(themeImages/lotusSprite-8bit.png);background-position:94% -4237px}
+/*[/sprite]*/
+
+/*2010 09 15 ¿ß¡¨ º±≈√µ«±‚¿¸*/
+/*.lotusPaletteWidget{border-color:#222;background-color:#4d5054;color:#fff}*/
+.lotusPaletteWidget{border-color:#E9E9E9;background-color:#F2F1F6;color:#858585}
+
+
+/*2010 09 15 ¿ß¡¨ ∏∂øÏΩ∫ ø¿πˆ*/
+/*.lotusPaletteWidgets .lotusSelected, .lotusPaletteWidget:hover, .lotusPaletteWidget:focus{border-color:#fff}*/
+.lotusPaletteWidgets .lotusSelected, .lotusPaletteWidget:hover, .lotusPaletteWidget:focus{color:#5E5E5E;border-color:#CFCFD2;background-color:#EAEAED;}
+
+
+/*2010 09 15 .lotusPaletteWidget a, .lotusPaletteWidget a:hover, .lotusPaletteWidget a:focus{color:#fff}*/
+.lotusPaletteWidget a, .lotusPaletteWidget a:hover, .lotusPaletteWidget a:focus{color:#5E5E5E;}
+
+/*2010 09 15  ¿ß¡¨ √ﬂ∞° πˆ∆∞ º±≈√¿¸*/
+/*.lotusPaletteWidget a.lotusIcon{background-image:url(../images/paletteAdd.png)}*/
+.lotusPaletteWidget a.lotusIcon{background-image:url('/wps/images/KOR/ptbox/icon.gif')}
+
+/*2010 09 15  ¿ß¡¨ √ﬂ∞° πˆ∆∞ ∏∂øÏΩ∫ø¿πˆ*/
+/*.lotusPaletteWidget a.lotusIcon:hover, .lotusPaletteWidget a.lotusIcon:focus{background-image:url(../images/paletteAddHover.png)}*/
+.lotusPaletteWidget a.lotusIcon:hover, .lotusPaletteWidget a.lotusIcon:focus{background-image:url('/wps/images/KOR/ptbox/icon_on.gif')}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusPaletteWidget a.lotusIcon{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -3982px}
+.lotusSpritesOn .lotusPaletteWidget a.lotusIcon:hover, .lotusSpritesOn .lotusPaletteWidget a.lotusIcon:focus{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -4084px}
+/*[/sprite]*/
+.lotusPaletteWidget div.lotusIcon span{background-color:transparent}
+.lotusPaletteWidget .lotusRating0{background-image:url(../images/paletteRating0.png)}
+.lotusPaletteWidget .lotusRating1{background-image:url(../images/paletteRating1.png)}
+.lotusPaletteWidget .lotusRating2{background-image:url(../images/paletteRating2.png)}
+.lotusPaletteWidget .lotusRating3{background-image:url(../images/paletteRating3.png)}
+.lotusPaletteWidget .lotusRating4{background-image:url(../images/paletteRating4.png)}
+.lotusPaletteWidget .lotusRating5{background-image:url(../images/paletteRating5.png)}
+/*[sprite]*/
+.lotusSpritesOn .lotusPaletteWidget .lotusRating0, .lotusSpritesOn .lotusPaletteWidget .lotusRating1, .lotusSpritesOn .lotusPaletteWidget .lotusRating2, .lotusSpritesOn .lotusPaletteWidget .lotusRating3, .lotusSpritesOn .lotusPaletteWidget .lotusRating4, .lotusSpritesOn .lotusPaletteWidget .lotusRating5{background-image:url(themeImages/lotusSprite-8bit.png)}
+.lotusSpritesOn .lotusPaletteWidget .lotusRating0{background-position:0 -4367px}
+.lotusSpritesOn .lotusPaletteWidget .lotusRating1{background-position:0 -4469px}
+.lotusSpritesOn .lotusPaletteWidget .lotusRating2{background-position:0 -4673px}
+.lotusSpritesOn .lotusPaletteWidget .lotusRating3{background-position:0 -4877px}
+.lotusSpritesOn .lotusPaletteWidget .lotusRating4{background-position:0 -5081px}
+.lotusSpritesOn .lotusPaletteWidget .lotusRating5{background-position:0 -5285px}
+/*[/sprite]*/
+
+
+
+.lotusLargeWidgets .lotusPaletteWidget div.lotusIcon span{background-color:transparent}
+.lotusLargeWidgets .lotusPaletteWidget div.lotusIcon img{border-color:#000}
+
+/*2010 09 15 Sue ƒ¡≈Ÿ√˜ ø¿∏•¬  Body*/
+/*.lotusPaletteContent{background-color:#37393c}*/
+.lotusPaletteContent{background-color:#FFFFFF} 
+
+.lotusPaletteContent .lotusPaging{background-color:transparent}
+
+/*2010 09 15 «œ¥‹ ¡¬√¯ ∆‰¿Ã¡ˆ «•Ω√*/
+/*.lotusPaletteContent .lotusPaging ul li, .lotusPaletteContent .lotusPaging div{color:#C1C0C0}*/
+.lotusPaletteContent .lotusPaging ul li, .lotusPaletteContent .lotusPaging div{color:#767676}
+
+/*2010 09 15 Sue «œ¥‹ ∆‰¿Ã¡ˆ ¿Ãµø «•Ω√*/
+/*.lotusPalette .lotusPaging input.lotusText{background-color:#222;color:#fff;border-color:#181818} */
+.lotusPalette .lotusPaging input.lotusText{background-color:#FFFFFF;color:#848484;border-color:#848484}
+
+/*2010 09 15 SueøÏ√¯ «œ¥‹ ∆‰¿Ã¡ˆ, ∏µ≈© */
+/*.lotusPaletteContent .lotusPaging a, .lotusPaletteContent .lotusPaging a:hover, .lotusPaletteContent .lotusPaging a:focus{color:#fff}*/
+.lotusPaletteContent .lotusPaging a, .lotusPaletteContent .lotusPaging a:hover, .lotusPaletteContent .lotusPaging a:focus{color:#848484}
+
+/*some additional options for widgets*/
+.lotusPalette .lotusAdded,  .lotusPalette .lotusAdded a{color:#0c0}/*to indicate that a widget has been added to the page*/
+.lotusPalette h4.lotusAdded,  .lotusPalette h4.lotusAdded a{color:#c1c0c0;}/*grays out header, if widget is already added to the page*/
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for search*/
+/*companion file is search.css*/
+/*** S E A R C H ***/
+
+/*2010 09 13 Sue  ¡¬√¯ navigator*/
+/*.lotusSearch .lotusSearchButton{color:#ffffff;background-image:url(../images/iconSearch16.png)}*/
+.lotusSearch .lotusSearchButton{width:18px !important;height:18px !important;background-image:url('/wps/images/KOR/button/btn_srch.gif')!important}
+
+.lotusSearch .lotusSearchButton:hover, .lotusSearch .lotusSearchButton:focus{/*border-color:#666666;*/}
+.lotusSearch .lotusText, .lotusSearch .dijitTextBox, .lotusSearch select{border-color:#7a7e81;background-color:#fff}
+.lotusSearch .lotusScope{color:#000;background-color:#fff;border-color:#7a7e81;background-image:url(../images/btnDropDownPadding.png);}
+.lotusSearch .lotusScope:hover, .lotusSearch .lotusScope:focus{color:#fff;background-color:#2e5a90;background-image:url(../images/btnDropDownHoverPadding.png)}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusSearch .lotusSearchButton{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -3089px}
+
+.lotusSpritesOn .lotusSearch .lotusScope{background-image:url(themeImages/lotusSprite-8bit.png);background-position:100% -893px}
+.lotusSpritesOn .lotusSearch .lotusScope:hover, .lotusSpritesOn .lotusSearch .lotusScope:focus{background-image:url(themeImages/lotusSprite-8bit.png);background-position:100% -981px}
+/*[/sprite]*/
+
+
+/***********************************************************/
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for search tab*/
+/*companion file is searchTab.css*/
+/*** S E A R C H   T A B ***/
+.lotusSearchTab{background-color:#fff;border-color:#ccc;}
+.lotusSearchTab:hover, .lotusTabExpanded{color:#414546}
+.tabExpanded{border-bottom-color:#fff;}
+.lotusSearchTab a, .lotusSearchTab a:visited{color:#000;background-image:url(../images/searchArrowClosed.png);}
+.lotusSearchTab a:hover{background-image:url(../images/searchArrowHover.png)}
+.lotusTabExpanded{border-bottom-color:#fff}
+.lotusTabExpanded a, .lotusTabExpanded a:visited{background-image:url(../images/searchArrowOpen.png)}
+.lotusTabExpanded a:hover{background-image:url(../images/searchArrowOpenHover.png)}
+/*[sprite]*/
+.lotusSpritesOn .lotusSearchTab a, .lotusSpritesOn .lotusSearchTab a:visited{background-image:url(themeImages/lotusSprite-8bit.png);background-position:100% -5464px}
+.lotusSpritesOn .lotusSearchTab a:hover{background-image:url(themeImages/lotusSprite-8bit.png);background-position:100% -5700px}
+.lotusSpritesOn .lotusTabExpanded a, .lotusTabExpanded a:visited{background-image:url(themeImages/lotusSprite-8bit.png);background-position:100% -5936px}
+.lotusSpritesOn .lotusTabExpanded a:hover{background-image:url(themeImages/lotusSprite-8bit.png);background-position:100% -6054px}
+/*[/sprite]*/
+.lotusSearchForm, .lotusSearchForm{background-color:#fff;border-color:#ccc;}
+.lotusSearchForm input, .lotusSearchForm input{color:#999}
+.lotusSearchForm option, .lotusSearchForm option{color:black}
+.lotusSearchForm .lotusText, .lotusSearchForm .lotusText{color:#999}
+.lotusSearchForm .lotusSearchButton{color:#ffffff;background-image:url(../images/iconSearch16.png)}
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for section*/
+/*companion file is section.css*/
+/*** S E C T I O N ***/
+/*this is the action menu icon*/
+.lotusSection h2 a.lotusActionMenu{background-image:url(../images/iconActions.png)}
+.lotusSection h2 a.lotusActionMenu:hover, .lotusSection h2 a.lotusActionMenu:focus{background-image:url(../images/iconActionsHover.png)}
+/*these twisties use lotusArrow sprite in baseTheme.css*/
+.lotusTwistyOpen{background-image:url(../images/arrowOpenLight.png)}
+.lotusTwistyClosed{background-image:url(../images/arrowClosedLight.png)}
+/*draggable sections*/
+.lotusSection .lotusDragHandle{background-image:url(../images/dndHandle.png);}
+.lotusSection h2.lotusDraggable:hover .lotusDragHandle{visibility:visible}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusSection h2 a.lotusActionMenu{background-image:url(themeImages/lotusSprite-8bit.png);background-position:3px -1921px}
+.lotusSpritesOn .lotusSection h2 a.lotusActionMenu:hover, .lotusSpritesOn .lotusSection h2 a.lotusActionMenu:focus{background-image:url(themeImages/lotusSprite-8bit.png);background-position:3px -2011px}
+.lotusSpritesOn .lotusTwistyOpen{background-position:0 -522px}
+.lotusSpritesOn .lotusTwistyClosed{background-position:0 -232px}
+.lotusSpritesOn .lotusSection .lotusDragHandle{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -1725px}
+/*[/sprite]*/
+/****************************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for sort*/
+/*companion file is sort.css*/
+/*** S O R T ***/
+.lotusSort .lotusAscending{background-image:url(../images/sortAscending.png)}
+.lotusSort .lotusDescending{background-image:url(../images/sortDescending.png)}
+.lotusSort a.lotusMoreSorts{background-image:url(../images/btnDropDown.png);}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusSort .lotusAscending{background-image:url(themeImages/lotusSprite-8bit.png);background-position:100% -6152px}
+.lotusSpritesOn .lotusSort .lotusDescending{background-image:url(themeImages/lotusSprite-8bit.png);background-position:100% -6242px}
+.lotusSpritesOn .lotusSort a.lotusMoreSorts{background-image:url(themeImages/lotusSprite-8bit.png);background-position:100% -764px}
+/*[/sprite]*/
+
+/****************************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for tables*/
+/*companion file is tables.css*/
+/*** T A B L E S ***/
+/*styles for displaying our data*/
+/*includes vertical tables, horizontal tabular display (summary, detail, and grid views) and highlighted information (announcements)*/
+.lotusVertTable th{color:#666;}
+.lotusTable{border-bottom-color:#e5e5e5;}
+.lotusTable td, .lotusTable th.lotusRowHeader, .lotusTable th.lotusSubHeader{border-top-color:#e5e5e5}
+.lotusTable .lotusLast td, .lotusTable .lotusLast th.lotusRowHeader{border-bottom-color:#e5e5e5}
+.lotusTable .lotusAltRow td, .lotusTable .lotusAltRow th.lotusRowHeader{background-color:#f8f8f8;}
+.lotusTable th.lotusAltCell, .lotusTable td.lotusAltCell{background-color:#f5f5f5;border-right-color:#fff;border-bottom-color:#fff}
+.lotusTable h4.lotusComplete, .lotusTable h4.lotusComplete a{color:#666}
+.lotusTable h5{color:#4f9815}
+.lotusTable caption, .portlet-table caption{color:#666;background-color:#f3f3f3;border-color:#e0e0e0;}
+.lotusTable .lotusSS{color:#666;}
+.lotusTable .lotusType{color:#666;}/*indicates entry types*/
+.lotusPrivate{background-image:url(../images/iconPrivate.png)}/*private entry*/
+.lotusSecure{background-image:url(../images/iconSecure.png)}/*secure entry*/
+/*[sprite]*/
+.lotusSpritesOn .lotusPrivate{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -2767px}/*private entry*/
+.lotusSpritesOn .lotusSecure{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -3145px}/*secure entry*/
+/*[/sprite]*/
+.lotusTable .lotusPaging, .lotusCaption .lotusPaging, .portlet-table .lotusPaging{background-color:#f3f3f3}
+.lotusTable .lotusPaging td, .portlet-table .lotusPaging td{border-color:#e0e0e0;}
+/*announcements*/
+.lotusInfoTable{background-color:#f0f0f0;background-image:url("../images/accentBkgd.png");border-color:#e3e3e3;}
+.lotusInfoTable h2 {color:#73BE59;}
+.lotusInfoTable .lotusClose{border-color:#b0b0b0}
+.lotusInfoTable .lotusClose:hover, .lotusInfoTable .lotusClose:focus{border-color:#918f8f}
+.lotusCaption .lotusPaging, .lotusCaption .lotusPaging td{background-color:transparent}
+.lotusCaption select{color:#666}
+/*[sprite]*/
+.lotusSpritesOn .lotusInfoTable{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 -450px}
+/*[/sprite]*/
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for tabs*/
+/*companion file is tabs.css*/
+/*** T A B S ***/
+.lotusTabContainer{border-bottom-color:#d9d9d9;}
+.lotusTabs li, .portlet-tab li{border-color:#e7e9ea;border-bottom-color:#d9d9d9;background-color:#e7e9ea}
+.lotusTabs li.lotusSelected, .portlet-tab li.lotusSelected{background-color:#fff;border-color:#d9d9d9;border-bottom-color:#fff;}
+.lotusTabs li.lotusSelected a, .lotusTabs li.lotusSelected a:visited, .portlet-tab li.lotusSelected a, .portlet-tab li.lotusSelected a:visited{color:#000;}
+/*a style that can be applied to a div that allows you to surround a tab content area with a border*/
+.lotusTabContent{border-color:#d9d9d9;}
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for tag cloud*/
+/*companion file is tagCloud.css*/
+/*** T A G   C L O U D ***/
+a.lotusF5, a.lotusF5:visited{color:#1c3052}
+a.lotusF4, a.lotusF4:visited{color:#2b588e}
+a.lotusF3, a.lotusF3:visited{color:#4477bb}
+a.lotusF2, a.lotusF2:visited{color:#649cd8}
+a.lotusF1, a.lotusF1:visited{color:#8bbce8}
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for tree*/
+/*companion file is tree.css*/
+/*** T R E E ***/
+/*the second class definition for each type of node accommodates a div version of the org chart*/
+.lotusOrgChart li a, .lotusOrgChartMiddle{background-image:url(../images/orgParentNode.png);}
+.lotusOrgChart a.lotusTop, .lotusOrgChartTop{background-image:url(../images/orgTopNode.png)}
+.lotusOrgChart .lotusBottom, .lotusOrgChartBottom{background-image:url(../images/orgBottomNode.png)}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusOrgChart li a, .lotusOrgChartMiddle{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -3537px}
+.lotusSpritesOn .lotusOrgChart a.lotusTop, .lotusOrgChartTop{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -3765px}
+.lotusSpritesOn .lotusOrgChart .lotusBottom, .lotusOrgChartBottom{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -3304px}
+/*[/sprite]*/
+
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*styles for the person card, a component sometimes used outside of our framework*/
+/****************************************/
+/*** V C A R D (P E R S O N   C A R D)***/
+.lotusVCard{background-color:#e0e0e0}
+.lotusVCard .lotusContainer{border-color:#c5c5c5;background-color:#f2f2f2}
+.lotusVCard a:link, .lotusVCard a:visited, .lotusVCard a:hover, .lotusVCard a:focus, a:active{color:#105cb6}
+.lotusVCard .lotusAppLinks td{background-color:#fff;background-image:url(../images/titleBkgd.png);border-color:#c5c5c5;}
+/*the more arrow, for when there is a second row of application links*/
+.lotusVCard .lotusMore{background-image:url(../images/iconMoreAppsClosed.png);}
+.lotusVCard .lotusMoreExpanded{background-image:url(../images/iconMoreAppsOpen.png)}
+/*lotusDetails is the detail area of the card that contains all info for the person*/
+.lotusVCard .lotusDetails{border-top-color:#fff;background-color:#f2f2f2}
+.lotusVCard .lotusPhoto{border-color:#bdc4ca;}
+/*lotusVCardActions are actions you can perform on this person, from the person card*/
+.lotusVCard .lotusPersonActions{background-color:#fff;border-top-color:#c5c5c5}
+.lotusVCard .lotusPersonActions .lotusInlinelist li{border-left-color:#105cb6}
+.lotusVCard .lotusActionMenu a, .lotusActionMenu a:visited{color:#000}
+.lotusVCard .lotusActionMenu a:hover, .lotusVCard .lotusActionMenu a:focus, .lotusVCard .lotusActionMenu a:active{color:#fff !important;background-color:#2e5a90;}
+/*lotusComments in the person card contains status information for the person*/
+.lotusVCard .lotusDetails .lotusCommentHeader{background-image:url(../images/commentPointPersonCard.png);}
+.lotusVCard .lotusDetails .lotusCommentBody{color:#666;background-color:#fff;border-color:#a0acba;}
+/*adjustments for an inline version of the card*/
+.lotusInlineVCard .lotusEmail{border-color:#c5c5c5;}
+.lotusPivotNavToggle a{background-color:#d8d8e0;background-image:url(../images/vCardClosed.png)}
+.lotusPivotNavOpen .lotusPivotNavToggle a{background-image:url(../images/vCardOpen.png)}
+/***********************************************************/
+
+/*[sprite]*/
+.lotusSpritesOn .lotusVCard .lotusAppLinks td{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 -900px}
+
+.lotusSpritesOn .lotusVCard .lotusMore{background-image:url(themeImages/lotusSprite-8bit.png);background-position:18px -2595px}
+.lotusSpritesOn .lotusVCard .lotusMoreExpanded{background-image:url(themeImages/lotusSprite-8bit.png);background-position:18px -2707px}
+
+.lotusSpritesOn .lotusVCard .lotusDetails .lotusCommentHeader{background-image:url(themeImages/lotusSprite-8bit.png);background-position:0 -1510px}
+.lotusSpritesOn .lotusPivotNavToggle a{background-image:url(themeImages/lotusSprite-8bit.png);background-position: 3px -6276px}
+.lotusSpritesOn .lotusPivotNavOpen .lotusPivotNavToggle a{background-image:url(themeImages/lotusSprite-8bit.png);background-position: 0 -6373px}
+/*[/sprite]*/
+
+/*** V C A R D   H O V E R ***/
+.lotusVCardHover{border-color:#aeaeae;background-color:#fff79a;background-image:url(../images/iconProfiles.png)}
+.lotusVCardHover:hover, .lotusVCardHover:focus{text-decoration:none}
+/*[sprite]*/
+.lotusSpritesOn .lotusVCardHover{background-image:url(themeImages/lotusSprite-8bit.png);background-position: 5px -2873px}
+/*[/sprite]*/
+
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for widget*/
+/*companion file is widget.css*/
+/*** W I D G E T ***/
+.lotusWidget{border-color:#E8ECEE;}
+.lotusWidget h2{background-color:#E8ECEE;background-image:url(../images/titleBkgd.png);border-color:#E8ECEE;}
+.lotusWidget .lotusWidgetBody h2 {background-image:none}
+.lotusWidget h3{color:#444;border-bottom-color:#e8ecee}
+.lotusWidget .lotusWidgetFooter{border-top-color:#e8ecee}
+.lotusWidget .lotusPaging{background-color:transparent}/*paging controls within a widget*/
+/*action menu icon*/
+.lotusWidget h2 a.lotusActionMenu{background-image:url(../images/iconActions.png)}
+.lotusWidget h2 a.lotusActionMenu:hover, .lotusWidget h2 a.lotusActionMenu:focus{background-image:url(../images/iconActionsHover.png)}
+/*add any additional buttons you need to expose here*/
+
+/*[sprite]*/
+.lotusSpritesOn .lotusWidget h2{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 -900px}
+.lotusSpritesOn .lotusWidget h2 a.lotusActionMenu{background-image:url(themeImages/lotusSprite-8bit.png);background-position:3px -1921px}
+.lotusSpritesOn .lotusWidget h2 a.lotusActionMenu:hover, .lotusSpritesOn .lotusWidget h2 a.lotusActionMenu:focus{background-image:url(themeImages/lotusSprite-8bit.png);background-position:3px -2011px}
+/*[/sprite]*/
+/***********************************************************/
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for widget*/
+/*companion file is widget.css*/
+/*** W I D G E T ***/
+.lotusWidget2{border-color:#E8ECEE;}
+.lotusWidget2 h2{background-color:#E8ECEE;background-image:url(../images/titleBkgd.png);border-color:#E8ECEE;}
+.lotusWidget2 .lotusWidgetBody h2 {background-image:none}
+.lotusWidget2 h3{color:#444;border-bottom-color:#e8ecee}
+.lotusWidget2 .lotusWidgetFooter{border-top-color:#e8ecee}
+.lotusWidget2 .lotusPaging{background-color:transparent}/*paging controls within a widget*/
+/*action menu icon*/
+.lotusWidget2 h2 a.lotusActionMenu{background-image:url(../images/iconActions.png)}
+.lotusWidget2 h2 a.lotusActionMenu:hover, .lotusWidget h2 a.lotusActionMenu:focus{background-image:url(../images/iconActionsHover.png)}
+/*add any additional buttons you need to expose here*/
+
+/*[sprite]*/
+.lotusSpritesOn .lotusWidget2 h2{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 -900px}
+.lotusSpritesOn .lotusWidget2 h2 a.lotusActionMenu{background-image:url(themeImages/lotusSprite-8bit.png);background-position:3px -1921px}
+.lotusSpritesOn .lotusWidget2 h2 a.lotusActionMenu:hover, .lotusSpritesOn .lotusWidget2 h2 a.lotusActionMenu:focus{background-image:url(themeImages/lotusSprite-8bit.png);background-position:3px -2011px}
+/*[/sprite]*/
+/***********************************************************/
+
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/* this file contains layout elements and style overrides for base components */
+/* these styles need to be applied after the component styles */
+/*companion file - layoutTheme.css*/
+/*******************************************/
+/*** P A G E   L A Y O U T   S T Y L E S ***/
+/*******************************************/
+body.lotusui {color:#222;background:none;background-color:#cee1fc}
+.lotusContent{background-color:#fff;}
+.lotusMain, .lotusFooter{background-color:#fff;border-color:#cfcfcf;}
+.lotusMain{border-top-color:#568dd0;}
+.lotusMain .lotusSearch .lotusText, .lotusMain .lotusSearch .dijitTextBox{border-color:#cccbcb}
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for the banner (layout)*/
+/*companion file is banner.css*/
+/*** B A N N E R **/
+/*this is the very top of the UI, that contains the logo, application links, user name, login/logout*/
+.lotusBanner{background-color:transparent;}
+.lotusBanner ul.lotusInlinelist li{color:#000;background-color:transparent;border-color:#105cb6}
+.lotusBanner ul li.lotusFirst{background-image:none}
+.lotusBanner ul.lotusLinks a{color:#105cb6}
+.lotusBanner ul.lotusLinks li.lotusSelected{background-color:#649De1;}
+.lotusBanner ul.lotusLinks li.lotusSelected a{color:#fff}
+.lotusBanner ul.lotusUtility a{color:#105cb6}
+/***********************************************************/
+
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for the footer (layout)*/
+/*companion file is footer.css*/
+/*** F O O T E R ***/
+/*this sits at the bottom of the UI and contains a lot of support links, like help and about*/
+.lotusFooter th, .lotusFooterHeader{color:#666}
+.lotusFooter th, .lotusFooter td{border-color:#e0e0e0}
+/***********************************************************/
+
+
+
+
+/*** N A V I G A T I O N ***/
+/*left column - menu and filters*/
+.lotusColLeft .lotusInlinelist li{border-color:#8d8d8d;} 
+/***********************************************************/
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for the place bar (layout)*/
+/*companion file is placebar.css*/
+/*** P L A C E   B A R ***/
+/*this place bar shows up right below the title bar and tells user what place or community they are in*/
+.lotusPlaceBar{background-color:#e4e8ef;border-color:#c0c7cd;background-image:url(../images/titleBkgd.png);}
+.lotusPlaceBar h2{color:#000;}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusPlaceBar{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 -900px}
+/*[/sprite]*/
+
+/***********************************************************/
+
+
+
+/*** S I D E B A R ***/
+/*right column - lists*/
+.lotusColRight .lotusInlinelist li{border-color:#8d8d8d;} 
+/***********************************************************/
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*these are the styles for the title bar (layout)*/
+/*companion file is titlebar.css*/
+/*** T I T L E   B A R 	***/
+/*the blue bar under the banner, that contains tabs and search UI*/
+.lotusTitleBar{background-color:#4586d3;border-bottom-color:#6794cb;background-image:url(themeImages/titlebarMid.png);}
+.lotusTitleBar .lotusRightCorner{background-image:url(themeImages/titlebarRight.png)}
+.lotusTitleBar .lotusInner{background-image:url(themeImages/titlebarLeft.png)}
+.lotusTitleBar h2{color:#fff;}
+.lotusTitleBar .lotusTabs li{border-color:#4675AD;border-bottom-color:#6794cb;background-color:#4372A9}
+.lotusTitleBar .lotusTabs a, .lotusTitleBar .lotusTabs a:visited{color:#fff;}
+.lotusTitleBar .lotusTabs li.lotusSelected{border-color:#4675AD;border-bottom-color:#fff;background-color:#fff}
+.lotusTitleBar .lotusTabs li.lotusSelected a, .lotusTitleBar .lotusTabs li.lotusSelected a:visited{color:#000;}
+.lotusTitleBar .lotusTabs li a:hover, .lotusTitleBar .lotusTabs li a:focus, .lotusTitleBar .lotusTabs li a:active{color:#fff !important}
+.lotusTitleBar .lotusTabs li.lotusSelected a:hover, .lotusTitleBar .lotusTabs li.lotusSelected a:focus, .lotusTitleBar .lotusTabs li.lotusSelected a:active{color:#000 !important}
+/*accessibility*/
+.lotusTitleBar .lotusSearchButton{color:#fff}
+
+/*[sprite]*/
+.lotusSpritesOn .lotusTitleBar{background-image:url(themeImages/lotusHorzBgSprite-8bit.png);background-position:0 -1800px}
+/*[/sprite]*/
+
+/***********************************************************/
+
+
+
+/*************************************/
+/*** S P E C I A L   S C R E E N S ***/
+/*************************************/
+
+/*** A B O U T ***/
+.lotusAbout .lotusMain{background-image:none}
+.lotusAbout .lotusContent h1{color:#4275aa}
+.lotusAbout .lotusContent h2{color:#4275aa}
+.lotusAbout .lotusContent h3{color:#4275aa}
+.lotusAboutBox{background-color:#e8f0fb}
+/***********************************************************/
+
+/*** E R R O R ***/
+.lotusErrorBox{background-color:#fff;border-color:#cfcfcf;}
+.lotusError h1{color:#274a71;}
+/***********************************************************/
+
+/*** H O M E ***/
+/*a.k.a. dashboard*/
+.lotusDashboard .lotusMain{background:url(../images/colBkgd160.png)}
+.lotusDashboard .lotusColRight h2{background-color:transparent;}
+/***********************************************************/
+
+/*** L O G I N ***/
+/*this can appear on a plain page (gradient background only), or launched in a separate window*/
+.lotusLoginBox{background-color:#fff;background-image:url(themeImages/loginBkgd.png);border-color:#BBBBBB;}
+.lotusLogin h1, .lotusLogin h2{color:#274a71;}
+.lotusDescription h2{color:#000}
+.lotusLoginLogo{}/*definition for this has moved up to general classes - please use the lotusLogo class instead of lotusLoginLogo*/
+/***********************************************************/
+
+/*** W E L C O M E ***/
+.lotusWelcome .lotusBtnAction, .lotusWelcomeBox .lotusClose{border-color:#666666}
+.lotusWelcomeBox{background-color:#e8f0fb;border-color:#d1e0f7}
+.lotusWelcomeBox, .lotusWelcomeBox h2{color:#4275aa;}
+.lotusWelcomeBox .lotusBtnAction:hover, .lotusWelcomeBox .lotusBtnAction:focus, .lotusWelcomeBox .lotusClose:hover, .lotusWelcomeBox .lotusClose:focus{border-color:#333333}
+/***********************************************************/
+
+/* Licensed Materials - Property of IBM.
+   (c) Copyright IBM Corporation 2001, 2009.  All Rights Reserved.
+   U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp. */
+/*This CSS was built on June 24 2009. (version: OneUI-2.0.0_20090624-0300)*/
+/*this file contains contains sprite styles*/
+/**********************************/
+/*** S P R I T E   S T Y L E S ****/
+/**********************************/
+.lotusSpritesOn .lotusHorzBgSprite{background-image:url(themeImages/lotusHorzBgSprite-8bit.png)}
+.lotusSpritesOn .lotusSprite{background-image:url(themeImages/lotusSprite-8bit.png)}
+.lotusSpritesOn .lotusArrow{background-image:url(themeImages/lotusSprite-8bit.png);}
+
+
+
+.wptheme-lightboxDisabledBackground {
+	display: block;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 100;
+	opacity: 0.7;
+	filter: alpha(opacity = 70);
+	background-color: #000000;
+}
+
+.wptheme-lightboxBorderBox {
+	position: absolute;
+	z-index: 101;
+	background-color: #FFFFFF;
+	border: 2px solid #000000;
+}
+
+.wptheme-lightboxBorderBox iframe {
+	width: 100%;
+	height: 100%;
+	border: 0px;
+}
+
+.wptheme-lightboxCloseLink {
+	padding: 4px;
+	color: #FFFFFF;
+	z-index: 101;
+}
+
+.wptheme-lightboxCloseLink:hover {
+	color: #FFFFFF;
+}
+
+.wptheme-lightboxIcon {
+	border: 0px;
+	padding: 3px;
+}
+
+.wptheme-lightboxLinks { /*float:;
+    padding-: 5px;*/
+	
+}
+
+#wptheme-createSiblingControlAnchor {
+	text-decoration: underline;
+}
+
+.wptheme-createSiblingPageTextInput {
+	/*font-family: ;
+    font-size: ;*/
+	margin: 0px;
+	padding: 0px 0px 0px 0px;
+	display: inline;
+}
+
+.wptheme-pageContentToolbar {
+	background-color: #FFF;
+	border-right: 1px solid #cfcfcf;
+	border-left: 1px solid #cfcfcf;
+	padding: 8px 17px 8px 17px;
+	background-image: url("../images/content_toolbar_background.gif");
+	background-repeat: repeat-x;
+}
+
+.ibmPortalDndGhost {
+	border: 1px dotted #444;
+	background: #cacaca;
+	margin:0 0 10px;
+	-moz-opacity: .3;
+	filter: alpha(opacity = 30);
+	opacity: 0.3;
+}
+
+.ibmPortalDndPageAvatar {
+	border: 1px solid #636363;
+	color: #FFFFFF;
+	font-weight: bold;
+	background-color: #a1a1a1;
+	/*
+	-moz-border-radius: .8em;
+	-webkit-border-radius: .8em;
+	border-radius: .8em;
+	*/
+	-moz-opacity: .6;
+	filter: alpha(opacity = 60);
+	opacity: 0.6;
+	padding: 8px 15px 8px 15px;
+}
+
+.ibmPortalEmptyLayoutContainerIndicator {
+	margin: 5px 0px 5px 0px;
+}
+
+.wptheme-clearing {
+	clear: both;
+}
+
+.ibmPortalControlContainer{
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+.ibmPortalPortletIcons {
+	text-align: right;
+	vertical-align: middle;
+	padding-right: 3px;
+	white-space: nowrap;
+	border: 0px;
+}
+
+.ibmPortalPortletIcons a {
+	text-align: right;
+	vertical-align: middle;
+	padding-right: 3px;
+	white-space: nowrap;
+	border: 0px;
+	text-decoration: none;
+}
+
+.ibmPortalPortletIcons a:hover {
+	text-align: right;
+	vertical-align: middle;
+	padding-right: 3px;
+	white-space: nowrap;
+	border: 0px;
+	text-decoration: none;
+	cursor: pointer;
+	color: #ffffff;
+}
+
+.ibmPortalPortletIcons button.lotusActionMenu {
+	background-color: transparent;
+	border-style:none
+}
+
+.lotusImagesOff .ibmPortalPortletIcons button.lotusActionMenu img { 
+	display:none 
+}
+
+.ibmLoading {
+	background-image: url('../images/loading.gif');
+	width: 16px;
+	height: 16px;
+}
+
+.lotusTabs .ibmLoading,.dijitMenuItemHover .ibmLoading {
+	background-image: url('../images/loadingDark.gif');
+}
+
+.tundra .dijitMenuItem td {
+	cursor: pointer;
+}
+
+.lotusTabs .disabled * {
+	-moz-opacity: .6;
+	filter: alpha(opacity = 60);
+	opacity: 0.6;
+}
+
+.tundra .dijitClickableRegion {
+	background: transparent;
+}
+
+.ibmPortalPlainButton {
+	border:none;
+	background-color:transparent;
+}
+
+/**** LAYOUT ****/
+body.lotusuiBody{
+	margin:0;
+	padding:0;
+	font:normal .75em/1.5em Arial, Helvetica, sans-serif;
+	background-position:top left;
+	background-repeat:repeat-x;
+	position:relative/*fix for IE7, to keep relatively positioned children looking okay.*/
+}
+.ibmPortalLayoutContainers{
+	padding:10px 15px 5px;
+	overflow:auto;
+}
+.ibmPortalContent1Col {		/* 1 column equal */
+	margin: 0 0 0 0;
+	width: 930px;
+	overflow:hidden;
+}
+.ibmPortalContent2Col {		/* 2 column equal */
+	float: left;
+	margin: 0 10px 2px 0;
+	width: 460px;
+	overflow:hidden;
+	position:relative; /*fix for IE7*/
+}
+.ibmPortalContent3Col {		/* 3 column equal */
+	float: left;
+	margin: 0 10px 5px 0;
+	width: 303px;
+	overflow:hidden;
+	position: relative; /*fix for IE7*/
+}
+.ibmPortalContentRightCol1 {		/* 2 column right */
+	float: left;
+	margin: 0 0 5px;
+	width: 180px;
+	overflow:hidden;
+}
+.ibmPortalContentRightCol2 {
+	float: left;
+	margin: 0 0 5px 10px;
+	width: 740px;
+	overflow:hidden;
+}
+.ibmPortalContentLeftCol1 {		/* 2 column left */
+	float: left;
+	margin: 0 0 5px;
+	width: 730px;
+	overflow:hidden;
+}
+.ibmPortalContentLeftCol2 {
+	float: left;
+	margin: 0 0 5px 10px;
+	width: 190px;
+	overflow:hidden;
+}
+.ibmPortalContentCenterCol1 {		/* 3 column center */
+	float: left;
+	margin: 0 0 5px;
+	width: 180px;
+	overflow:hidden;
+}
+.ibmPortalContentCenterCol2 {
+	float: left;
+	margin: 0 10px 5px;
+	width: 540px;
+	overflow:hidden;
+}
+.ibmPortalContentCenterCol3 {
+	float: left;
+	margin: 0 0 5px;
+	width: 190px;
+	overflow:hidden;
+}
+
+.ibmPortalExpContentRow1{
+	width: 930px;
+	overflow:hidden;
+}
+.ibmPortalExpContentCol1{
+	float:left;
+	margin: 0 10px 5px 0;
+	width: 310px;
+	overflow:hidden;
+	position:relative; /*fix for IE7*/
+}
+.ibmPortalExpContentCol2{
+	float: left;
+	margin: 0 10px 5px 0;
+	width: 610px;
+	overflow:hidden; 
+}
+.ibmPortalExpContentCol2a{
+	float: left;
+	margin: 0 10px 5px 0;
+	width: 300px;
+	overflow:hidden; 
+	position:relative; /*fix for IE7*/
+}
+.ibmPortalExpContentRow2{
+	clear:both;
+}
+.ibmPortalRightmostColumn {
+	margin-right:0px;
+}
+
+/*keeps links inline when there are divs in the LIs - used for top level navigation rendered with the nav widget*/
+.lotusBanner ul.lotusLinks li{float:left;}
+
+/* overlay class*/
+.ibmPortalOverlayShow {
+  position:absolute;
+  top:0px;
+  left:0px;
+  top:0;
+  -moz-opacity:0.5;
+  opacity:.50;
+  filter: alpha(opacity=50)
+  z-index:1000;
+  background-color:#000;
+}
+
+.ibmPortalLoading {
+  background-repeat:no-repeat;
+  background-position:center;
+  background-image:url(../images/loadingDark.gif);
+}
+
+/* this is here because we do not use the lotusui class on the body in Portal, which is how it gets applied via one ui styles */
+body {
+	background-color:#FFFFFF;
+}
+
+/* css to override some of the styles for the top level links */
+.lotusBanner ul.lotusInlinelist.ibmPortalList li {border-left-width:0;border-right-width:1px;border-right-style:solid;}
+.lotusBanner ul.lotusInlinelist.ibmPortalList li.lotusLast {border-right-width:0;}
+.lotusBanner ul.lotusInlinelist.ibmPortalList a {line-height: 13px;}
+
+/* css to override some of the shelf styles */
+.ibmPortalCustomizeShelf{ /* keeps shelf from bouncing when opening for the first time */ 
+	height: 27em;
+	max-height: 27em;
+}
+.lotusPaletteHeader {
+	height:1.9em;
+}
+.lotusui .lotusPaletteWidgetContainer  h4 {
+	font-size:1.1em;
+}
+.lotusui_ie .lotusui .lotusPaletteWidgetContainer  h4 {
+	width:14.5em;
+}
+.lotusui_ie .lotusLargeWidgets .lotusPaletteWidgetContainer  h4 {
+	width:12em;
+}
+.lotusLargeWidgets .lotusPaletteWidget {
+	height:4.3em;
+}
+.lotusPaletteWidget { /* making this any bigger causes them to wrap in opera, 19.3em is good for all other browsers */
+	width:21em;
+}
+.lotusPaletteHeader .lotusPaletteHeaderLink{
+	margin:0 7px;
+}
+.lotusPaletteWidgetContainer .lotusSelected{
+	border-color:#fff;
+	border-style:dotted;
+}
+.lotusPaletteWidgetContainer { /* keeps paging at the bottom of the shelf, 18.3em works best for all browsers except opera*/
+	min-height:17.8em;
+}
+.lotusui_ie6 .lotusPaletteWidgetContainer { /* keeps paging at the bottom of the shelf for ie6 */
+	height:18.3em;
+	overflow:auto;
+}
+.lotusui_ie .lotusLargeWidgets .lotusIcon { /* makes sure title doesnt overlap icon in ie */
+	margin-right: 1.5em! important;
+}
+.lotusPaletteContent .lotusPaging input {
+	margin:0 5px;
+}
+.lotusPaletteContent .lotusPaging {
+	width:auto;
+}
+.lotusui_ie .lotusLargeWidgets .lotusPaletteWidget div.lotusIcon {
+	padding-top:0.1em;
+}
+.lotusui_ie .lotusPalette .lotusMenu {
+	height:14.6em;
+}
+.lotusui_ie .lotusLargeWidgets .lotusPaletteWidget .lotusTitle h4 {
+	margin-top:.9em;
+}
+.lotusui_ie .lotusPaletteHeader .lotusTabs li a:active, .lotusui_ie .lotusPaletteWidget a:active, .lotusui_ie .lotusPaletteHeaderLink a:active {
+	color:#FFFFFF;
+}
+.lotusPaletteHeader a.lotusAction, .lotusPaletteHeader a.lotusAction:visited, .lotusPaletteHeader a.lotusAction:hover, .lotusPaletteHeader a.lotusAction:focus, .lotusPaletteHeader a.lotusAction:active {
+	color:#fff !important;
+}
+button.lotusBtnDisabled,input.lotusBtnDisabled,a.lotusBtnDisabled ,span.lotusBtnDisabled{
+	cursor:default;
+}
+
+/* bread crumb styles */
+.ibmPortalBreadcrumbs  {
+	padding:0 5px;
+	line-height: 3em;
+}
+.ibmPortalBreadcrumbs .lotusBreadcrumbs .newPageLink {
+	cursor: pointer;
+	line-height:1.5em;
+}
+
+.ibmPortalBreadcrumbs .lotusBreadcrumbs .disabled * {
+	opacity: 0.5;
+	font-style:italic; 
+	cursor: default;
+	text-decoration: none;
+}
+
+/* dialogs */
+.lotusuiBody .lotusDialogBorder{ z-index: 1000 }
+.lotusuiBody .dijitDialogUnderlay  { background: #000; }
+.lotusDialog h1 { margin: 0 }
+.lotusDialog h1 .lotusClose { margin:0 2px }
+
+.mumHiddenWidget {
+	display:none;
+}
+.lotusuiBody input.lotusFormButton { /* overwrites mashup style */ font-size:.9em; }
+
+/* whole statusBar element */   
+.ibmPortalStatusBar {}   
+.ibmPortalStatusBar.expanded{
+	background-color: #FAFAFA;
+	border: 1px solid #AAA;
+	color: #333;
+	padding: 2px 5px;
+}            
+/* spacing between each status entry */
+.ibmPortalError, .ibmPortalWarning, .ibmPortalInfo {
+	margin: 5px 0px 5px 20px ;
+}
+.ibmPortalMultiple{
+	margin: 5px 0px ;
+}
+/* all h3 elements in the status bar are the summary lines for each entry */
+.ibmPortalStatusBar h3 {
+	font-size: 0.9166em;
+	padding: 2px 5px;
+	color: #333;
+	margin: 0;
+}
+/* status icon */
+.ibmPortalStatusBar h3 img {
+	height: 16px;
+    width: 16px;
+    vertical-align: middle;
+    padding-right: 4px;
+}
+/* status details link */
+.ibmPortalStatusBar h3 a {
+    padding: 2px 5px;
+}
+/* container for left side of status entry header */
+.ibmPortalStatusBar .ibmPortalStatusHeaderLHS {
+    float: left;
+    clear:left;
+    margin: 0;
+    padding: 0px 0px;
+}
+/* container for right side of status entry header */
+.ibmPortalStatusBar .ibmPortalStatusHeaderRHS {
+    float: right;
+    clear: right;
+    margin: 0;
+    padding: 0px 0px;
+}
+/* details section below each error. */
+.ibmPortalStatusBar .ibmPortalDetails {
+    background-color: #FFF;
+    border-width: 0px 1px 1px 1px;
+    border-style: solid;
+    border-color: #AAA;
+    margin: 0;
+    padding: 2px 5px;
+}
+/* styles for each status type */            
+.ibmPortalStatusBar .ibmPortalInfo h3 {
+	background-color: #F2F9FD;
+	border: 1px solid #B3C9D5;
+}
+.ibmPortalStatusBar .ibmPortalInfo .ibmPortalDetails {
+    border-color: #B3C9D5;     
+}
+.ibmPortalStatusBar .ibmPortalWarning h3 {
+	background-color: #FDF6DE;
+	border: 1px solid #E6CF99;
+}
+.ibmPortalStatusBar .ibmPortalWarning .ibmPortalDetails {
+    border-color: #E6CF99;     
+}
+.ibmPortalStatusBar .ibmPortalError h3 {
+	background-color: #FEE4E4;
+	border: 1px solid #FFC4C4;
+}
+.ibmPortalStatusBar .ibmPortalError .ibmPortalDetails {
+    border-color: #FFC4C4;     
+}
+.ibmPortalStatusBar .ibmPortalMultiple h3 {
+	background-color: #E9CAF9;
+	border: 1px solid #DEAAFA;
+}
+.ibmPortalStatusBar .ibmPortalMultiple .ibmPortalDetails {
+	border-color: #DEAAFA;     
+}
+
+/* styles to fix layouts in ie6 */
+.lotusui_ie6 #lotusMain {
+	overflow: visible; 
+	height: 400px;
+}
+.lotusui_ie6 #ibmPortalPageMenuButton{ 
+	padding-top: .2em !important;
+	padding-bottom: .3em !important; 
+}
+
+/* some enhanced skin styles that override default one ui behavior */
+.lotusWidget2 h2 {  /* overwrites so cursor is only move on the drag handle */
+	cursor:default;
+}
+.lotusWidget2 h2 img {
+	margin-top:6px;
+}
+.lotusWidget2 h2 a.lotusActionMenu,.lotusWidget2 h2 a.lotusActionMenu:hover, .lotusWidget2 h2 a.lotusActionMenu:focus {
+	background-image:none !important; /* background images aren't accessible */
+}
+.ibmPortalPlaceholder .lotusWidget2 h2 { /* placehlders arent draggable */
+	cursor:default;
+}
+.lotusWidget2 button { /* fix for opera */
+	cursor:pointer;
+}
+.lotusWidget2 h2 {color:#105CB6}
+.lotusWidget2 h2:hover{color:#05386B}
+.ibmPortalEditMode .lotusWidget2 h2 .ibmPortalPortletTitle{ /* drag handle only occupies first 75% of titlebar*/
+	cursor:move;
+	width:75%;
+}
+.ibmPortalThinSkinContainer .lotusWidget2 {
+	border-style:none
+}
+.ibmPortalThinSkinContainer .wpsThinSkinInvisible .lotusui h2 {
+	border-color: transparent;
+}
+.wpsThinSkinInvisible, 
+.ibmPortalThinSkinContainer .lotusui a.lotusActionMenu img,
+.lotusui_ie6 .ibmPortalThinSkinContainer .lotusui h2.wpsThinSkinInvisible{
+	visibility: hidden;
+}
+.wpsThinSkinVisible,
+.ibmPortalThinSkinContainer:focus .lotusui h2, .ibmPortalThinSkinContainer:hover .lotusui h2, 
+.ibmPortalThinSkinContainer .ibmPortalPortletIcons a, /* so the links have keyboard accessibility */
+.ibmPortalThinSkinContainer:focus .lotusui a.lotusActionMenu img, .ibmPortalThinSkinContainer:hover .lotusui a.lotusActionMenu img ,
+.ibmPortalThinSkinContainer .lotusui a.lotusActionMenu:focus img,
+.lotusui_ie6 .ibmPortalThinSkinContainer .lotusui h2.wpsThinSkinVisible{
+	visibility: visible;
+}
+.lotusui_ie6 .ibmPortalThinSkinContainer .lotusui h2.wpsThinSkinVisible .lotusActionMenu {
+	background-image: url("../images/iconActions.png");
+}
+
+.lotusPlaceBar .lotusBtnContainer button.lotusBtnDisabled:hover, .lotusPlaceBar .lotusBtnContainer button.lotusBtnDisabled:focus, .lotusPlaceBar .lotusBtnContainer button.lotusBtnDisabled:active {
+	color:#B0B0B0 !important;
+}
+
+/* IE 6 fixes from golden OneUI drop */
+.lotusui_ie6 .lotusPaletteHeader li a {
+	color: white !important;
+}
+
+.lotusui_ie6 .lotusPaletteContent {
+	height: 21.2em;
+}
+
+/* nav ie6 fixes */
+.lotusui_ie6 #topNavLinks .lotusLinks {
+	float: left;
+}
+
+.lotusui_ie6 .lotusTitleBar .lotusTabs .inlineEditor {
+	margin-left: 10px !important;
+	margin-top: 1px !important;
+}
+
+.lotusTitleBar .lotusTabs a, .lotusTitleBar .lotusTabs a:visited {
+	font-weight:normal; 
+}
+
+.lotusTitleBar .lotusTabs li {
+	padding-left:10px;
+}
+
+/* navigation wrapping */
+.lotusTitleBar { height: auto !important; height: 3em; min-height: 3em; }
+.lotusTitleBar .lotusRightCorner { height: auto !important; height: 3em;}
+.lotusTitleBar .lotusInner { height:auto !important; height: 3em; }
+.lotusTitleBar .lotusTabs { position: relative; padding-top: .7em; overflow: visible; }
+.lotusPlaceBar { clear: both; }
+.lotusui_ie .lotusTitleBar .lotusTabs { line-height: 0pt; }
+.lotusui_ie7 .lotusTitleBar .lotusInner { overflow: hidden; }
+
+/* search widget css */
+.wptheme-searchBoxContainer {
+	float: right;
+	margin-right: 12px;
+}
+
+.dijitRtl .wptheme-searchBoxContainer {
+	float: left;
+	margin-left: 15px;
+}
+
+.lotusui_ie .searchForm img {
+	vertical-align: text-bottom;
+}
+
+.lotusui_ie .searchForm input {
+	vertical-align: text-bottom;
+}
+
+.lotusui_ie .wptheme-searchBoxContainer {
+	line-height: 0px;
+}
+
+.lotusui_ie .searchForm .searchIcon {
+	vertical-align: baseline;
+}
+
+/* original search widget css */
+.searchForm .dijitButtonNode {
+	background-image: none;
+	background-color: transparent;
+	border: none;
+	margin: 0px;
+	padding: 2px 2px 1px;
+	width: 23px;
+}
+
+table.searchForm {
+	background-color: #ffffff;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #aaaaaa;
+}
+
+.searchForm .dijitButtonText {
+	display:none;
+	padding: 0;
+}
+
+.searchForm .dijitDropDownButtonHover button.dijitButtonNode {
+	background-image: none;
+	background-color: transparent;
+	border: none;
+}
+
+.searchForm .dijitDropDownButtonActive button.dijitButtonNode {
+	background-image: none;
+	background-color: transparent;
+	border: none;
+}
+
+.searchForm .dijitDropDownButton {
+	margin: 0px;
+}
+
+.searchForm .dijitMenuItem {
+	background-color: #ffffff;
+	text-decoration: none;	
+	padding: 3px;
+	white-space:nowrap;
+	font-size: 1em;
+	margin: 0;
+}
+.searchForm .dijitMenuItemLabel {
+	padding: 0.3em;
+	font-family:Helvetica,Arial,sans-serif;
+	white-space: nowrap
+}
+.searchForm .dijitMenuItemIcon {
+	padding: 0.2em;
+}
+.searchForm .dijitMenuItemHover {
+	color: #202020;
+	background-color: #DAE6f7;
+	cursor: pointer;
+}
+
+.searchForm .dijitMenuSeparatorTop {
+	border-bottom: 1px solid #aaaaaa;
+}
+
+.searchForm .dijitMenuSeparator {
+	background-color: #dddddd;
+}
+
+.searchForm {
+	white-space: nowrap;
+	margin: 0px;
+	padding: 0px
+}
+
+.searchForm input {
+	vertical-align: middle;
+}
+
+.searchForm td {
+	white-space: nowrap;
+}
+
+.searchForm .text {
+	border-style:solid;
+	border-width:1px;
+	margin: 0pt 1px;
+	padding: 3px 5px 4px;
+	width:11em;
+	border-color: #aaaaaa;
+}
+
+.searchForm .dijitButtonNode img {
+	margin: 0px;
+	padding: 0px;
+}
+
+.resultsSummary {
+	margin-bottom: 0.5em;
+	margin-top: 1em;
+	font-size: 1.3em;
+}
+
+.sponsoredLink {
+	margin-bottom: 0.5em;
+	margin-top: 1em;
+}
+
+.itemsPerPageLink {
+	margin: 0.2em;
+}
+
+/* OneUI has the error box set to specific width */
+.lotusErrorBox {
+	width: 90% !important;
+}
+
+/* Main top navigation rtl mode */
+.lotus_rtl .lotusBanner ul.lotusLinks li {
+	float: right;
+}
+
+.lotusui_ie6.dijitRtl #topNavLinks {
+	float: right;
+}
+
+.lotusui_ie6.dijitRtl #topNavLinks .lotusLinks {
+	float: none;
+}
+
+/* fix firefox text being white */
+.inlineEditor .dijitReset input { color: #000; }
+
+/* New Logo */
+.lotusui .lotusLogo, .lotusLoginLogo{height:15px;width:90px;background-image:url(../images/logo_black.png);background-repeat:no-repeat; margin-top: 2px; }
+
+/* Drag Handle Fixes in rtl */
+.dragHandle { cursor: move !important; }
+.lotus_rtl .dragHandle { float: right; }
+.lotus_rtl .dragHandle .dragHandleInner { right: -7px; left: auto; padding-left: 0px; padding-right: 3px; }
+.lotus_rtl .modelHasChildrenIcon { left: -5px; right: auto; padding-left: 7px; }
+.lotus_rtl.lotusui_ie .dragHandle { position: static;}
+.lotus_rtl.lotusui_ie .dragHandle .dragHandleInner { right: 3px; left: auto; padding-left: 0px; padding-right: 3px; }
+
+/* Mashups */
+.mmDialogTopAreaBig {
+	padding:16px 10px 10px 20px;
+}
+
+/* Fluid Layouts */
+.lotusFrame {  min-width: 982px;  width: 98% !important; width: 982px;  }
+.ibmPortalContent1Col { width: 100%; }
+.ibmPortalContent2Col { width: 49.2%; margin: 0 .8% 2px 0; }
+.ibmPortalContent3Col { width: 32.5%; margin: 0 .8% 2px 0; }
+.ibmPortalContentRightCol1 { width: 19.5%; }
+.ibmPortalContentRightCol2 { width: 79.5%; margin: 0 0 5px .8%}
+.ibmPortalContentLeftCol1 { width: 79.5%; }
+.ibmPortalContentLeftCol2 { width: 19.5%; margin: 0 0 5px .8%; }
+.ibmPortalContentCenterCol1 { width: 20%; }
+.ibmPortalContentCenterCol2 { width: 58%; margin: 0 .8% 5px; }
+.ibmPortalContentCenterCol3 { width: 20%; }
+.ibmPortalExpContentRow1{ width: 100%; }
+.ibmPortalExpContentCol1{ margin: 0 .8% 5px 0; width: 33%; }
+.ibmPortalExpContentCol2{ margin: 0 .8% 5px 0; width: 66.1%; }
+.ibmPortalExpContentCol2a{ margin: 0 .8% 5px 0; width: 49.2%; }
+.ibmPortalRightmostColumn{ margin-right: 0%; }
+
+
+/* RTL layotus */
+.lotus_rtl .ibmPortalLayoutContainer { float:right; } 
+.lotus_rtl .ibmPortalContent1Col { margin: 0 0 0 .8%; }
+.lotus_rtl .ibmPortalContent2Col { margin: 0 0 2px .8%; }
+.lotus_rtl .ibmPortalContent3Col { margin: 0 0 5px .8%; }
+.lotus_rtl .ibmPortalContentRightCol2 { margin: 0 .8% 5px 0; }
+.lotus_rtl .ibmPortalContentLeftCol2 { margin: 0 .8% 5px 0; }
+.lotus_rtl .ibmPortalExpContentCol1{ margin: 0 0 5px .8%; }
+.lotus_rtl .ibmPortalExpContentCol2{ margin: 0 0 5px .8%; }
+.lotus_rtl .ibmPortalExpContentCol2a{ margin: 0 0 5px .8%; }
+.lotus_rtl .ibmPortalRightmostColumn { margin-left:0px; }
+
+/* accessibility hidden text */
+.ibmPortalHiddenText { position: absolute; top: -9000px; }
+
+/* edit mode button */
+.ibmPortalModeButton { background-image: url(../images/EditMode_default.gif); margin-left: 5px; height: 22px; width: 22px; background-repeat:no-repeat }
+.ibmPortalModeButton:hover { background-image: url(../images/EditMode_default_hover.gif);  }
+.ibmPortalEditMode .ibmPortalModeButton { background-image: url(../images/EditMode_depressed.gif); }
+.ibmPortalEditMode .ibmPortalModeButton:hover { background-image: url(../images/EditMode_depressed_hover.gif);  }
+.ibmPortalEditModeLoading .ibmPortalModeButton, .ibmPortalEditModeLoading .ibmPortalModeButton:hover {height:20px;width:20px;padding:0px;border-style:solid;border-color:#4586D3;border-width:1px;background-image: url('../images/loading.gif');background-position:center center;background-color:#eff3f7}
+.lotus_rtl .ibmPortalModeButton { margin-right: 5px; }
+.ibmPortalEditMode .showEditorTab { display: inline; }
+.showEditorTab { display: none; }
+
+/* searchbar and edit button */
+#searchAndEdit { float: right; margin-bottom: -1px; }
+.lotus_rtl #searchAndEdit { float: left; }
+#searchAndEdit .wptheme-searchBoxContainer { float: none; display: inline-block; }
+#searchAndEdit #ibmPortalModeToggle { float: none; display: inline-block; } 
+#searchAndEdit .lotusSearch { position: static !important; }
+
+.ibmPortalAppName { float:left; font-size: 1.6em; padding-left: 0.6em; padding-top: 0.6em; color:#fff }
+.lotus_rtl .ibmPortalAppName { float:right; padding-right: 0.6em; }
+
+/* padding so portlets in legacy layouts don't touch */
+.layoutRow .lotusWidget2, .layoutColumn .lotusWidget2 { margin:0 5px 10px; }
+ 
+.portlet-dlg-icon-label {font-weight: bold;color: #000000;white-space: nowrap;}
+.portlet-icon-label {color: #000000;}
+.portlet-section-header {font-weight: bold;color: #333333;}
+.portlet-section-header-highlight {background-color: #F0F0F0;}
+.portlet-font {font-family: Helvetica, Arial, sans-serif;font-size: 1em;color: #333333;}
+.portlet-section-body {}
+.portlet-section-alternate {}
+.portlet-section-selected {}
+.portlet-section-footer {}
+.portlet-section-subheader {color: #333333;}
+.portlet-table-text {}
+.portlet-table-selected {color: #333333;background-color: #c5d1de;}
+.portlet-table-alternate {color: #333333;}
+.portlet-table-header {font-weight: normal;color: #000000;text-align: left;background-color: #ffffff;border-width: 0px 0px 0px 0px;border-style: none;border-color: #aaaaaa;}
+.portlet-table-body {text-align: left;border-width: 1px 0px 0px 0px ! important;border-style: solid ! important;border-color: #aaaaaa ! important;}
+.portlet-table-footer{}
+.portlet-table-subheader {font-weight: bold;color: #000000;text-align: left;}
+.portlet-form-input-field {border: 1px solid #999999;}
+.portlet-form-button {text-decoration: none;text-align: center;background-image: url("../../colors/default/ButtonBackground.gif");background-repeat: repeat-x;background-position: left center; border: 1px solid #919191;padding: 0px 2px;margin: 0px;overflow: visible;font-weight: normal;color: #000000;cursor: pointer;}
+.portlet-form-field, .portlet-form-field-label {color: #333333;}
+.portlet-font-dim {color: #808080;}
+.portlet-form-label {color: #333333;}
+.portlet-msg-error {color: #000000;}
+.portlet-msg-alert {color: #000000;}
+.portlet-msg-success {color: #000000;}
+.portlet-msg-info {color: #000000;}
+.portlet-section-text {color: #666666;}
+.portlet-msg-status {color: #333333;}
+.portlet-menu, .portlet-menu-cascade {background-color: #EEEEEE;border-style: solid;border-color: #333333;border-width: 1px;padding: 3px;}
+.portlet-menu-item {background-color: #EEEEEE;border-style: solid;border-color: #333333;border-width: 1px;padding: 3px;}
+.portlet-menu-item-selected {background-color: #aaaaaa;border-style: solid;border-color: #333333;border-width: 1px;padding: 3px;}
+.portlet-menu-item-hover, .portlet-menu-cascade-item-hover {background-color: #cccccc;border-style: solid;border-color: #333333;border-width: 1px;padding: 3px;}
+.portlet-menu-item-hover-selected, .portlet-menu-cascade-item-hover-selected {background-color: #cccccc;border-style: solid;border-color: #333333;border-width: 1px;padding: 3px;}
+.portlet-menu-cascade-item {background-color: #eeeeee;border-style: solid;border-color: #333333;border-width: 1px;padding: 3px 3px 3px 3px;}
+.portlet-menu-cascade-item-selected {background-color:#cccccc;border-style: solid;border-color: #333333;border-width: 1px;padding: 3px 3px 3px 3px;}
+.portlet-menu-separator, .portlet-menu-cascade-separator {background-color: #999999;}
+.portlet-menu-content, .portlet-menu-content-selected {background-color: #eeeeee;}
+.portlet-menu-content-hover, .portlet-menu-content-hover-selected {background-color: #cccccc;}
+.portlet-menu-indicator, .portlet-menu-indicator-selected {}
+.portlet-menu-indicator-hover, .portlet-menu-indicator-hover-selected {}
+.portlet-menu-description {}
+.portlet-menu-caption {border-style: solid;border-color: #333333; border-width: 1px;}
+.portlet-separator {background-color: #999999;height: 1px;}
+div.portlet-separator {background-color: #999999;margin: 2px 0 2px 0;}
+.help {font-size: 1em; color: #000000;}
+.help_indent {font-size: 1em; color: #000000; background-color: #ffffff}
+A.help {font-size: 1em; color: #3366CC}
+A.help:visited {font-size: 1em; color: #666699}
+A.help:active {font-size: 1em; color: #3366CC}
+A.help:hover {font-size: 1em; color: #3366CC}
+H2.help {padding-left: 8px; font-weight: bold; font-size: 1.1667em; color: #000000; padding-top: 22px; border-bottom: 1px solid #B0B0B0; background-color: #F0F0F0; text-align: left}
+H3.help {font-size: 1.1667em; padding-left: 8px; font-weight: bold; padding-top: 3px; background-color: #F0F0F0}
+H3 A.help {font-size: 1.1667em; color: #000000; background-color: #F0F0F0; text-decoration: none}
+H4.help {padding-left: 8px; margin: 16px 20px 0px 20px; color: #000000; padding-top: 3px; background-color: #F0F0F0; text-align: left}
+H4 A.help {font-weight: normal; font-size: 1em; color: #000000; font-style: italic; background-color: #F0F0F0}
+P.help {padding-bottom: 0px; margin: 2px 20px 0px 30px; padding-top: 4px}
+P.help_indent {padding-bottom: 0px; margin: 2px 20px 0px 0px; padding-top: 4px}
+UL.help {margin-left: 56px; margin-right: 20px}
+OL.help {margin-left: 56px; margin-right: 20px}
+DL.help {margin-left: 56px; margin-right: 20px}
+PRE.help {margin-left: 30px; font-family: monospace; font-size: 1.1667em;}
+DT A.help {font-weight: 900; color: #000000}
+DD.help {padding-bottom: 20px; padding-top: 2px}
+LI.help {padding-bottom: 2px; padding-top: 2px}
+TABLE.help {padding-right: 20px; padding-left: 30px; margin-left: 28px}
+TH.help {text-align: center; padding-top: 5px; padding-bottom: 5px; vertical-align: top;}
+TD.help {padding-bottom: 3px; vertical-align: top; padding-top: 3px; text-align: left}
+samp, samp.help {font-family: monospace; font-size: 1.1667em;}
+TABLE.dataTable {color:black;width:90%;border-collapse: collapse;border-color:Black;background-color:white;margin-left:28px;}
+.dataTable TH {font-weight:bold;font-size:0.8em;color:black;background-color:#F0F0F0;}
+.wpsTableAdminHead {color:#333333;background-color:#CCCCCC;}
+.wpsAdminHeadSeparator {background-color:#999999;height:1px;}
+.wpsStatusMsg {color: #000000;background-color: #E7EFF7;margin: 10px 0px;padding: 5px;border: solid 2px #ABCACA;-moz-border-radius: 8px;}
+.wpsStatusMsg img {vertical-align: middle;}
+.wpsInstructionText {color: #6B6B6B;margin: 0.6em 0px 0px 0px;}
+.wpsInstructionText em {font-weight: bold;font-style: normal;color: #8A59A6;}
+.wpsInstructionHeadText {font-weight: bold;font-size: 1em;color: #405380;}
+.wpsIndentXSmall {padding-left: 4px; }
+.wpsIndentSmall {padding-left: 8px; }
+.wpsIndentMedium {padding-left: 16px; }
+.wpsIndentLarge {padding-left: 32px; }
+.wpsIndentXLarge {padding-left: 48px; }
+.wpsTaskIconText {font-weight: bold;color: #000000; white-space: nowrap;}
+.wpsTaskDisabledIconText {font-weight: bold;white-space: nowrap;color: #888888; }
+.wpsTaskIconBorderTable, .wpsTaskDisabledIconBorderTable {border: 0px;}
+.wpsTaskIconTextBackground {background-color: #DDDDDD; background-image: url("../../colors/default/ButtonBackground.gif");background-repeat: repeat-x;background-position: left center;     border: 1px solid #919191;padding: 2px 4px;margin: 0px;text-align: center;vertical-align: middle;white-space: nowrap;}
+.wpsTaskDisabledIconTextBackground {background-color: #DDDDDD;background-image: url("../../colors/default/ButtonBackground.gif");background-repeat: repeat-x;background-position: left center;     border: 1px solid #919191;padding: 2px 4px;margin: 0px;text-align: center;vertical-align: middle;white-space: nowrap;}
+.wpsDialogIconText {color: #000000;}
+.wpsDialogDisabledIconText {color: #888888;}
+.wpsDialogIconBackground {text-align: center;vertical-align: middle;background-color: #DDDDDD;background-image: url("../../colors/default/DialogIconBackground.gif");background-repeat: repeat-x;background-position: left center; border-top: 1px solid #919191;border-right: 0px none #919191;border-bottom: 1px solid #919191;border-left: 1px solid #919191;padding: 0px 0px;margin: 0px;}
+.wpsDialogIconTextBackground {text-align: center;vertical-align: middle;background-color: #DDDDDD; background-image: url("../../colors/default/DialogIconTextBackground.gif");background-repeat: repeat-x;background-position: left center; border-top: 1px solid #919191;border-right: 1px solid #919191;border-bottom: 1px solid #919191;border-left: 0px none #919191;padding: 2px 4px;margin: 0px;white-space: nowrap;}
+.wpsDialogDisabledIconBackground {text-align: center;vertical-align: middle;background-color: #DDDDDD;background-image: url("../../colors/default/DialogIconBackground.gif");background-repeat: repeat-x;background-position: left center; border-top: 1px solid #919191;border-right: 0px none #919191;border-bottom: 1px solid #919191;border-left: 1px solid #919191;padding: 0px 0px;margin: 0px;}
+.wpsDialogDisabledIconTextBackground {text-align: center;vertical-align: middle;background-color: #DDDDDD; background-image: url("../../colors/default/DialogIconTextBackground.gif");background-repeat: repeat-x;background-position: left center; border-top: 1px solid #919191;border-right: 1px solid #919191;border-bottom: 1px solid #919191;border-left: 0px none #919191;padding: 2px 4px;margin: 0px;white-space: nowrap;}
+.wpsDialogIcon {width: 16px;height: 16px;}
+.wpsButtonBarTop, .wpsButtonBarBottom {background-color: #DFDFDF; }
+.wpsPortletBack {background-color: #FFFFFF;}
+.wpsEditBack, .wpsConfigureBack {background-color: #FFFFFF;}
+.wpsAdvancedOptions { background-color: #e4e4e4;border: solid 1px #4A4A4A;margin-left: 10px;}
+.wpsPortletColorBack {background-color: #CCCCCC;}
+.wpsPortletHead, .wpsEditHead {font-weight: bold;color: #333333;}
+.wpsPortletText, .wpsEditText, .wpsPortletSmText, .wpsEditSmText, .wpsPortletTinyText {font-family: Helvetica, Arial, sans-serif;font-size: 1em;color: #333333;}
+.wpsCopyrightText {font-size: 0.9166em;color: #999999;}
+.wpsPortletBody {}
+.wpsTableHead {font-weight: bold;color: #989898;text-align: left;}
+.wpsTableHead th {padding: 3px;}
+.wpsTableText {}
+.wpsTableRow, .wpsTableNrmRow {color: #333333;background-color: #ffffff;}
+.wpsTableSelectedRow {color: #333333;background-color: #c5d1de;}
+.wpsTableShdRow {color: #333333;}
+.wpsTableRow td, .wpsTableNrmRow td, .wpsTableShdRow td {border-width: 1px 0px 0px 0px;border-style: solid;border-color: #aaaaaa;padding: 3px;}
+.wpsTableHeadLink, .wpsTableHeadLink:visited, .wpsTableHeadLink:hover, .wpsTableHeadLink:active {font-weight: normal;color: #000000;}
+.wpsTable {border-width: 1px;border-style: solid;border-color: #aaaaaa;}
+.wpsTable td {vertical-align:top;}
+.wpsTableHeadStart, .wpsTableHeadMiddle, .wpsTableHeadEnd {font-weight: normal;color: #000000;text-align: left;background-color: #ffffff;border-width: 0px 0px 0px 0px;border-style: none;border-color: #aaaaaa;}
+.wpsTableHeadStartAlignCenter, .wpsTableHeadMiddleAlignCenter, .wpsTableHeadEndAlignCenter {font-weight: normal;color: #000000;text-align: center;background-color: #ffffff;border-width: 0px 0px 0px 0px;border-style: none;border-color: #aaaaaa;}
+.wpsTableHeadStartNumeric, .wpsTableHeadMiddleNumeric, .wpsTableHeadEndNumeric {font-weight: normal;color: #000000;text-align: right;background-color: #ffffff;border-width: 0px 0px 0px 0px;border-style: none;border-color: #aaaaaa;}
+.wpsTableDataStart, .wpsTableDataMiddle, .wpsTableDataEnd {text-align: left;border-width: 1px 0px 0px 0px ! important;border-style: solid ! important;border-color: #aaaaaa ! important;}
+.wpsTableDataStartAlignCenter, .wpsTableDataMiddleAlignCenter, .wpsTableDataEndAlignCenter {text-align: center;border-width: 1px 0px 0px 0px ! important;border-style: solid ! important;border-color: #aaaaaa ! important;}
+.wpsTableDataStartNumeric, .wpsTableDataMiddleNumeric, .wpsTableDataEndNumeric {text-align: right;border-width: 1px 0px 0px 0px ! important;border-style: solid ! important;border-color: #aaaaaa ! important;}
+.wpsPagingTable, .wpsPagingTableHeader, .wpsPagingTableFooter, .wpsPagingTableBody {border: 0px;}
+.wpsPagingTableHeaderIcon, .wpsPagingTableFooterIcon {width: 16px;height: 16px;}
+.wpsPagingTableHeaderStart {background-color: #F0F0F0;border-top: 1px solid #aaaaaa;border-right: 0px none #aaaaaa;border-bottom: 0px none #aaaaaa;border-left: 1px solid #aaaaaa;}
+.wpsPagingTableHeaderMiddle {background-color: #F0F0F0;border-top: 1px solid #aaaaaa;border-right: 0px none #aaaaaa;border-bottom: 0px none #aaaaaa;border-left: 0px none #aaaaaa;}
+.wpsPagingTableHeaderEnd {background-image: url("../../colors/default/PagingTableTopRight.gif");background-repeat: no-repeat;background-position: right top;background-color: transparent;}
+.wpsPagingTableFooterStart {background-color: #F0F0F0;border-top: 0px none #aaaaaa;border-right: 0px none #aaaaaa;border-bottom: 1px solid #aaaaaa;border-left: 1px solid #aaaaaa;}
+.wpsPagingTableFooterMiddle {background-color: #F0F0F0;border-top: 0px none #aaaaaa;border-right: 0px none #aaaaaa;border-bottom: 1px solid #aaaaaa;border-left: 0px none #aaaaaa;}
+.wpsPagingTableFooterEnd {background-image: url("../../colors/default/PagingTableBottomRight.gif");background-repeat: no-repeat;background-position: right bottom; background-color: transparent;}
+.wpsPagingTableHeaderEmpty {height:7px;width:7px;line-height:1px;}
+.wpsTableRowDetail td {border-width:0px;text-align: left;border-width: 0px ! important;padding:2px 3px 5px 3px;}
+.wpsTableSectionHead {font-weight: bold;color: #000000;text-align: left;}
+.wpsTableSectionHead th {border-width: 1px 0px 0px 0px;border-style: solid;border-color: #aaaaaa;padding: 3px 0 3px 5px;}
+.wpsTableTopRow td {border-color: #aaaaaa ! important;}
+.wpsPagingTableHeaderEmpty {height: 7px;width: 7px;line-height: 1px;}
+.wpsTableRowDetail td {border-width: 0px;text-align: left;border-width: 0px ! important;padding: 2px 3px 5px 3px;}
+.wpsCompactCheckBox, .wpsCompactRadioButton {height: 16px;margin-top: 0px;margin-bottom: 0px;}
+.wpsEditField{border: 1px solid #999999;}
+.wpsButtonText{ font-weight: bold;color: #000000;background-color: #DDDDDD;background-image: url("../../colors/default/ButtonBackground.gif");background-repeat: repeat-x;background-position: left center; border: 1px solid #919191;padding: 2px 4px;margin: 0px;text-align: center;}
+.wpsButtonDisabledText { font-weight: bold;color: #888888;background-color: #DDDDDD; background-image: url("../../colors/default/ButtonBackground.gif");background-repeat: repeat-x;background-position: left center; border: 1px solid #919191;padding: 2px 4px;margin: 0px;text-align: center;}
+.wpsBrowseButton {}
+.wpsLabelText, wpsRequiredLabelText {color: #333333;}
+.wpsRequiredLabelText strong {color: #ff0000;}
+.wpsDescriptionText {color: #808080;}
+.wpsFieldErrorText {color: #000000;}
+.wpsFieldWarningText {color: #000000;}
+.wpsFieldSuccessText {color: #000000;}
+.wpsFieldInfoText {color: #000000;}
+.wpsInlineHelpText {color: #666666;}
+.wpsFieldMonospaced {font-family: monospace;font-size: 1.1667em;}
+.wpsFlagText {font-size: 0.9166em;color: #FF0000;}
+.wpsPortletTabBar {}
+.wpsPortletTabBarSeparator {background: url("../../colors/default/portletTabSeparator.gif");background-repeat: repeat-x;background-color: #95a5b9;margin: 0px;padding: 0px;height: 3px;}
+.wpsPortletTabSet {border: 0px;background-color: transparent;}
+.wpsPortletTab {border: 0px;background-color: transparent;}
+.wpsPortletSelectedTab {border: 0px;background-color: transparent;}
+.wpsPortletTabTopStart {background-image: url("../../colors/default/PortletTabTopLeft.jpg");background-repeat: no-repeat;background-position: bottom left;padding: 0px 2px 0px 2px;width: 5px;height: 5px;}
+.wpsPortletTabTopCenter {background-image: url("../../colors/default/PortletTabTopMiddle.jpg");background-repeat: repeat-x;background-position: bottom;}
+.wpsPortletTabTopEnd {background-image: url("../../colors/default/PortletTabTopRight.jpg");background-repeat: no-repeat;background-position: bottom right;border-style: none;background-color: transparent;padding: 0px 2px 0px 2px;width: 5px;height: 5px;}
+.wpsPortletTabMiddleStart {background-image: url("../../colors/default/PortletTabCenter.jpg");background-repeat: repeat-x;background-color: #FFFFFF;border-top: 0px none #C0C0C0;border-right: 0px none #C0C0C0;border-bottom: 0px none #C0C0C0;border-left: 1px solid #C0C0C0;}
+.wpsPortletTabMiddleCenter {background-image: url("../../colors/default/PortletTabCenter.jpg");background-repeat: repeat-x;background-color: #FFFFFF;white-space: nowrap;border-style: none;}
+.wpsPortletTabMiddleEnd {background-image: url("../../colors/default/PortletTabCenter.jpg");background-repeat: repeat-x;background-color: #FFFFFF;border-top: 0px none #C0C0C0;border-right: 1px solid #C0C0C0;border-bottom: 0px none #C0C0C0;border-left: 0px none #C0C0C0;}
+.wpsPortletTabBottomStart {background-color: #FFFFFF;border-top: 0px none #C0C0C0;border-right: 0px none #C0C0C0;border-bottom: 0px none #C0C0C0;border-left: 1px solid #C0C0C0;width: 5px;height: 5px;}
+.wpsPortletTabBottomCenter {background-color: #FFFFFF;border-style: none;}
+.wpsPortletTabBottomEnd {background-color: #FFFFFF;border-top: 0px none #C0C0C0;border-right: 1px solid #C0C0C0;border-bottom: 0px none #C0C0C0;border-left: 0px none #C0C0C0;width: 5px;height: 5px;}
+.wpsPortletSelectedTabTopStart {background-image: url("../../colors/default/PortletSelectedTabTopLeft.jpg");background-repeat: no-repeat;background-position: bottom left;padding: 0px 2px 0px 2px;width: 5px;height: 5px;}
+.wpsPortletSelectedTabTopCenter {background-image: url("../../colors/default/PortletSelectedTabTopMiddle.jpg");background-repeat: repeat-x;background-position: bottom;border-top: 0px solid #AAC2E6;border-right: 0px none #AAC2E6;border-bottom: 0px none #AAC2E6;border-left: 0px none #AAC2E6;}
+.wpsPortletSelectedTabTopEnd {background-image: url("../../colors/default/PortletSelectedTabTopRight.jpg");background-repeat: no-repeat;background-position: bottom right;border-style: none;background-color: transparent;padding: 0px 2px 0px 2px;width: 5px;height: 5px;}
+.wpsPortletSelectedTabMiddleStart {background-image: url("../../colors/default/portletSelectedTabCenterMid.jpg");background-repeat: repeat-x;border-top: 0px none #AAC2E6;border-right: 0px none #AAC2E6;border-bottom: 0px none #AAC2E6;border-left: 1px solid #AAC2E6;}
+.wpsPortletSelectedTabMiddleCenter {background-image: url("../../colors/default/portletSelectedTabCenterMid.jpg");background-repeat: repeat-x;border-style: none;white-space: nowrap;}
+.wpsPortletSelectedTabMiddleEnd {background-image: url("../../colors/default/portletSelectedTabCenterMid.jpg");background-repeat: repeat-x;border-top: 0px none #AAC2E6;border-right: 1px solid #AAC2E6;border-bottom: 0px none #AAC2E6;border-left: 0px solid #AAC2E6;}
+.wpsPortletSelectedTabBottomStart {background-color: #FFFFFF;border-top: 0px none #AAC2E6;border-right: 0px none #AAC2E6;border-bottom: 0px none #AAC2E6;border-left: 1px solid #AAC2E6;width: 5px;height: 5px;}
+.wpsPortletSelectedTabBottomCenter {background-color:  #FFFFFF;border-style: none;}
+.wpsPortletSelectedTabBottomEnd {background-color:  #FFFFFF;border-top: 0px none #AAC2E6;border-right: 1px solid #AAC2E6;border-bottom: 0px none #AAC2E6;border-left: 0px none #AAC2E6;width: 5px;height: 5px;}
+.wpsPortletTabLink, .wpsPortletTabLink:visited, .wpsPortletTabLink:active, .wpsPortletTabLink:hover {color: #333333;}
+.wpsPortletSelectedTabLink, .wpsPortletSelectedTabLink:hover, .wpsPortletSelectedTabLink:visited, .wpsPortletSelectedTabLink:active {color: #2056A0;font-weight: bold;}
+.wpsPortletToolbar {background-color: #c5d1de;border-top: 1px solid #e4edf5;border-right: 1px solid #95a5b9;border-bottom: 1px solid #95a5b9;border-left: 1px solid #e4edf5;}
+.wpsPortletToolbarSection {border-width: 0px;}
+.wpsPortletToolbarSet {}
+.wpsPortletToolbarButton {    background-color: #c5d1de;padding: 3px;border-width: 1px;border-style: solid;border-color: #c5d1de;}
+.wpsPortletToolbarButtonRollover {background-color: #c5d1de;padding: 3px;border-top: 1px solid #e4edf5;border-right: 1px solid #95a5b9;border-bottom: 1px solid #95a5b9;border-left: 1px solid #e4edf5;}
+.wpsPortletToolbarButtonPressed {background-color: #dadfe5;padding: 3px;border-top: 1px solid #95a5b9;border-right: 1px solid #e4edf5;border-bottom: 1px solid #e4edf5;border-left: 1px solid #95a5b9;}
+.wpsPortletToolbarButtonSelected {background-color: #aeb8c4;padding: 3px;border-top: 1px solid #95a5b9;border-right: 1px solid #e4edf5;border-bottom: 1px solid #e4edf5;border-left: 1px solid #95a5b9;}
+.wpsPortletToolbarButtonSelectedRollover {background-color: #aeb8c4;padding: 3px;border-top: 1px solid #e4edf5;border-right: 1px solid #95a5b9;border-bottom: 1px solid #95a5b9;border-left: 1px solid #e4edf5;}
+.wpsPortletToolbarButtonIcon {width: 16px;height: 16px;}
+.wpsPortletToolbarControl {padding: 3px;}
+.wpsPortletToolbarText {color: #333333;}
+.wpsPortletToolbarDisabledText {color: #999999;}
+.wpsPortletToolbarLink, .wpsPortletToolbarLink:hover, .wpsPortletToolbarLink:visited, .wpsPortletToolbarLink:active {color: #333333;}
+.wpsPortletToolbarSeparator {background-color: #95a5b9;width: 1px;margin: 0px;padding: 0px;border-top: 0px none #95a5b9;border-right: 1px solid #e4edf5;border-bottom: 0px none #e4edf5;border-left: 0px none #95a5b9;}
+.wpsPortletToolbarSpacer {padding: 0px 2px 0px 2px; }
+.wpsPortletToolbarHandle {background-color: #c5d1de;padding: 0px;margin: 0px;width: 1px;border-top: 1px solid #e4edf5;border-right: 1px solid #95a5b9;border-bottom: 1px solid #95a5b9;border-left: 1px solid #e4edf5;}
+.wpsBreadcrumbTrail {font-weight: bold;}
+.wpsBreadcrumbTrailLink, .wpsBreadcrumbTrailLink:hover, .wpsBreadcrumbTrailLink:visited, .wpsBreadcrumbTrailLink:active {font-weight: bold;color: #3366CC;text-decoration: underline;}
+.wpsPortletAccentArea {background-color: #c5d1de;color: #333333;}
+.wpsPortletAccentArea3DHighlight {background-color: #e4edf5;color: #333333;}
+.wpsPortletAccentArea3DShadow {background-color: #95a5b9;color: #333333;}
+.wpsWizardTitle {font-weight: bold;background-color: #c1c1c1;color: black;padding-left: 5px;padding-top: 5px;padding-bottom: 5px;}
+.wpsWizardStepNotification {background-color: #dfdfdf;color: black;padding-left: 5px;padding-top: 5px;padding-bottom: 5px;}
+.wpsWizardBottomSubmit {background-color: #c1c1c1;color: black;padding-left: 5px;padding-top: 5px;padding-bottom: 25px;}
+.wpsCursorPointer {cursor: pointer;}
+.weekday_header {font-size: 1em;background-color: #999999;color: #333333;}
+.other_month_header {background-color: #E4E3E3;color: #7E7001;height: 20px;}
+.current_month_header {background-color: #CBDBF3;color: #333333;height: 20px;}
+.other_month_cell {background-color: #F0F0F0;}
+.current_month_cell {background-color: #FFFFFF;color: Black;}
+.current_day_header {font-size: 1em;background-color: #92B5E6;color: #333333;height: 20px;}
+a.current_day_header:link {background-color: transparent;color: #333333;}
+a.other_month_header:link {background-color: transparent;color: #0000ff;}
+a.current_month_header:link {background-color: transparent;color: #0050C9;}
+a.wpsPersonName {text-decoration: none;white-space: nowrap;color: #3366CC;}
+a.wpsPersonName:visited {text-decoration: none;white-space: nowrap;color: #666699;}
+a.wpsPersonName:hover {text-decoration: underline;white-space: nowrap;color: #666699;}
+.wpsGettingStartedTitle{font-size: 1.1667em;font-weight: normal;color: #2055A3;}
+.wpsGettingStartedHeader{font-size: 1em;font-weight: normal;color: #2055A3;}
+.wpsGettingStartedBody{font-size: 0.9166em;color: #616161;padding-top: 10px;}
+.gsTableOutside{background-color: #E0EDFC;vertical-align : top;}
+.gsTableInside{background-color: #E0EDFC;padding-top: 5px;padding-left: 5px;padding-right: 5px;vertical-align : top;}
+.gsTableEnd{background-image: url("../../colors/default/gs_end.gif");background-repeat: repeat-x;}
+.wpsSearchInfoBar{font-family: Helvetica, Arial, sans-serif;font-size: 1em;color: #333333;background-color: #c7d9f1;}
+.wpsSearchUrl, a.wpsSearchUrl {font-weight: bold;}
+.wpsSearchUrlAddressText{color: #008000;font-style: italic;}
+.wpsSearchAttributeText{color: #c1c1c1;font-style: italic;}
+.lwp-teamSpace-title, .lwp-webConference-title {font-weight: bold;background-color: #5C5C5C;color: #FFFFFF;}
+.popup-background {background-color: #eeeeee;}
+.lwp-middleToolbar {font-size: 1em;color: #737373; background-color: #FFFFFF;border-bottom: 0px solid #D8D8E0;padding: 4px 4px;margin: 0px;}
+.lwpAdminButton {font-size: 1em;color: #FFFFFF; background-color: #A0A0A0;text-decoration: none;padding: 0px 5px;margin: 0px;}
+.lwpAdminButtonLink, .lwpAdminButtonLink:hover, .lwpAdminButtonLink:active, .lwpAdminButtonLink:visited {font-size: 1em;font-weight: normal;color: #FFFFFF; background-color: #A0A0A0;margin: 0px;text-decoration: none;}
+.lwpNavButton {color: #FFFFFF; background-color: #70A8F0;margin: 0px;text-decoration: none;padding: 0px 5px;       }
+.lwpNavButtonLink, .lwpNavButtonLink:hover, .lwpNavButtonLink:active, .lwpNavButtonLink:visited {font-weight: normal;color: #FFFFFF; background-color: #70A8F0;margin: 0px;text-decoration: none;}
+.button-link, a.button-link, a.button-link:hover, a.button-link:visited {text-decoration: none;color: #000000;}
+.lwpButtonGroup{margin: .25em 4px;}
+.lwpIconOnly, .lwpIconOnlyDisabled {border:0px;background-color:white;}
+.lwpDialogIconBackground {text-decoration: none;text-align: center;vertical-align: top;background-color: #DDDDDD;background-image: url("../../colors/default/DialogIconTextBackground.gif");background-repeat: repeat-x;border: 1px solid #919191;padding: 0px 2px;margin: 0px;overflow: visible;font-weight: normal;color: #000000;cursor: pointer;}
+.lwpDialogDisabledIconBackground, .lwpDialogIconBackgroundDisabled {text-decoration: none;text-align: center;vertical-align: top;background-color: #DDDDDD;background-image: url("../../colors/default/DialogIconTextBackground.gif");background-repeat: repeat-x;background-position: left center;border: 1px solid #919191;padding: 0px 2px;margin: 0px;overflow: visible;font-weight: normal;color: #888888;}
+.lwpButtonText { font-weight: bold;text-decoration: none;color: #000000;vertical-align: middle;background-color: #DDDDDD; background-image: url("../../colors/default/ButtonBackground.gif");background-repeat: repeat-x;background-position: left center; border-top: 1px solid #919191;border-bottom: 1px solid #919191;border-right: 1px solid #919191;border-left: 1px solid #919191;padding: 0px 2px;overflow: visible;margin: 0px;text-align: center;}
+.lwpButtonTextDisabled {text-decoration: none;text-align: center;vertical-align: middle;background-color: #DDDDDD;background-image: url("../../colors/default/ButtonBackground.gif");background-repeat: repeat-x;background-position: left center;border-top: 1px solid #919191;border-bottom: 1px solid #919191;border-right: 1px solid #919191;border-left: 1px solid #919191;padding: 0px 2px;margin: 0px;overflow: visible;font-weight: bold;color: #888888;}
+.lwpButtonSpacer {margin-right: 2px;}
+.lwpSeparatorBg {background-color: #999999;height: 1px;}
+div.lwpSeparatorBg {background-color: #999999;margin: 2px 0 2px 0;}
+.borderNone {border-width: 0 ! important;}
+.lwpPortletTitleBorder {background-image: url("../../colors/default/skin_border.gif");background-position: bottom;background-repeat: repeat-x;}
+.lwpAlignRight {text-align: right; }
+.lwpBorderAll {border-right: 1px solid #DCDCDC;border-left: 1px solid #DCDCDC;	border-top: 1px solid #DCDCDC;	border-bottom: 1px solid #DCDCDC;	}
+.lwpShadowBorder {border-right: 1px solid #888888;border-bottom: 1px solid #888888;	}
+.lwpSearchBar{margin: 5px 0;background-color: #ECECEC;			text-align: right;}		
+.lwpSearchBar table{margin-right: 0;margin-left: auto;}
+.lwpSearchBar td{padding: 5px 3px 5px 2px;}
+.lwpSearchBar .portlet-form-field-label{padding-left: 10px;}
+.lwpInlineHelp td{padding: 5px 10px 5px 1px;vertical-align: top;}
+.lwpMenuHeader, a.lwpMenuHeader, a.lwpMenuHeader:visited, a.lwpMenuHeader:hover {background-color: #F0F0F0;color: #000000;text-decoration: none;font-weight: normal;cursor: pointer;}
+.lwpMenuBackground {background-color: #ffffff;}
+.lwpMenuItem, a.lwpMenuItem, a.lwpMenuItem:visited, a.lwpMenuItem:hover  a.lwpMenuItem:active {color: #000000;text-decoration: none;background-color: #ffffff;}
+.lwpSelectedMenuItem, a.lwpSelectedMenuItem:visited, a.lwpSelectedMenuItem:hover, a.lwpSelectedMenuItem:active{background-color: #284888;color: #ffffff;text-decoration: none;cursor: pointer;}
+.lwpMenuItemDisabled, a.lwpMenuItemDisabled, a.lwpMenuItemDisabled:visited, a.lwpMenuItemDisabled:hover, a.lwpMenuItemDisabled:active {color: #888888;text-decoration: none;background-color: #ffffff;font-style: italic;}
+.unreadMailText, a.unreadMailText {font-weight: bold;text-decoration: underline;color: #3366CC;}
+.lwpLastReadMark {font-weight: bold;color: #FFFFFF;background-color: #666666;text-align: center;padding: 3px 0;}
+.lwpDateStampMark {font-weight: bold;color: #666666;background-color: #999999;text-align: center;padding: 3px 0px;}
+.lwpCalFsizeX {font-size: 1.1667em;}
+.lwpCalViewMenuPosition {padding-left: 2px;padding-top: 8px;padding-bottom: 8px; }
+a.lwpCalLinkText {text-decoration: none;}
+a.lwpCalLinkText:hover {text-decoration: underline;}
+a.lwpCalDateLinkText, a.lwpCalDateLinkText:visited {text-decoration: none;color: #000000;}
+a.lwpCalDateLinkText:hover {text-decoration: underline;color: #666699;}
+a.lwpCalInactiveDateLinkText, a.lwpCalInactiveDateLinkText:visited {text-decoration: none;color: #a0a0a0;}
+a.lwpCalInactiveDateLinkText:hover {text-decoration: underline;color: #666699;}
+.lwpCal1WeekCellRow {height: 6em;font-weight: normal;}
+.lwpCalCellRow {height: 2.2em;font-weight: normal;}
+.lwpCalLDivider {border-left: solid 1px #aaaaaa;}
+.lwpCalTDivider {border-top: solid 1px #aaaaaa;}
+.lwpCalNoBottom {border-bottom: none;}
+.lwpCalHeader {color: #3366CC;font-weight: bold;vertical-align: top;}
+.lwpCalHeaderImage {padding: 12px 3px 2px 0px; margin-bottom: 5px;}
+.lwpCalAttendeeHeading {color: #898989; }
+.lwpCalSectionHeader {font-weight: bold;color: black;padding-top: 12px;padding-bottom: 2px;margin-bottom: 5px;display: block;}
+.lwpCalInviteeSection {padding-left:2px;   }
+.lwpCalWeekNumber {color: #808080;}
+.lwpCalEntryHoverDetail {border : solid 1px #000000;position: absolute; visibility: hidden; width: 400px;overflow: hidden;}
+.lwpCalEventField { padding:5px 0px 3px 0px; }
+.lwpCalEntryHoverPosition {padding-left: 5px;}
+.lwpCalBgMeeting, .lwpCalBgWebConf {background-color: #C3D3E6;}
+.lwpCalBgAppointment{background-color: #D8F8D8;}
+.lwpCalBgAnniversary{background-color: #F8E8D0;}
+.lwpCalBgReminder{background-color: #F8F8D0;}
+.lwpCalBgAllDayEvent{background-color: #F8E0E0;}
+.lwpCalTodayCell {border: solid 1px #000000;}
+.lwpCalMonthDayCell {border-top: solid 1px #AAAAAA;height: 6.4em;width: 14%;}
+.lwpCalInactiveDayCell {background-color: #efefef;}
+.lwpCalInactiveDay {color: #a0a0a0;}
+.lwpCalSeperator {border-bottom: solid 1px #ffffff;}
+.lwpCalConflict {border-left: solid 2px #000000;}
+.lwpCalTimeText {text-align: right;}
+.lwpCalEntryPosition {padding-top: 2px;}
+.lwpCalBDivider {border-bottom: solid 1px #aaaaaa;}
+.lwpPpkList {width: 250px;height: 200px;padding-left: 2px;border-right: 1px solid #c0c0c0;border-bottom: 1px solid #c0c0c0;border-left: 1px solid black;border-top: 1px solid black;overflow: auto;}
+.lwpPpkListBorder {width: 250px;height: 200px;border-left: 1px solid #a0a0a0;border-top: 1px solid #a0a0a0;}
+.lwpPpkNormalText {background-color: white; color: black;}
+.lwpPpkSelectedText {background-color: #284888;color: white;}
+.lwpMailboxRecipientAnchor, a.lwpMailboxRecipientAnchor {	color: black;text-decoration: underline;cursor: pointer;}
+.lwpMailboxRecipientAnchor:hover, a.lwpMailboxRecipientAnchor:hover {color: black;text-decoration: underline;cursor: pointer;}
+.lwpMailboxRecipientAnchor:visited, a.lwpMailboxRecipientAnchor:visited {color:black;}
+.chat_background {background-color: #FFFFFF;}
+.chat_partner_presence {border-top : 1px solid #AAAAAA;border-left : 1px solid #AAAAAA;border-color : #AAAAAA;padding: 3px;background-color: #EEEEEE;}
+.chat_partner_presence_corner {background-image: url("../../colors/default/chat_presence_corner.gif");background-repeat: no-repeat;background-position: top;background-color: transparent;background-color: #FFFFFF;}
+.chat_partner_alert {border-top : 1px solid #AAAAAA;border-left : 1px solid #AAAAAA;border-right : 1px solid #AAAAAA;border-color : #AAAAAA;padding: 3px;background-color: #FFFFFF;color: #666666;}
+.chat_transcript {border-left : 1px solid #AAAAAA;border-right : 1px solid #AAAAAA;border-bottom : 1px solid #AAAAAA;border-top : 1px solid #AAAAAA;border-color : #AAAAAA;}
+.chat_transcript_nway {border-top : 1px solid #456A8B;border-left : 1px solid #456A8B;border-right : 1px solid #456A8B;border-bottom : 1px solid #456A8B;border-color : #456A8B;}
+.chat_message_input {border-top : 1px solid #AAAAAA;border-left : 1px solid #AAAAAA;border-right : 1px solid #AAAAAA;border-bottom : 1px solid #AAAAAA;border-color : #AAAAAA;background-color: #FFFFFF;}
+.chat_statusbar {border-top : 1px solid #AAAAAA;border-color : #AAAAAA;background-color: #EEEEEE;color: #AAAAAA;}
+.chat_participants {border-bottom : 1px solid #D8D8D8;border-color : #D8D8D8;}
+.lwp-agendaItemDocument {color: #585858;padding-top: 3px;padding-bottom: 3px;}
+.lwp-agendaItem-ul {padding-top: 3px;list-style-type: none;margin-left: 0px;margin-right: 20px;padding-bottom: 0px;}
+.lwp-agendaItem-li {padding-top: 0px;padding-bottom: 0px;}
+.lwp-agendaItem, .lwp-agendaItem:visited, a.lwp-agendaItem, a.lwp-agendaItem:active, a.lwp-agendaItem:visited, .lwp-agendaItemPage, a.lwp-agendaItemPage, .lwp-agendaItemSlide, .lwp-agendaItemPage:visited, .lwp-agendaItemSlide:visited {background-color: rgb(246,246,246);text-decoration: none;color: #7080A8;font-weight: normal;padding-top: 1px;padding-bottom: 1px;}
+a.lwp-agendaItem:hover, .lwp-agendaItemPage:hover, .lwp-agendaItemSlide:hover {text-decoration: underline;color: #639ACE;font-weight: normal;}
+.lwp-selectedAgendaItem, a.lwp-selectedAgendaItem {background-color: rgb(49, 106, 197);padding-top: 1px;padding-bottom: 1px;color:#FFFFFF;line-height: 150%;text-decoration: none;font-weight: bold;}
+.lwp-selectedAgendaItem:visited, a.lwp-selectedAgendaItem:visited {color: #FFFFFF;}
+a.lwp-selectedAgendaItem:hover {background-color: rgb(49, 106, 197);padding-top: 1px;padding-bottom: 1px;color:#FFFFFF;line-height: 150%;text-decoration: underline;font-weight: bold;}
+.lwpProjectorHeaderStart { background-color: #70A8F0; border-top: 1px solid #777777;border-right: 0px none #777777;border-bottom: 0px none #777777;border-left: 1px solid #777777;	}
+.lwpProjectorHeaderMiddle {background-color: #70A8F0;border-top: 1px solid #777777;border-right: 0px none #777777;border-bottom: 0px none #777777;border-left: 0px none #777777;	color: #343434;font-weight: bold;}
+.lwpProjectorHeaderEnd {background-image: url("../../colors/default/projectorTableTopRight.gif");background-repeat: no-repeat;background-position: right top;background-color: transparent;}
+.lwpSlideTable {border-width: 1px;border-style: solid;border-color: #000000;}
+.lwpSlideTableHeadStart, .lwpSlideTableHeadMiddle, .lwpSlideTableHeadEnd {font-weight: bold;color: #989898;text-align: left;background-color: #ffffff;border-width: 0px 0px 0px 0px;border-style: solid;border-color: #000000;}
+.lwpSlideBorder{border-color: #b0b0c0;border-style: solid;border-width: 1px 1px 1px 1px;}
+.lwpAgendaFrameDiv{position:absolute;width:100%;visibility:hidden;bottom:0;border:1px solid rgb(233, 233, 233);background-color: rgb(246, 246, 246);top:80px;}
+.lwpAttendeesFrameDiv{width:100%;position:absolute;bottom:0;border:1px solid rgb(233, 233, 233);background-color: rgb(246, 246, 246);visibility:hidden;overflow:auto;top:26px;}
+.lwpDownloadsFrameDiv{width:100%;position:absolute;bottom:2px;visibility:hidden;top:26px;}
+.lwpHostingStarted {font-size: 1.1667em;font-weight: bold;color: #FFFFFF;}
+.lwpHostingStartedLarge {font-size: 1.1667em; font-weight: bold;color: #FFFFFF;}
+.lwp_labelNormalStyle, a.lwp_labelNormalStyle, a.lwp_labelNormalStyle:visited, a.lwp_labelNormalStyle:active {color: #000000; text-decoration: none;}
+.lwp_tdStyle {white-space:nowrap; padding:0px; }
+.lwp_linkTextStyle {text-decoration:none;}
+.lwp_nodeStyle {border-collapse: collapse; border-spacing:0px;}
+.lwp_nodeImageStyle {border-top: 0px; border-right: 0px; border-left: 0px; border-bottom: 0px; }
+.lwp_labelHighlightStyle, a.lwp_labelHighlightStyle, a.lwp_labelHighlightStyle:active, a.lwp_labelHighlightStyle:visited { font-weight: bold;text-decoration: none;color: #FFFFFF; background-color: #A0A0A0; padding-right: 5px;}
+.lwp_labelMouseoverStyle, a.lwp_labelMouseoverStyle:hover, a.lwp_labelMouseoverStyle:active {font-weight: normal;text-decoration: underline;color: #000000; }
+.lwp_labelDragoverStyle{font-weight: normal;text-decoration: underline;color: #000000; }
+.lwpFldNodeLableSpacing, .lwpFldNodeLabelSpacing {padding-left: 5px;}
+.lwpTreePanel {overflow: auto;height: 100%;width: 18em;}
+.lwpTreePanelBody {border-left: 1px solid #aaaaaa;border-right: 0px;border-top: 0px;border-bottom: 0px;}
+.lwpTreePanelHeader {background-color: #F0F0F0;border-left: 1px solid #aaaaaa;border-right: 0px;border-top: 1px solid #aaaaaa;border-bottom: 1px solid #aaaaaa;}
+.lwpTreePanelFooter {background-color: #F0F0F0;border-left: 1px solid #aaaaaa;border-right: 0px;border-top: 1px solid #aaaaaa;border-bottom: 1px solid #aaaaaa;}
+.lwpPeopleFlyoutExpanded {background-color: #DEDEDE;border-left: 1px solid #9A9A9A;border-right: 0px;border-top: 0px;border-bottom: 1px solid #DEDEDE;}
+.lwpPeopleFlyoutCollapsed {background-color: #DEDEDE;border-left: 1px solid #686868;border-right: 0px;border-top: 0px;border-bottom: 1px solid #DEDEDE;}
+.lwpPeopleFlyoutFrame {background-color: #DEDEDE;border-left: 1px solid #686868;border-right: 1px solid #686868;border-top: 1px solid #686868;border-bottom: 1px solid #686868;}
+.lwpTimeDateBorder {border:0px;} 
+.lwpTimeDateCalBorder { background-color: white;border-top: 1px none #aaaaaa;border-right: 1px solid #aaaaaa;border-bottom: 1px solid #aaaaaa;border-left: 1px solid #aaaaaa;}
+.lwpTimeDateCalText { font-weight: bold; }
+.lwpTimeDateDayName { text-align: center;font-weight: normal;vertical-align: middle;background-color: white;border-top: 1px none #aaaaaa;border-right: 1px none #aaaaaa;border-bottom: 1px solid #aaaaaa;border-left: 1px none #aaaaaa;}
+.lwpTimeDateDay { text-align: center;vertical-align: middle;background-color: white;border-width: 0px 0px 0px 0px;border-style: solid;border-color: #aaaaaa;}
+.lwpTimeDateWeekendDay { text-align: center;vertical-align: middle;background-color: white;border-width: 0px 0px 0px 0px;border-style: solid;border-color: #aaaaaa;}
+.lwpTimeDateDayLink { text-decoration:none;}
+.lwpTimeDateCalTop {border: 1px solid #aaaaaa;background-color: #eeeeee;}
+.lwpTimeDateSelectedCalTop { border: 1px solid #606098;background-color: #d0d0d0;}
+.lwpTimeDateSelectedDay { text-align: center;vertical-align: middle;background-color: #ffffff;}
+.lwpTimeDateSelectedDayLink { text-decoration:none;text-align: center;vertical-align: middle;background-color: #d0d0d0;}
+.lwpTimeDateSelectedWeek { text-decoration:none;text-align: center;vertical-align: middle;background-color: #d0d0d0;}
+.lwpTimeDateSelectedAllWeeks { text-decoration:none;text-align: center;vertical-align: middle;background-color: #e8e8e8;}
+.lwpTimeDateWeek { text-decoration:none;text-align: center;vertical-align: middle;background-color: #ffffff;border: 1px solid #aaaaaa;}
+.lwpTimeDateMonthRadio { text-decoration:none;text-align: center;vertical-align: middle;width:15px;border-right: 1px solid #aaaaaa;}
+.lwpTimeDateWeekRadioOn { text-decoration:none;text-align: center;vertical-align: middle;background-color: #d0d0d0;width:15px;border-color: #aaaaaa;border-right: 1px solid #aaaaaa;border-left: 1px solid #aaaaaa;}
+.lwpTimeDateWeekRadioOff { text-decoration:none;text-align: center;vertical-align: middle;background-color: #ffffff;width:15px;border-color: #aaaaaa;border-right: 1px solid #aaaaaa;border-left: 1px solid #aaaaaa;}
+.lwpTimeDateEmptyDayName { font-weight: normal;text-align: center;vertical-align: middle;background-color: #ffffff;width:15px;border-right: 1px solid #aaaaaa;border-left: 1px none #aaaaaa;border-bottom: 1px solid #aaaaaa;}
+.outerTreeStyle{color: WindowText;border-width: 0px;border-style: none;padding:0px;font-weight: 400;}
+.nodeStyle{padding: 0px;letter-spacing: 0;border-collapse: collapse;}
+.scrollStyle{overflow: auto;width: 200px;}
+.tdStyle{padding: 0px;width: 200px;	}
+.labelDragoverStyle{font-size: 11px;color: #000000;font-family: Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;font-style: italic;}
+.linkTextStyle{text-decoration: none}
+.classForTreeSysIcons {}
+.tdTreeTabStyle{padding: 0px;width: 200px;margin:0px}
+.tdTableStyle{width: 200px;padding:0px;margin:0px}
+.headerStyle{width: 200px;background-color: ThreeDFace;color: WindowText;border-width: 1px;border-style: solid;border-color: ThreeDShadow;margin:0px;padding:0px;}
+.tree{}
+.tree_outerTreeStyle{color: WindowText;border-width: 0px;border-style: none;padding: 0px;font-weight: 400;}
+.tree_nodeStyle {padding: 0px;letter-spacing: 0;border-collapse: collapse;margin: 0px;}
+.tree_scrollStyle{overflow: auto;width: 200px;}
+.tree_tdStyle{padding: 0px;width: 200px;	}
+.tree_labelNormalStyle {font-size: 11px;color: #000000;font-family: Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif; }
+.tree_nodeImageStyle {border-right: 0px;border-top: 0px;border-left: 0px;width: 19px;border-bottom: 0px;height: 16px}
+.tree_labelHighlightStyle{font-size: 11px;color: #000000;font-family: Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;font-weight: bold;}
+.tree_labelMouseoverStyle{font-size: 11px;color: #000000;font-family: Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;font-style: italic;}
+.tree_labelDragoverStyle{font-size: 11px;color: #000000;background-color: #bbbbbb;font-family: Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;font-style: italic;}
+.tree_linkTextStyle{text-decoration: none}
+.tree_classForTreeSysIcons {}
+.tree_tdTreeTabStyle{padding: 0px;width: 200px;margin:0px}
+.tree_tdTableStyle{width: 200px;padding:0px;margin:0px}
+.tree_headerStyle{width: 200px;background-color: ThreeDFace;color: WindowText;border-width: 1px;border-style: solid;border-color: ThreeDShadow;margin:0px;padding:0px;}
+.wpsEditorToolbar {max-height: 24px;background-color: #D8D8D8;border-top: 1px solid #aebccf;border-right: 1px solid #355787;border-bottom: 1px solid #355787;border-left: 1px solid #aebccf;border-top: 1px solid #cccccc;}
+.wpsEditorToolbarSection {border-width: 0px;}
+/* Table displaying the tools in this section */
+.wpsEditorToolbarSet {}
+tr.wpsEditorToolbar {padding: 0px 2px 0px 2px;} 
+table.wpsEditorToolbar {padding: 0px 0px 0px 0px;width: 100%;height: 24px;   background-color: #f0f0f0;border-top: 1px solid #cccccc;border-bottom: 0px solid #cccccc;border-left: 1px solid #cccccc;border-right: 1px solid #cccccc;background-color: white;background-image: url(/wps/DocEditor/images/editor_toolbar_gradient.gif);background-repeat:  repeat-x;background-position: 0px 0px;}    
+/* A normal toolbar button */
+.wpsEditorToolbarButton {padding: 3px;margin: 0px;border-width: 1px;border-style: none;}
+/* A toolbar button with the mouse hovering over it */
+.wpsEditorToolbarButtonRollover {background-color: WHITE;margin:0px;padding: 2px;border-top: 1px solid WHITE;border-right: 1px solid WHITE;border-bottom: 1px solid WHITE;border-left: 1px solid WHITE;}
+/* A toolbar button with the mouse button pressed or selected */
+.wpsEditorToolbarButtonPressed {background-color: #d8d8d8;margin:0px;padding: 2px;border-top: 1px solid #888888;border-right: 1px solid #d8d8d8;border-bottom: 1px solid #d8d8d8;border-left: 1px solid #888888;}
+/* A selected toolbar button */
+.wpsEditorToolbarButtonSelected {background-color: #aeb8c4;margin:0px;padding: 2px;border-top: 1px solid #95a5b9;border-right: 1px solid #e4edf5;border-bottom: 1px solid #e4edf5;border-left: 1px solid #95a5b9;}
+/* A toolbar button with the mouse hovering over it */
+.wpsEditorToolbarButtonSelectedRollover {background-color: #aeb8c4;margin:0px;padding: 2px;border-top: 1px solid #e4edf5;border-right: 1px solid #95a5b9;border-bottom: 1px solid #95a5b9;border-left: 1px solid #e4edf5;}
+/* An icon displayed on a toolbar button */
+.wpsEditorToolbarButtonIcon {width: 18px;height: 18px;margin:0px;padding:0px;}
+/* A toolbar area displaying non-button controls such as text, or a dropdown */
+.wpsEditorToolbarControl {padding: 1px 1px;}
+/* A toolbar area displaying non-button controls such as text, or a dropdown */
+select.wpsEditorToolbarControl {border-top: 1px solid #cccccc;border-bottom: 1px solid #cccccc;border-left: 1px solid #cccccc;border-right: 1px solid #cccccc;}
+/* Text on the toolbar */
+.wpsEditorToolbarText {color: #333333;}
+/* A link on the toolbar */
+.wpsEditorToolbarLink, .wpsEditorToolbarLink:hover, .wpsEditorToolbarLink:visited, .wpsEditorToolbarLink:active {color: #333333 ;}
+/* A separator between groups of toolbar items */
+.wpsEditorToolbarSeparatorNew {background-color: #355787;height: 18px;width: 5px;margin: 0px;padding: 0px;border-top: 0px none #305080;border-bottom: 0px none #305080;border-left: 1px none #aebccf;}
+/* A separator between groups of toolbar items */
+.wpsEditorToolbarSeparator {background-image: url(/wps/DocEditor/images/separator.gif);margin: 0px;padding: 0px 7px 0px 7px;}
+/* A spacer between groups of toolbar items  */
+.wpsEditorToolbarSpacer {padding: 0px 2px 0px 2px;}
+/* A separator between groups of toolbar items */
+.wpsEditorToolbarHandle {background-color: #c5d1de;padding: 0px;margin: 0px;width: 1px;border-top: 1px solid #e4edf5;border-right: 1px solid #95a5b9;border-bottom: 1px solid #95a5b9;border-left: 1px solid #e4edf5;}
+.wpsEditorTextArea {background-color: #fff;border: 1px solid #cccccc;padding: 0px;margin: 0px;}
+.wpsEditorTextAreaText {margin: 0px;  padding: 0px;border: 0px none;}
+.clearing {clear: both;}
+.layoutRow {width: 100%;}
+.layoutColumn {width: 100%;}
+.generalErrorText {	color: red;}
+.portlet-separator { margin:0px; line-height:1px;background-color: #999999;}
+.ibm-portlet-section-header {border-bottom: 1px solid #E0E0E0;}
+.information {color: #888; margin-bottom: 0.4em;}
+.ibm-portlet-section-body {width: 100%;clear: both;}
+.ibm-portlet-item-summary-list {padding:0;margin:0}
+.ibm-portlet-item-summary-list UL {padding: 0; margin: 0;}
+.ibm-portlet-item-summary-list LI {padding: 0; margin: 0; list-style: none;}
+.ibm-portlet-item-summary-list .ibm-portlet-item-summary {margin-bottom: 2em;}
+.centered-div-outer {overflow: hidden;position: relative; width: 100%;}
+.centered-div-outer[class] {display: table; position: static;}
+.centered-div-outer .centered-div-middle {position: absolute; top: 50%; text-align: center; width: 100%;} /* IE only */
+.centered-div-outer .centered-div-middle[class] {display: table-cell; vertical-align: middle; position: static;}
+.centered-div-outer .centered-div-middle .centered-div-inner {position: relative; top: -50%} /* IE only */
+.ibm-portlet-item-summary-list .ibm-portlet-item-summary {margin-bottom: 2em;}
+.ibm-portlet-item-summary H3 {margin:0;padding:0;display:inline; ;font-weight:normal;}
+.ibm-portlet-item-summary UL.property-list {margin: 0.05em 0; padding:0; width: 100%;}
+.ibm-portlet-item-summary UL.property-list LI {display: inline; color: gray; float: left; margin: 0; margin-right:0.5em; padding: 0; list-style-type: none;}
+.ibm-portlet-item-summary PRE.text {font-family: Helvetica, Arial, sans-serif; font-size: 1em;margin:0;padding:0;}
+.ibm-portlet-item-summary .abstract {padding: 0; margin-top: 0.75em;}
+.ibm-portlet-item-summary .abstract P {margin-top:0;padding-top:0;}
+.ibm-portlet-item-summary .item-affordance TD {padding-top: 0.7em; padding-bottom: 0.7em;}
+.ibm-portlet-item-summary .item-affordance TD.locked-icon {padding:0; vertical-align: top; text-align: right;}
+.ibm-portlet-item-summary .item-affordance TD.icon {vertical-align: middle; padding-left: 1.5em; padding-right: 1.5em;}
+.ibm-portlet-item-summary .item-affordance UL.property-list {padding-left: 0.7em;}
+.ibm-portlet-item-summary .item-affordance TD.folder .abstract {padding: 0 0.6em; margin-top: 0.75em;}
+.ibm-portlet-item-summary .item-affordance TD.document .abstract {padding: 0 0.6em; margin-top: 0.75em;}
+* HTML .ibm-portlet-item-summary .item-affordance TD .drag-image {margin-right: 10px;}
+*:first-child+html .ibm-portlet-item-summary .item-affordance TD .drag-image {margin-right: 10px;}
+TABLE.ibm-portlet-table-summary .ibm-portlet-item-summary DIV.name-indent {padding: 0 0.6em;}
+TABLE.ibm-portlet-table-summary .ibm-portlet-item-summary H3 A.folder-link,
+TABLE.ibm-portlet-table-summary .ibm-portlet-item-summary H3 A.folder-link:visited {color: #0063DC;}
+TABLE.ibm-portlet-table-summary .ibm-portlet-item-summary H3 A.document-link,
+TABLE.ibm-portlet-table-summary .ibm-portlet-item-summary H3 A.document-link:visited {color: #0063DC;}
+A.document-link { color: #0063DC; text-decoration: none; }
+A.document-link:visited { color: #0063DC; }
+A.document-link:hover { text-decoration: underline; }
+.ibm-portlet-sidebar .info-section UL.property-list {margin: 0;padding: 0;}
+.ibm-portlet-sidebar .info-section UL.property-list LI {margin: 0;padding: 0;margin-bottom: 0.5em;list-style: none;}
+.ibm-portlet-sidebar .info-section UL.property-list LI LABEL {color: #888;}
+/* .palette {background-color: white;} */
+/* Header */
+.palette h5{color: #FFFFFF !important;background-color: #578adb;background: #578adb url(../../colors/default/toolbar_background.gif) repeat-x;font-size: 1.333em;border: 1px solid;border-right: 0px;border-color: #97A9C1;height: 48px;margin-top: 0px; margin-bottom: 0px;}
+.palette h5 div{margin-top: 18px;margin-left: 10px;}
+/* Hidden forms cause extra whitespace if display is not set to inline */
+.palette form{display: inline;}
+/* Search box */
+.contentTypeSearch{background-color: #E8EBF1;color: #7A93BB;margin-top: 0px;margin-bottom: 0px;}
+.contentTypeSearch table{margin-left: 10px;}	
+/* Selected category title */
+.categoryTitleExpanded{background: url(../../colors/default/palette_selected_cat.gif ) repeat-x;background-position: top;background-color: #E8EBF1;font-size: 0.9166em;font-family: arial;padding: 5px 10px;color: #7A93BB;margin-bottom: 0px;}
+/* Unselected category title */
+.categoryTitleCollapsed{background: url(../../colors/default/palette_unselected_cat.gif ) repeat-x;background-position: top;background-color: #E8EBF1;font-family: arial;font-size: 0.9166em;color: #7A93BB;padding: 5px 10px;margin-bottom: 0px; }
+/* hide the contents of a category when unselected */
+.contentItemListCollapsed{display: none;}
+/* An Item in a category */
+.contentItem{font-weight: normal;font-family: arial;font-size: 0.9166em;color: #4E4E4E;}
+/* An Item in a category */
+.contentItemGrayed{font-weight: normal;font-family: arial;font-size: 0.9166em;color: #C6C6C6;}
+.contentItemHover{font-weight: normal;font-family: arial;font-size: 0.9166em;color: #4E4E4E;}
+.contentItemGrayedHover{font-weight: normal;font-family: arial;font-size: 0.9166em;color: #C6C6C6;}
+/* the icon associated with the item */
+.contentItemIcon{vertical-align: middle; border: 0px;}
+/* Only display the item context menu when hovering over the item */ 
+.contentItem button{visibility: hidden;}
+.contentItemHover button{visibility: visible;}
+.contextMenu{border: 0px; background-color: transparent;}	
+.actionMainArea{margin: 4px;}
+.actionFooter{margin-top: 4px;}
+.dropActive{border: 1px solid #FF9000;}
+.dropAware{border: 1px solid #FFEBC5;}
+/* Top level container for the person menu */
+.personMenu { border:1px solid rgb(224,224,224); background-color:rgb(245,248,255); font-family:Helvetica, Arial, sans-serif; font-style:normal; margin:0px; padding:0px; -moz-border-radius: 7px; }
+.personMenu a { color:#0063dc; text-decoration:underline; }
+.semtag_header { }
+/* Container for business-card photo */
+.photoCard { float:left; margin:10px 5px 10px 10px; padding:0px; }
+.photoCard img { border:1px solid rgb(192,192,192); padding:2px ! important; height:115px; width:115px; background-color:white; }
+/* Container for business-card */
+.businessCard { float:right; margin:11px 3px; padding-top:0px; line-height:1.7em; }
+/* List for displaying business card information */
+.businessCard ul { list-style-type:none; margin:0px; padding-left:0px }
+.businessCard .cardName { color:black; font-weight:bold; font-size:1.3em; }
+.businessCard li { color:black; font-size:1.2em; }
+.businessCard a { text-decoration:underline; }
+/* Container for person menu actions */
+.personMenuActions { clear:both; background-color:white; width:100%; padding:0px; margin-bottom:0px; border-top:1px solid #ACB9CD; }
+/* Styles for menu list */
+.personMenuActions ul { padding:0px; margin:0px; list-style:none; }
+.personMenuActions li { }
+/* Styles for the hover */
+.menu_drop_icon { color:black; font-family: Arial, Tahoma, Verdana, Helvetica, sans-serif; font-size:1.0em; background-color:#e2eeff; border:1px solid #ACB9CD; padding:3px 5px; -moz-border-radius: 7px; }
+.menu_drop_icon img { border:none; }
+a.menu_drop_icon { background: url(../menu_dropdown.gif) no-repeat scroll center; }
+a.menu_drop_icon:link, a.menu_drop_icon:visited{ color:#000; text-decoration:none; }
+a.menu_drop_icon:hover { background: url(../menu_dropdown.gif) no-repeat scroll center; }
+.hasHover { border-bottom: 1px dotted #306bc4; }
+/* Values specific to popup menu */
+.personMenu { width:400px; }
+.personMenu .photoCard { }
+.personMenu .photoCard img { }
+.personMenu .businessCard { width:258px; }
+.personMenu .businessCard ul { }
+.personMenu .businessCard .cardName { }
+.personMenu .businessCard li { }
+.personMenu .businessCard a { }
+.personMenu .personMenuActions { -moz-border-radius: 7px; }
+.personMenu .personMenuActions tr, .personMenu .personMenuActions td { border-width:0px; padding:0px; margin:0px; -moz-border-radius: 7px; }
+.personMenu .personMenuActions a { color:black; font-size:1.2em; text-decoration:none; border: solid 1px; display:block; padding:1px 2px 1px 5px; -moz-border-radius: 7px; }
+.personMenu .personMenuActions a:link, .personMenu .personMenuActions a:visited { border-color: white; }
+.personMenu .personMenuActions a:hover, .personMenu .personMenuActions a:active { background-color:#e2eeff; border-color: #8bb5e8; }
+.personMenu .personMenuActions a:focus, .personMenu .personMenuActions a:active { background-color:#e2eeff; border-color: #8bb5e8; }
+/** Styles for popup person card **/
+.personMenu #levelOne {clear:left;margin:12px 0 5px;padding:0 0 0 125px;}
+.personMenu #levelOne #photo {float:left;margin:0 0 0 -113px;padding:3px !important; border:1px solid #c2c2c4;background-color:#fff;}
+.personMenu #levelOne #fn {font-size:1.2em;font-weight:bold;margin:3px 0px 0px;padding:0;}
+.personMenu #levelOne #noProfileMsg {padding-top:10px;}
+.personMenu #levelOne h3 {font-size:1.1em;font-weight:normal;margin:0;padding:0;}
+.personMenu #levelTwo {border-top:1px solid #e3e3e4;clear:left;margin:0;padding:5px 0}
+.personMenu #levelTwo #applicationLinks {padding-left:12px;}
+.personMenu #levelTwo .actions{margin:0;padding:0}
+.personMenu #levelTwo .actions li{display:inline;margin:0 0 0 -4px;padding:0 10px;border-left:1px solid #ccc;}
+.personMenu #levelTwo .actions li.first{margin-left:0;padding-left:0;border-left-width:0;}
+.personMenu #levelTwo .actions li.first, .personMenu #levelTwo .actions li.last{margin-left:-5px;padding-left:0;border-left-width:0;}
+.personMenu #levelTwo .actions a, .personMenu #levelTwo .actions a:visited{color:#105cb6 !important;text-decoration:underline !important;border-bottom:0 !important;}
+.personMenu #levelTwo .actions a:hover, .personMenu #levelTwo .actions a:focus{color:#05386b !important;text-decoration:underline !important;border-bottom:0 !important;}
+.active span, .online {background:transparent url("../images/active.gif") 0 4px no-repeat;padding-left:18px}
+.away span {background:transparent url("../images/away.gif") 0 4px no-repeat;padding-left:18px}
+.meeting span {background:transparent url("../images/meeting.gif") 0 4px no-repeat;padding-left:18px}
+.dnd span {background:transparent url("../images/dnd.gif") 0 4px no-repeat;padding-left:18px}
+.mobileActive span {background:transparent url("../images/mobileactive.gif") 0 4px no-repeat;padding-left:18px}
+.mobileAway span {background:transparent url("../images/mobileaway.gif") 0 4px no-repeat;padding-left:18px}
+.mobileMeeting span {background:transparent url("../images/mobileinameeting.gif") 0 4px no-repeat;padding-left:18px}
+.mobileDnd span {background:transparent url("../images/mobiledonotdisturb.gif") 0 4px no-repeat;padding-left:18px}
+.away span a.online, .meeting span a.online, .dnd span a.online, .mobileAway span a.online, .mobileMeeting span a.online, .mobileDnd span a.online, .online {font-weight:normal}
+/* Container for extended business-card */
+.businessCardExtended { border:1px solid rgb(241,241,241); background-color:F1F1F1; float:left; margin:3px 3px; padding-top:0px; line-height:1.2em; }
+/* List for displaying extended business card information */
+.businessCardExtended ul { list-style-type:none; margin:0px; padding-left:0px }
+.businessCardExtended .cardName { color:black; font-weight:bold; font-size:1.1em; }
+.businessCardExtended li { color:black; font-size:1.0em; }
+.businessCardExtended a { text-decoration:underline; }
+.toggle { float:right; margin:1px 1px 1px 1px; padding:0px; }
+.toggle img { float:right; }
+/*.personMenu .businessCardExtended { width:358px; }*/
+.personMenu .businessCardExtended { width:390px; }
+.personMenu .businessCardExtended ul { }
+.personMenu .businessCardExtended .cardName { }
+.personMenu .businessCardExtended li { }
+.personMenu .businessCardExtended a { }
+.personMenu .toggle { width:390px;}
+.personMenu .toggle img{ float:right;}
+/* Values specific to inline menu */
+.X-person-display-inline .personMenu {}
+.X-person-display-inline .personMenu .photoCard {}
+.X-person-display-inline .personMenu .photoCard img {}
+.X-person-display-inline .personMenu .businessCard {}
+.X-person-display-inline .personMenu .businessCard ul {}
+.X-person-display-inline .personMenu .businessCard .cardName {}
+.X-person-display-inline .personMenu .businessCard li {}
+.X-person-display-inline .personMenu .personMenuActions {}
+.X-person-display-inline .personMenu .personMenuActions ul {}
+.X-person-display-inline .personMenu .personMenuActions li {}
+.X-person-display-inline .personMenu .personMenuActions a:link, .X-person-display-inline .personMenuActions a:visited{}
+/* hyper link for Person Menu */
+.hyperLink { color:black; text-decoration:none; }
+/* Fix some rtl issues */
+.dijitRtl .wpsPagingTableHeaderEnd { background-image: url(../../colors/default/PagingTableTopRight_rtl.gif); background-position: left top; }
+.dijitRtl .wpsPagingTableFooterEnd { background-image: url(../../colors/default/PagingTableBottomRight_rtl.gif); background-position: left bottom; }
+.dijitRtl .wpsPagingTableHeaderStart { border-width: 1px 1px 0 0; border-style: solid solid none none; }
+.dijitRtl .wpsPagingTableFooterStart { border-width: 0 1px 1px 0; border-style: none solid solid none; }
+.dijitRtl .wpsPortletSelectedTabTopStart { background-image: url(../../colors/default/PortletSelectedTabTopRight.jpg); background-position: right bottom; }
+.dijitRtl .wpsPortletTabTopStart { background-image: url(../../colors/default/PortletTabTopRight.jpg); background-position: right bottom; }
+.dijitRtl .wpsPortletSelectedTabMiddleStart, .dijitRtl .wpsPortletTabMiddleStart, .dijitRtl .wpsPortletSelectedTabBottomStart, .dijitRtl .wpsPortletTabBottomStart { border-width: 0 1px 0 0; border-style: none solid none none; }
+.dijitRtl .wpsPortletSelectedTabTopEnd { background-image: url(../../colors/default/PortletSelectedTabTopLeft.jpg); background-position: left bottom; }
+.dijitRtl .wpsPortletTabTopEnd { background-image: url(../../colors/default/PortletTabTopLeft.jpg); background-position: left bottom; }
+.dijitRtl .wpsPortletSelectedTabMiddleEnd, .dijitRtl .wpsPortletTabMiddleEnd, .dijitRtl .wpsPortletSelectedTabBottomEnd, .dijitRtl .wpsPortletTabBottomEnd { border-width: 0 0 0 1px; border-style: none none none solid; }
+÷æù	Ñ      UHë◊UHë◊;/"UO)V   ]:http://portal.koreatech.ac.kr/EnhancedTheme/themes/html/Enhanced/css/defaultTheme/styles.jsp necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:48:06 GMT
+Server: IBM_HTTP_Server
+Cache-Control: public, max-age=432000, post-check=172000, max-age=3600
+Expires: Tue, 05 May 2015 10:48:06 GMT
+Content-Type: text/css;charset=ISO-8859-1
+Content-Language: en-US
+ uncompressed-len 0  s!

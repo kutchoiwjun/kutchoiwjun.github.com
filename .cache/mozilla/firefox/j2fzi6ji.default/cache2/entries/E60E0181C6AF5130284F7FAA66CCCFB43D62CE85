@@ -1,0 +1,2405 @@
+var ie = document.all;
+var clientAgent = navigator.userAgent;
+var repeat = 1;
+var onbeforeunload_flag = true;
+var gCurrentEditorType = 'Html';
+var autosave_check;
+var error_addr = []; // 검색되지 않은 주소
+var change_addr = []; // 자동으로 변경된 주소
+var exist_addr = []; // 중복 주소
+var uploader;
+var agreeMailSend = false;
+var receiverValitdateSubmit = true; // 유효성 체크 후 바로 발송할것인가?
+var CallType = {
+	POPUP:"POPUP",
+	HTML:"HTML"
+};
+/**
+ * 에디터 타입
+ */
+var EditorType = {
+	CKEditor:'ck',
+	DaumEditor:'daum'
+};
+
+var writeform = {
+	/**
+	 * 일반 작성
+	 */
+	NORMAL:0,
+	/**
+	 * 답장
+	 */
+	REPLY:1,
+	/**
+	 * 전달
+	 */
+	FORWARD:2,
+	/**
+	 * 임시보관한 메일 작성
+	 */
+	DRAFTS:3,
+	/**
+	 * 전체답장
+	 */
+	REPLY_ALL:4,
+	/**
+	 * 다중전달
+	 */
+	FORWARD_ATTACH:5,
+	/**
+	 * 회송
+	 */
+	RETURNING:6,
+	/**
+	 * 재전송
+	 */
+	RESEND:7,
+	
+	/**
+	 * 호출 방식
+	 */
+	callType : CallType.HTML,
+	
+	/**
+	 * 자동저장 INTERVAL (단위 : 초 )
+	 */
+	autosave_interval:0,
+	/**
+	 * ACTIVEX 사용여부
+	 */
+	use_active_upload_component:false,
+	/**
+	 * 자동저장 작동여부
+	 */
+	run_autosave:true,
+	default_font:"돋움",
+	/**
+	 * 메일 발송전 취소 가능 시간 (단위 : 초)
+	 */
+	mail_cancel_time:0,
+	
+	/**
+	 * 메일발송 전 취소 타이머 변수
+	 */		
+	countdownTimer:null,
+	/**
+	 * 카운트 시간 
+	 */	
+	countdownSec:0,
+	/**
+	 * 메일 발송전 본문 미리보기 기능
+	 * 0 : 사용안함
+	 * 1 : 모든메일
+	 * 2 : 중요메일
+	 */
+	preview_mode:0,
+	
+	newEmailList:null,
+	/**
+	 * 메일작성 폼 초기화
+	 */	
+	init:function(){
+		
+		//에디터에 본문을 삽입한다.
+		editor.loadContent();
+				
+		// ACTIVEX 사용시 컴포넌트에 버젼 및 키를 저장한다.
+		if( !writeform.use_activex_upload_component ){
+			//plupload 업로드 컴포넌트 테이블 처리
+			$("#attach_file").fixheadertable({
+				theme:"mail_attach"
+	    	});
+		}
+		
+		// 모달창 등록
+		write_modal.init();
+		
+		log.debug( "writeform.autosave_interval : "+ writeform.autosave_interval );
+		if(writeform.autosave_interval != 0){
+		    //writeform.autosave_interval = 10000;
+			autosave_check = setInterval( autosave , writeform.autosave_interval );
+		}
+		
+		log.debug("uploadComponent.setAttachInfo()..");
+		
+		uploadComponent.setAttachInfo(); // 첨부파일 용량 계산
+				
+		var to = document.editForm.to.value;
+		var cc = document.editForm.cc.value;
+		var bcc = document.editForm.bcc.value;
+		
+		if( $.trim( to ).length > 0 ){
+			try{
+              document.editForm.subject.focus();
+            }catch(e){}
+		}else{
+		    try{
+		      document.editForm.to.focus();
+		    }catch(e){}
+		}
+		
+		// 참조나 숨은참조에 데이터가 있을 경우 cc/bcc 를 펼친다.
+		if( cc != '' || bcc !='' ){
+			writeform.showCc();
+		}
+				
+		// 언어설정에 따라서 기본 글씨체를 변경한다.
+		if( sensmail.language == 'ko'){
+			writeform.default_font = '돋움';
+		} else if( sensmail.language == 'en'){
+			writeform.default_font = 'Arial';
+		} else if( sensmail.language == 'ja'){
+			writeform.default_font = 'MS UI Gothic';
+		} else if( sensmail.language == 'zh'){
+			writeform.default_font = '宋体';
+		}
+		
+						
+		/*$("#to").elastic();
+        $("#cc").elastic();
+        $("#bcc").elastic();*/
+		
+		//$("#to").trigger('update');
+		//$("#cc").trigger('update');
+		//$("#bcc").trigger('update');
+		
+		// 모질라 키이벤트 안먹는 현상 대응
+		new AddKeyEvent("to");
+		new AddKeyEvent("cc");
+		new AddKeyEvent("bcc");
+		
+		//document.editForm.to.focus();
+		//log.debug("focus..");
+		
+		var pageFirst = $("#first").val();
+		//페이지 로드시 서명 입력을 할 수 있도록 하며 , 재발송 및 임시저장시에는 서명이 출력되지 않도록 한다.
+		if(/*$("#sign").val() != 0 && */pageFirst != writeform.DRAFTS && pageFirst != writeform.RESEND){
+			this.signSet($("#sign").val());
+		}
+		
+		// 제목 필드에서 탭키를 눌렀을때 에디터로 포커스 이동
+        shortcut.add("tab",function() {
+             editor.moveNextFocusAfterSubject();
+        },{
+            'type':'keydown',
+            'propagate':false,
+            'disable_in_input':false,
+            'target': document.editForm.subject
+        });
+        shortcut.add("tab",function() {
+        	document.editForm.subject.focus();
+        },{
+        	'type':'keydown',
+        	'propagate':false,
+        	'disable_in_input':false,
+        	'target': document.editForm.bcc
+        });
+        
+		// 메일작성 폼데이터를 가져온다.
+		try{
+		  layout.mode( menu.MAIL_WRITE );
+		}catch(e){}
+		
+		// 업로드 컴포넌트 위치를 바로 잡는다.
+		if(uploader) uploader.refresh();
+		
+		/* 수신자 입력방식 변경 */
+		$('#input_to').tagit({
+			allowDuplicates: true,
+            singleField: true,
+			editable: true,
+			sorteable: false,
+			allowSpaces: true,
+			singleFieldNode: $('#to'),
+			autocompleteAreaAppendObj: 'input_to'
+        });
+		
+		$('#input_cc').tagit({
+			allowDuplicates: true,
+            singleField: true,
+			editable: true,
+			sorteable: false,
+			allowSpaces: true,
+			singleFieldNode: $('#cc'),
+			autocompleteAreaAppendObj: 'input_cc'
+        });
+		
+		$('#input_bcc').tagit({
+			allowDuplicates: true,
+            singleField: true,
+			editable: true,
+			sorteable: false,
+			allowSpaces: true,
+			singleFieldNode: $('#bcc'),
+			autocompleteAreaAppendObj: 'input_bcc'
+        });
+		$(".tagit .tagit_input").bind("focus",function(){
+			$(this).parents(".tagit").css("background","#eff6f8");
+		});
+		$(".tagit .tagit_input").bind("blur",function(){
+			$(this).parents(".tagit").css("background","#fff");
+		});
+		//$( document ).on("focus",".test",function(){
+		//	$(this).parents(".tagit").css("background","#eff6f8");
+		//});
+
+		//if($("#tome").attr("checked")){
+		//	try {
+		//		$('#input_to').tagit('disableEdit');
+		//		$('#input_cc').tagit('disableEdit');
+		//		$('#input_bcc').tagit('disableEdit');
+		//	}catch(e){}
+		//}
+		/* 수신자 입력방식 변경 */
+		
+		$('#reserveTime').datepicker({
+			inline: false,
+			showOn: focus(),
+			changeMonth: true,
+			changeYear:true,
+			dayNames: ['','','','','','',''],
+			dayNamesMin: ["일","월","화","수","목","금","토"],
+			dayNamesShort: ["일","월","화","수","목","금","토"],
+			monthNames: ['','','','','','','','','','','',''],
+			monthNamesShort: ['01','02','03','04','05','06','07','08','09','10','11','12'],
+			dateFormat: 'yy-mm-dd',
+			duration: 10 
+		});
+		
+		
+		 /*오늘 날짜를 선택 될 수 있도록 한다. */
+		 var today = new Date();
+		 var nowYear = today.getFullYear();
+		 var nowMonth = today.getMonth() + ((today.getMonth() < 13) ? 1 : -1); 
+		 var strNowMonth = (nowMonth < 10)? "0"+nowMonth : nowMonth;
+		 var nowDate = today.getDate();  // 날짜
+		 var strNowDate = (nowDate < 10)? "0"+nowDate : nowDate;
+		 
+		 var setNowDate = nowYear+"-"+strNowMonth+"-"+strNowDate;
+		 $("#reserveTime").val(setNowDate);
+		
+		
+
+        // 화면이 새로고침 되었을때 예약발송 체크가 되어있으면 날짜를 입력
+        this.setReserve( document.getElementById("sendmode") );
+	}
+	/**
+	 * 기존 쓰기 폼 데이터를 리셋한다.
+	 * @returns {} 
+	 */
+	,reset:function(){
+		// 먼저 등록된 첨부파일 목록을 모두 제거한다.
+		uploadComponent.reset();
+	}
+	/**
+	 * 에디터 생성.. 
+	 */
+	,editorInit:function(){	    
+	    cfg.imageupload_url = app.contextPath +"/mail/text/uploadImage.do";
+	    cfg.language = sensmail.language;
+	    log.debug("language : "+ cfg.language ); 
+	    log.debug("cfg.imageupload_url : "+ cfg.imageupload_url);
+	    log.debug("cfg.language : "+ cfg.language);
+	    editor.init();
+	}
+	/**
+	 * 메일작성 설정을 불러온다. 
+	 */
+	,loadData:function( param ){
+				
+		var url = app.contextPath +"/mail/json/write.do";
+		$.ajax({
+			url: url ,
+			type : "POST" ,
+			data : param ,
+			cache : false,
+			dataType:"json",
+			async:false,
+			error:function(xhr,stats){
+				AjaxUtil.error( xhr );				
+			},
+			success:function( jsonData ){
+				 
+				// JSON으로 가져온 원본 메일 데이터를 메일작성 폼에 데이터를 적용한다.
+				var form = jsonData.MailWriteForm;
+				
+                $("#MailWriteForm input[name='first']").val( form.first );
+                $("#MailWriteForm input[name='ukey']").val( form.ukey );
+                $("#MailWriteForm textarea[name='to']").val( form.to );                
+                $("#MailWriteForm textarea[name='cc']").val( form.cc );
+                $("#MailWriteForm textarea[name='bcc']").val( form.bcc );                
+                $("#MailWriteForm input[name='subject']").val( form.subject );
+                $("#MailWriteForm input[name='fromname']").val( form.fromname );
+                $("#MailWriteForm input[name='tempKey']").val( form.tempKey );
+                                
+                // 보내는 메일 주소 데이터 추가             
+                $("#fromaddr").empty();
+                var emailList = jsonData.myEmailList;             
+                for( var i = 0 ; i < emailList.length ; i++ ){
+                    var email = emailList[i];
+                    $("#fromaddr").appendOption2( email , email );
+                }
+                $("#fromaddr").val( form.fromaddr );
+                
+                
+                // 본문 HTML이 잘못된 경우 바로 잡는다.                
+                var tempDiv = document.createElement("div");
+                var div_id = 'div_'+sensmail.dummy();
+                log.debug(div_id);
+                tempDiv.id = div_id;
+                tempDiv.innerHTML = form.prevHtml;                
+                
+                // 본문 추가
+                $("#prevHtml").val( tempDiv.innerHTML );
+                $("#"+div_id).remove();
+                                
+                // 나에게 발송 설정
+                if ( form.tome == 1 ){
+                    writeform.tome(true);
+                }
+                
+                // 수신인 개별발송
+                if ( form.is_each == '1' ){
+                    $("#is_each").attr("checked",true);
+                }
+                
+                // 문자셋 데이터 적용
+                $("#characterset").empty();
+                var charsetList = jsonData.charsetList;
+                for(var i = 0 ; i < charsetList.length ; i++){
+                    var charset = charsetList[i];
+                    $("#characterset").appendOption2( charset.name , charset.charset );                    
+                }
+                log.debug("characterset :"+ form.characterset);
+                $("#characterset").val( form.characterset );
+
+                // 서명 사용여부 설정
+                log.debug("use_sign :"+ form.use_sign);
+                if( form.use_sign == '1' ){
+                    $("#use_sign").attr("checked","checked");
+                    // 서명 설정
+                    $("#sign").val( form.sign );
+                    // 서명 선택창을 보이게한다.
+                    $("#sign_select_area").show();
+                }
+
+
+                                
+                // 최근수신자 목록
+                actb.latest = jsonData.latestlist;
+                
+                // 자동저장 주기 설정
+                writeform.autosave_interval = jsonData.autosave_interval;
+                
+                // 컴포넌트 종류 설정
+                writeform.use_activex_upload_component = jsonData.use_activex_upload_component;
+                                
+				// 업로드 컴포넌트 설정값 적용
+				uploadComponent.init( jsonData.uploadConfig );
+
+				// 발송 취소 가능 시간 정의
+                //writeform.mail_cancel_time = form.mail_cancel_time;
+                //log.debug("mail_cancel_time :"+ writeform.mail_cancel_time );
+				
+				// 미리보기 설정
+				writeform.preview_mode = jsonData.preview_mode;
+				log.debug( "writeform.preview_mode : "+ writeform.preview_mode );
+				$("input[name='preview_mode'][value="+ writeform.preview_mode +"]").attr("checked","checked");
+				
+				// 첨부파일 등록
+				//setTimeout(function(){
+				var attachList = form.attachmentsList;
+				
+				for( var i = 0 ; i < attachList.length ; i++ ){				    
+					try{
+					    var attach = attachList[i];    
+                        uploadComponent.addServerFile( attach.name , attach.size , attach.key, attach.attachType );
+					}catch(e){}
+				}
+				
+				// 자주 사용하는 주소 등록
+				var quick_addr_arr = jsonData.quick_addr;
+				var quick_addr_length = quick_addr_arr.length;
+				
+				var options = "<option value=\"0\">"+message.M0199+"</option>";
+				for(var i = 0 ; i < quick_addr_length ; i++){
+					var quick_addr = quick_addr_arr[i];
+
+					options += "<option value=\""+quick_addr+"\">"+quick_addr+"</option>";
+				}
+				options += "<option value=\"-1\" onclick=\"writeform.setQuickAddr();\">["+message.M0200+"]</option>";
+				
+				$("#to_quick_address").html(options);
+				$("#cc_quick_address").html(options);
+				$("#bcc_quick_address").html(options);		
+				$("#sensupload_component").unblock();
+				$("#sign1").val(jsonData.sign1);
+				$("#sign2").val(jsonData.sign2);
+				$("#sign3").val(jsonData.sign3);
+				$("#sign_position").val(jsonData.sign_position);
+				
+				if( jsonData.deny_mailsend ){
+					jAlert( message.M0219,function(){
+						history.back();
+					});
+				}
+    			//};, 500);
+			}
+		});
+	}
+	
+	/**
+	 * 메일쓰기 화면 레이아웃을 불러온다. 
+	 */
+	,loadForm:function( param ){	    
+		var url = app.contextPath +"/mail/html/write.do";
+		$.ajax({
+			url: url ,
+			type : "POST" ,
+			data : param ,
+			cache : false,
+			dataType:"html",
+			async:false,
+			beforeSend:function(){				
+				writeform.reset();				
+			},
+			error:function(xhr,stats){
+				AjaxUtil.error( xhr );				
+			},
+			success:function( writePane ){
+				
+				// 1. 디자인을 입히고
+				//$("#writePane").html( writePane );			
+				document.getElementById("writePane").innerHTML = writePane;
+				log.debug(" design ok..");
+				
+				// 2. 에디터 설정
+                writeform.editorInit();
+                log.debug(" editor ok..");
+				
+                // 3. 메일작성 설정을 가져오고
+                writeform.loadData( param );
+				log.debug(" loadConfig ok..");
+				
+				// 4. 메일작성 기능을 설정한다.
+				writeform.init();
+				log.debug(" init ok..");
+			}
+		});
+	}
+	,doSubmit:function(){
+		
+		var isAliveSession = sensmail.aliveSession();
+		log.debug("isAliveSession : "+ isAliveSession );
+		if( !isAliveSession ){			
+			return;
+		}
+		
+		if( writeform.preview_mode == 0){ //사용안함
+			writeform.send();				
+		}else if( writeform.preview_mode == 1 ){ // 모든메일
+			writeform.preview();
+		}else if( writeform.preview_mode == 2 ){ // 중요메일
+			if( $("#important").val() == '1' ){
+				writeform.preview();				
+			}else{
+				writeform.send();
+			}					
+		}		
+	}
+	,send:function(){
+		writeform.preview_close();
+		
+		var editForm = document.editForm;
+		editForm.tempsave.value = "0";
+		
+		if( writeform.valid() ){
+			writeform.receiverValidation("send"); //유효성 체크	
+		}
+	},
+	/**
+	 * 입력상태 검증
+	 */
+	valid:function(){
+		var editForm = document.editForm;
+		
+		// 더이상 자동저장을 하지 않도록 한다.
+		writeform.run_autosave = false;
+		if( autosave_check ){
+		    clearInterval( autosave_check );
+        }
+		
+		// 예약시간이 지금 시간보다 늦은 시간인지 체크
+		if( $("#sendmode").is(":checked") ){		
+			var now = new Date();
+			var getDate = $("#reserveTime").val();
+			getDate = getDate.replace(/([\d]{4})([\d]{2})([\d]{2})/,"$1-$2-$3");
+			var year = getDate.substring(0,4); 
+			var month = getDate.substring(5,7);
+			var day = getDate.substring(8,10);
+			
+			
+			var reservDate = new Date( year , month -1 , day , editForm.hour.value , editForm.minute.value , 0);
+			toNow = now.getTime();
+			toReserveDate = reservDate.getTime();
+			if( toNow > toReserveDate ){
+				jAlert( msg.get( message.M0116 ) );
+				return false;
+			}
+		}
+				
+		//var name_ptrn = /[@<>,]/;
+		//if(name_ptrn.test(fromname)) {
+		//	jAlert( msg.get( message.M0117 ) );
+		//	editForm.fromname.focus();
+		//	return false;
+		//}
+
+		// trim string
+		var strTo = editForm.to.value.replace(/(\s+$)/g,"");
+		strTo =  strTo.replace(/(^\s*)/g,"");
+		editForm.to.value = strTo;	
+			
+		if( editForm.is_secure.checked ){
+			if(editForm.secureValue.value == ""){
+				jAlert( msg.get( message.M0118 ) );
+				return false;
+			}
+		}
+
+		editForm.to.value = editForm.to.value.replace(/\r\n|\n/g,"");
+		editForm.cc.value = editForm.cc.value.replace(/\r\n|\n/g,"");
+		editForm.bcc.value = editForm.bcc.value.replace(/\r\n|\n/g,"");
+		editForm.to.value = editForm.to.value.replace(/;/g,",");
+		editForm.cc.value = editForm.cc.value.replace(/;/g,",");
+		editForm.bcc.value = editForm.bcc.value.replace(/;/g,",");
+
+		if ( $.trim(editForm.to.value) == "") {
+			jAlert( msg.get( message.M0114 ) );
+			editForm.to.focus();
+			return false;
+		}
+		
+		if ( $.trim(editForm.subject.value) == "") {
+			jAlert( msg.get( message.M0115 ) );
+			editForm.subject.focus();
+			return false;
+		}
+
+		if( editForm.characterset.value == "" ){
+			jAlert("Select valid mail encoding characterset.");
+			editForm.characterset.focus();
+			return false;
+		}
+		
+		return true;
+	}
+	/**
+	 * 팝업에서 새메일쓰기 버튼 클릭.
+	 */
+	,write:function(){
+		location.href=app.contextPath +"/mail/popup/write.do";
+	}
+	/**
+	 * 새창메일 쓰기 
+	 */
+	,popup_write:function(){
+        var url = app.contextPath +"/mail/popup/write.do";
+        var wname = sensmail.dummy();
+        var writeWin = window.open(url,wname,'width=980,height=700,scrollbars=yes,resizable=yes');
+        writeWin.focus();  
+	}
+	/**
+	 * 메일 발송 요청
+	 */
+	,sendProcess:function(){
+   		
+		var editForm = document.editForm;
+		
+		onbeforeunload_flag = false;
+		
+		editForm.body.value = editor.getHtml();
+		
+		editForm.body_src.value = editor.getText();		
+		
+		// 예약발송시 예약 시간 설정
+		if( $("#sendmode").is(":checked") ){
+			//예약메일로 설정된 데이트를 가져온다.
+			var getDate = $("#reserveTime").val();
+			getDate = getDate.replace(/([\d]{4})([\d]{2})([\d]{2})/,"$1-$2-$3");
+			editForm.reserverTime.value = getDate.substring(0,4) + getDate.substring(5,7) + getDate.substring(8,10) + editForm.hour.value + editForm.minute.value;
+		}
+		
+		$("#eachsend").attr("disabled", false);
+		$("#merge").attr("disabled", false);
+		
+		uploadComponent.setFile();
+				
+		$.ajax({
+			url : app.contextPath +"/mail/json/send.do",
+			type : "POST",
+			cache : false,
+			data : $("#MailWriteForm").serialize(),
+			dataType : "json",
+			async : true,
+			beforeSend:function(){
+			    // 임시저장은 프로그레스 바를 보여주지 않는다.
+			    if( document.editForm.tempsave.value == '0' ){
+			    	$("#sensupload_component").block({message:null});
+			        $("#mailsending").show();
+			    }
+			},
+			error: function( xhr ){
+				AjaxUtil.error( xhr );
+			},
+			success : function( jsonData ){
+				
+				var code = jsonData.code;
+				
+				// 발송 결과 오른쪽 아이콘 및 간단설정에 대한 처리
+				if( code == SendResult.SERVERERROR || code == SendResult.FAIL || code == SendResult.NORECEIVER ){ // 발송 오류
+				    $("#result_ico").removeClass("success");
+				    $("#result_ico").removeClass("draft");
+				    $("#result_ico").addClass("warning");
+				    $("#result_txt").html( message.M0222 );
+				}else if( code == SendResult.DRAFT ){ // 임시저장
+					$("#result_ico").removeClass("success");
+					$("#result_ico").removeClass("warning");
+				    $("#result_ico").addClass("draft");
+				    $("#result_txt").html( message.M0223 );
+				}else{ // 발송 성공
+				    $("#result_ico").removeClass("warning");
+				    $("#result_ico").removeClass("draft");
+                    $("#result_ico").addClass("success");
+                    $("#result_txt").html( message.M0221 );
+				}
+				
+				$("#send_result_txt").html( jsonData.send_result_txt );
+				
+				// 발송 상태에 대한 상세 설명에 대한 처리
+				if( jsonData.send_result_txt_desc ){
+					$("#send_result_txt_desc").html( jsonData.send_result_txt_desc );
+					$("#send_result_txt_desc").show();
+				}else{
+					$("#send_result_txt_desc").hide();
+				}
+				
+				// 새로운 주소 추가 
+				writeform.newEmailList = jsonData.newEmailList;
+				
+				if( writeform.newEmailList && writeform.newEmailList.length > 0 ){
+					var newEmailCount = writeform.newEmailList.length;
+					$("#newEmail_cnt").html( newEmailCount );
+					$("#newEmailArea").show();
+				}else{
+					$("#newEmailArea").hide();
+				}
+				
+				// 실패주소
+				var failList = jsonData.failList;
+				if( failList && failList.length > 0 ){
+					$("#failList").empty();
+					var failCount = failList.length;
+					$("#fail_cnt").html( failCount );
+					for( var i = 0 ; i < failCount ; i++ ){
+						var address = failList[i];						
+						$("#failList").append("<li><label>"+ address +"</label>");
+						//$("#failList").append("<li><label><input type=\"text\" class=\"config_input default\" value=\""+ address +"\" /></label><button type=\"button\" class=\"btn_bgtxt bk pd10\">재발송</button></li>");
+					}
+					$("#failListArea").show();	
+				}else{
+					$("#failListArea").hide();
+				}
+				
+				// 주소록 추가를 위하여 보낸메일함 키를 저장한다.
+				$("#sent_mail_key").attr("mail_key",jsonData.sent_mail_key);
+				
+                $("#writePane").hide();
+                // 메일작성 창의 내용을 모두 제거한다.
+				try{
+				    document.getElementById("writePane").innerHTML = "";
+				}catch(e){}
+				
+				$("#sendPane").show();
+				editor.destory();// 에디터를 제거한다.
+			},
+			complete:function(){
+                $("#sensupload_component").unblock();
+                $("#mailsending").hide();                
+			}
+		});
+	}
+	/**
+	 * 수신자 유효성 체크
+	 * @param type
+	 */
+	,receiverValidation:function( type ){
+		// trigger 추가(수신자 입력방식 변경에 따른)
+		$("#to").val( trimArray( $("#to").val() ) ).trigger('change');
+		$("#cc").val( trimArray( $("#cc").val() ) ).trigger('change');
+		$("#bcc").val( trimArray( $("#bcc").val() ) ).trigger('change');
+		
+		var check_value = user_check();
+		
+		if( check_value == 0 ){
+			
+			$("#sendcheck").empty();
+			$("#sendcheck_err").empty();
+			
+			if( error_addr.length == 0 ){
+			    			
+				if( exist_addr.length > 0 ){
+					var str = [] , n = -1;
+					str[++n] = message.M0182;
+					str[++n] = "<ul>";
+					for(var i = 0 ; i < exist_addr.length ; i++ ){
+						var addr = exist_addr[i];
+						var resultlist = addr.resultlist;
+						
+						str[++n] = "<li>"+addr.before_addr;
+						str[++n] = "<ul class=\"r_existaddr\">";
+						for(var j = 0 ; resultlist != null && j < resultlist.length ; j++ ){					
+							var recvinfo = resultlist[j];
+							var opt = "";
+							if( recvinfo.dept ){
+								opt += recvinfo.dept;
+							}
+							if( recvinfo.position ){
+								if( opt.length > 0 ){
+									opt += " / ";
+								}
+								opt += recvinfo.position;
+							}
+							if( opt.length > 0 ){
+								opt = "[ "+opt+" ]";
+							}	
+							var checked = "";
+							if( j == 0 ){
+								checked = "checked";
+							}
+							
+							var email_type = null;
+							if( recvinfo.source_type == 1 ){ //조직도
+								email_type = message.M0183;								
+							}else if( recvinfo.source_type == 2 ){//공공주소록
+								email_type = message.M0184;
+							}else if( recvinfo.source_type == 6 ){//주소록그룹
+								email_type = message.M0185;							
+							}
+							str[++n] = "<li title=\""+recvinfo.text+" "+opt+"\">";
+							str[++n] = "<input type=\"radio\" name=\""+i+"_"+addr.before_addr+"\" value=\""+recvinfo.email+"\"/ "+checked+">";
+							if( email_type != null ){
+								str[++n] = "("+email_type+") ";
+							}
+							str[++n] = recvinfo.text+" "+opt+"</li>";
+						}
+						str[++n] = "</ul>";
+						str[++n] = "</li>";
+					}
+					str[++n] = "</ul>";
+					$("#sendcheck").append( str.join('') );
+				}
+				if( !type ){
+					receiverValitdateSubmit = false;
+				}else{
+					receiverValitdateSubmit = true;
+				}
+				$("#modal_sendcheck").dialog("open");
+				
+			} else {
+				
+				if( error_addr.length > 0 ){
+					exist_str = "<ul>";
+					for(var i = 0 ; i < error_addr.length ; i++ ){
+						var addr = error_addr[i];
+						exist_str += "<li>"+addr.error_addr;
+						exist_str += "</li>";
+					}
+					exist_str += "</ul>";
+					$("#sendcheck_err").append( exist_str );
+				}			
+				$("#modal_sendcheck_err").dialog("open");			
+			}
+					
+		}else if( check_value == 1 ){
+			
+			replaceEmailAddress( change_addr , 1 );
+			writeform.startUpload();
+			
+		}else if( check_value == 2 ){ // 발송 중지
+		}
+	},
+	showCc:function(){
+		//document.getElementById("quickaddr_bcc").style.display = "";
+				
+		$(".mail_input_reference").show();		
+		$("#toggle_bcc").addClass("not");
+		$("#toggle_bcc").attr("show","true");
+				
+		// uploader 위치보정		
+		if(uploader) uploader.refresh();
+	},
+	hideCc:function(){
+		//document.getElementById("quickaddr_bcc").style.display = "none";
+		
+		$(".mail_input_reference").hide();
+		$("#toggle_bcc").removeClass("not");	
+		$("#toggle_bcc").attr("show","false");
+				
+		// uploader 위치보정
+		if(uploader) uploader.refresh();
+	},	
+	/**
+	 * 보안 메일 설정 ON/OFF
+	 */
+	doCheckSecurity:function(){
+		if(document.editForm.is_secure.checked && !document.editForm.is_secure.disabled ){
+			document.getElementById('idSecuHint').style.display="";
+			document.getElementById('idSecuValue').style.display="";
+		} else {
+			document.getElementById('idSecuHint').style.display="none";
+			document.getElementById('idSecuValue').style.display="none";
+		}
+	},
+	/**
+	 * 파일 업로드
+	 */
+	startUpload:function(){
+		
+		var isUpload = false;
+		
+		writeform.run_autosave = false; //발송을 하게 되면 더이상 자동저장을 하지 않도록 한다.
+		
+		if( writeform.use_activex_upload_component ){ // SENSUPLOAD
+			
+			var sensupload = document.getElementById('objFileUp');			
+			if( sensupload != null ){
+				if((typeof(sensupload) == "object") && (sensupload.GetFileCount > 0)){
+					isUpload = true;
+				}
+			}else {
+				jAlert( message.M0204 );
+			}
+			
+			if( isUpload ){
+				
+				// 첨부파일
+				sensupload.UrlPath = app.contextPath +"/mail/text/uploadFile.do";
+				log.debug("upload sensupload");
+				sensupload.UploadStart();
+				
+			} else {
+				
+				writeform.sendProcess();
+				
+			}
+			
+		}else{ // PLUPLOAD
+			if(uploader){
+				if(uploader.files.length > 0){
+					isUpload = true;
+				}
+			}
+			if( isUpload ){
+				
+				// 업로드 모달창에 현재 등록된 첨부파일의 정보를 이용하여 레이아웃을 만든다.
+				uploadComponent.uploadProgressInit();
+				
+				// 업로드 진행상황 창을 띄운다.
+				write_modal.openUploadModal();
+								
+				// 업로드를 시작하고, 업로드 완료이후에 doSubmit()을 호출하는데 호출하는 부분은 
+				// 아래쪽의 uploader.bind('UploadComplete',... 부분에서 처리함
+				uploader.start();
+			}else{
+				writeform.sendProcess();
+			}
+		}
+	}
+	/**
+	 * 예약발송기능 보임 ON/OFF 를 설정
+	 */
+	,displayReserve:function(flag){
+		if( flag ){
+			$("#reserve").show();
+		}else{
+			$("#reserve").hide();
+			// 예약발송을 못할경우에는 일반발송으로 강제 변경
+			$("#sendmode").val("0");
+		}
+	}
+	/**
+	 * 예약 메일설정
+	 */
+	,setReserve:function(obj){
+	    if( obj.checked ){	        
+	        // 예약발송 설정 SELECT 날짜 값 설정
+	    	initTime(document.editForm);
+            
+	        $("#reserve").show();          
+            $("#is_save").attr('checked','checked');
+            $("#is_receipt").attr('checked','checked');
+            $("#is_save").attr('disabled',true);
+            $("#is_receipt").attr('disabled',true); 
+	    }else{
+	        $("#reserve").hide();          
+            $("#is_save").attr('disabled',false);
+            $("#is_receipt").attr('disabled',false);
+	    }
+	}
+	,tome:function( flag ){
+		
+		log.debug("flag : "+ flag );
+		var thisToTextArea = $("#MailWriteForm textarea[name='to']").val();
+		/*var to_str = $("#to").val();*/
+		 
+		var fromname = $("#fromname").val();
+		var fromemail = $("#fromaddr").val();				
+		var to_str = "\""+ fromname +"\"<"+ fromemail +">,";
+		
+		
+		if( flag ){
+			$("#tome").attr("checked",true);
+			// trigger 추가(수신자 입력방식 변경에 따른)
+			$("#MailWriteForm textarea[name='to']").val( to_str + thisToTextArea ).trigger('change');	
+			
+			
+			/*$("#MailWriteForm textarea[name='cc']").val("").trigger('change');
+			$("#MailWriteForm textarea[name='bcc']").val("").trigger('change');			
+			$("#MailWriteForm textarea[name='to']").attr("disabled",true);
+			$("#MailWriteForm textarea[name='cc']").attr("disabled",true);
+			$("#MailWriteForm textarea[name='bcc']").attr("disabled",true);
+			$("#MailWriteForm input[name='is_secure']").attr("disabled",true);*/
+			
+			// 나에게 발송은 예약메일 금지
+			/*$("#MailWriteForm input[name='sendmode']").attr("checked",false);
+			$("#MailWriteForm input[name='sendmode']").attr("disabled",true);
+			writeform.setReserve( document.editForm.sendmode );*/
+			
+			/*writeform.doCheckSecurity();*/
+			
+			/* 수신자 입력방식 변경 */
+			/*try {
+				$('#input_to').tagit('disableEdit');
+				$('#input_cc').tagit('disableEdit');
+				$('#input_bcc').tagit('disableEdit');
+			}catch(e){}*/
+						
+		}else{
+			$("#tome").attr("checked",false);
+			// trigger 추가(수신자 입력방식 변경에 따른)
+			if( thisToTextArea.indexOf(to_str) != -1 ){
+				
+				thisToTextArea = thisToTextArea.replace(new RegExp(to_str,'gi'),"");
+				$("#MailWriteForm textarea[name='to']").val( thisToTextArea ).trigger('change');
+				
+			}
+			/*$("#MailWriteForm textarea[name='to']").attr("disabled",false);
+			$("#MailWriteForm textarea[name='cc']").attr("disabled",false);
+			$("#MailWriteForm textarea[name='bcc']").attr("disabled",false);
+			$("#MailWriteForm input[name='is_secure']").attr("disabled",false);
+			$("#MailWriteForm input[name='sendmode']").attr("disabled",false);
+									
+			writeform.doCheckSecurity();
+			
+			// 수신자 입력방식 변경 
+			try {
+				$('#input_to').tagit('enableEdit');
+				$('#input_cc').tagit('enableEdit');
+				$('#input_bcc').tagit('enableEdit');
+			}catch(e){}*/
+		}
+	}
+	/**
+	 * 나에게 체크박스 변경
+	 */
+	,sendtome:function(obj){		
+		try{
+			hideSelectList();//자동완성 리스트를 감춘다.
+		}catch(e){}
+		
+		if( obj.checked ){
+			/*if( confirm( message.M0046 ) ){*/
+				writeform.tome( true );
+			/*}else{
+				obj.checked = false;				
+			}*/
+		}else{			
+			writeform.tome( false );
+		}
+	}
+	/**
+	 * 휴효성 체크 후 발송
+	 * @return
+	 */
+	,usercheck_send:function(){
+		replaceEmailAddress( change_addr , 1 );
+		replaceEmailAddress( exist_addr , 2 );
+		$("#modal_sendcheck").dialog("close");
+		if( receiverValitdateSubmit ){
+		    //[IS-00010]수정
+			//writeform.sendProcess();
+			wirteform.startUpload();
+		}
+	},	
+	/**
+	 * 임시 저장
+	 */
+	tempsave:function(){
+		
+		document.editForm.tempsave.value = "1";
+		this.signSelect(4);
+		if( writeform.valid() ){
+			writeform.receiverValidation("tempsave"); //유효성 체크	
+		}
+	}
+	/**
+	 * 발송 취소
+	 */
+	,cancel:function(){
+		clearUnload();
+		if( writeform.callType == CallType.POPUP ){
+			window.close();
+		}else{
+			history.back();
+		}
+	}
+	/**
+	 * 화면 닫기
+	 */
+	,close:function(){
+		self.close();
+	}
+	/**
+	 * 메일형식으로 변경한다. 일반,외부결재,내부결재
+	 */
+	,sendtype:function( type ){
+		
+		var to_str = $("#to").val();		
+		$(".sendtype").removeClass("active");
+		
+		// 일반메일
+		if(type == 0 ){
+			
+			$(".default_mail").addClass("active");			
+			$("#approval_flag").val("0");	
+			$("#apDiv").hide();
+			$("#writeform_from").show();
+			// trigger 추가(수신자 입력방식 변경에 따른)
+			$("#to").val("").trigger('change');
+			$("#cc").val("").trigger('change');
+			$("#bcc").val("").trigger('change');
+			$("#writeform_to").show();
+			$("#mail_input_reference").show();			
+			writeform.hideCc();
+			
+			writeform.displayReserve(true);			
+						
+		//외부결재용
+		}else if(type == 1){		
+			$(".outside_mail").addClass("active");			
+			$("#approval_flag").val("1");
+			$("#apDiv").show();
+			$("#writeform_from").show();
+			// trigger 추가(수신자 입력방식 변경에 따른)
+			$("#to").val("").trigger('change');
+			$("#cc").val("").trigger('change');
+			$("#bcc").val("").trigger('change');
+			$("#writeform_to").show();
+			$("#mail_input_reference").show();						
+			writeform.hideCc();
+			
+			writeform.displayReserve(false);
+			
+		//내부결재용
+		}else{		
+		
+			$(".inside_mail").addClass("active");
+			$("#approval_flag").val("2");
+			$("#apDiv").show();
+			$("#writeform_from").hide();
+			$("#writeform_to").hide();
+			$("#mail_input_reference").hide();
+			
+			var fromname = $("#fromname").val();
+			var fromaddr = $("#fromaddr").val();							
+			var to_str = "\""+ fromname +"\"<"+ fromaddr +">";		
+			// trigger 추가(수신자 입력방식 변경에 따른)
+			$("#to").val( to_str ).trigger('change');
+			$("#cc").val("").trigger('change');
+			$("#bcc").val("").trigger('change');
+			
+			writeform.displayReserve(false);
+									
+		}
+		// uploader 위치보정
+		if(uploader) uploader.refresh();
+	}
+	/**
+	 * 결재라인 선택 popup 창
+	 */
+	,doAp:function(){
+		if(!document.editForm.apUser.value == ''){
+		    jConfirm( message.M0175, message.M0112 , function(){
+		        writeform.popup_apline();
+		    });
+		}else{
+		    writeform.popup_apline();    
+		}
+	},
+	popup_apline:function(){
+	    document.editForm.apUser.value = "";
+        window.open(app.contextPath + '/approval/popup/line.do','addrWin','toolbar=no,width=600,height=500,top=0,left=0;directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no');
+	}
+	/**
+	 * 참조/숨음참조 입력란 show/hide 
+	 */
+	,toggle_bcc:function(){
+		
+		if( $("#toggle_bcc").attr("show") == 'true' ){
+			writeform.hideCc();
+		}else{				
+			writeform.showCc();	
+		}
+	}
+    ,toggle_option:function(){
+        if( $(".option_extend").css("display") == "none" ){
+            $("#toggle_option").addClass("not");
+            $(".option_extend").show();
+        }else{
+            $("#toggle_option").removeClass("not");
+            $(".option_extend").hide();
+        }
+    }
+	/**
+	 * 템플릿 선택창을 호출한다.
+	 */
+	,popupTemplate:function(){
+		window.open(app.contextPath + '/mail/popup/template/list.do','templateSelect','toolbar=no,width=800,height=600,top=0,left=0;directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no');
+	}
+	/**
+	 * 웹하드 첨부파일 추가
+	 */
+	,addWebhardFile:function(){
+		window.open(app.contextPath + '/mail/popup/webhard.do', 'webhardSelect','toolbar=no,width=955,height=400,directories=no,status=no,scrollbars=yes,resizable=Yes,menubar=no');
+	}
+	/**
+	 * 사용자가 설정한 서명 위치에 따라 에디터에 삽입하며, 선택한 서명을 에디터에서 삽입/교체 될 수 있도록 한다.
+	 */
+	,signSelect:function(val){
+		
+		var content = CKEDITOR.instances.editHtml.getData();
+		var indexOfStart = "<!--SIGN_AREA_START-->";
+		var indexOfEnd = "<!--SIGN_AREA_END-->";
+		var sign_position = $("#sign_position").val();
+		var signReplacePatten = /<!--SIGN_AREA_START[\S\s]*SIGN_AREA_END-->/gm;
+		var annotationStartPatten = /<!--SIGN_AREA_START-->/gm;
+		var annotationEndPatten = /<!--SIGN_AREA_END-->/gm;
+		
+		var replaceContent = null;
+		if(val == 1){
+			var element = '<!--SIGN_AREA_START--><p>&nbsp;</p>'+$("#sign1").val()+'<html><body><!--SIGN_AREA_END-->';
+			
+			if(content.indexOf(indexOfStart) != -1 && content.indexOf(indexOfEnd) != -1){	
+				if(!confirm(message.M0231)){
+                    writeform.useSign(true);
+					return;
+				}
+				replaceContent = content.replace(signReplacePatten, element);
+				CKEDITOR.instances.editHtml.setData(replaceContent);
+			}else{
+				if(sign_position == 1){  
+					content = content.replace(annotationStartPatten,"").replace(annotationEndPatten,"");
+					replaceContent =  content + element;
+					CKEDITOR.instances.editHtml.setData(replaceContent);
+				} //답장시 맨 하단 서명 입력
+				else{
+					content = content.replace(annotationStartPatten,"").replace(annotationEndPatten,"");
+					replaceContent =  element + content;
+					CKEDITOR.instances.editHtml.setData(replaceContent);
+				}		
+			}
+		}else if(val == 2){
+			var element = '<!--SIGN_AREA_START--><p>&nbsp;</p>'+$("#sign2").val()+'<html><body><!--SIGN_AREA_END-->';
+			
+			if(content.indexOf(indexOfStart) != -1 && content.indexOf(indexOfEnd) != -1){
+				if(!confirm(message.M0231)){
+                    writeform.useSign(true);
+					return;
+				} 
+				replaceContent = content.replace(signReplacePatten , element);
+				CKEDITOR.instances.editHtml.setData(replaceContent);
+			}else{
+				if(sign_position == 1){  
+					content = content.replace(annotationStartPatten,"").replace(annotationEndPatten,"");
+					replaceContent =  content + element;
+					CKEDITOR.instances.editHtml.setData(replaceContent);
+				} //답장시 맨 하단 서명 입력
+				else{
+					content = content.replace(annotationStartPatten,"").replace(annotationEndPatten,"");
+					replaceContent =  element + content;
+					CKEDITOR.instances.editHtml.setData(replaceContent);
+				}		
+			}
+		}else if(val == 3){
+			var element = '<!--SIGN_AREA_START--><p>&nbsp;</p>'+$("#sign3").val()+'<html><body><!--SIGN_AREA_END-->';
+			
+			if(content.indexOf(indexOfStart) != -1 && content.indexOf(indexOfEnd) != -1){
+				if(!confirm(message.M0231)){
+                    writeform.useSign(true);
+					return;
+				} 
+				replaceContent = content.replace(signReplacePatten , element);
+				CKEDITOR.instances.editHtml.setData(replaceContent);
+			}else{
+				if(sign_position == 1){  
+					content = content.replace(annotationStartPatten,"").replace(annotationEndPatten,"");
+					replaceContent =  content + element;
+					CKEDITOR.instances.editHtml.setData(replaceContent);
+				} //답장시 맨 하단 서명 입력
+				else{
+					content = content.replace(annotationStartPatten,"").replace(annotationEndPatten,"");
+					replaceContent =  element + content;
+					CKEDITOR.instances.editHtml.setData(replaceContent);
+				}		
+			}
+		}else if(val == 0){
+			var element = '';
+
+			if(content.indexOf(indexOfStart) != -1 && content.indexOf(indexOfEnd) != -1){
+				if(!confirm(message.M0231)){
+                    writeform.useSign(true);
+					return;
+				} 
+				replaceContent = content.replace(signReplacePatten , element);
+				CKEDITOR.instances.editHtml.setData(replaceContent);
+			}else{
+				if(sign_position == 1){  
+					content = content.replace(annotationStartPatten,"").replace(annotationEndPatten,"");
+					replaceContent =  content + element;
+					CKEDITOR.instances.editHtml.setData(replaceContent);
+				} //답장시 맨 하단 서명 입력
+				else{
+					content = content.replace(annotationStartPatten,"").replace(annotationEndPatten,"");
+					replaceContent =  element + content;
+					CKEDITOR.instances.editHtml.setData(replaceContent);
+				}		
+			}
+		}	
+	}
+	
+	// mailWrite 페이지 로드시 서명을 삽입해준다.
+	,signSet:function(val){
+	
+		// 서명 입력 때문에 메일 쓰기 페이지에서 <p> 태그로 간격을 벌려줌
+		var blank_tag = "<p>&nbsp;</p>\n<p>&nbsp;</p>\n";
+		var content = CKEDITOR.instances.editHtml.getData();
+		var sign_position = $("#sign_position").val();
+		var replaceContent = null;
+		
+		if(val == 1){
+			var element = '<!--SIGN_AREA_START-->\n'+$("#sign1").val()+'<html><body><!--SIGN_AREA_END-->';
+						
+			if(sign_position == 1){  
+				replaceContent =  blank_tag + content + element;
+				CKEDITOR.instances.editHtml.setData(replaceContent);
+			} //답장시 맨 하단 서명 입력
+			else{
+				replaceContent = blank_tag + element + content;
+				CKEDITOR.instances.editHtml.setData(replaceContent);
+			}	
+		}else if(val == 2){
+			var element = '<!--SIGN_AREA_START-->\n'+$("#sign2").val()+'<html><body><!--SIGN_AREA_END-->';
+			
+			if(sign_position == 1){  
+				replaceContent =  blank_tag + content + element;
+				CKEDITOR.instances.editHtml.setData(replaceContent);
+			} //답장시 맨 하단 서명 입력
+			else{
+				replaceContent = blank_tag + element + content;
+				CKEDITOR.instances.editHtml.setData(replaceContent);
+			}	
+		}else if(val == 3){
+			var element = '<!--SIGN_AREA_START-->\n<hr id="SIGN_HR"/>\n'+$("#sign3").val()+'<html><body><!--SIGN_AREA_END-->';
+			
+			if(sign_position == 1){  
+				replaceContent =  blank_tag + content + element;
+				CKEDITOR.instances.editHtml.setData(replaceContent);
+			} //답장시 맨 하단 서명 입력
+			else{
+				replaceContent = blank_tag + element + content;
+				CKEDITOR.instances.editHtml.setData(replaceContent);
+			}	
+		}else if(val == 0){
+			var element = '';
+
+			if(sign_position == 1){  
+				replaceContent =  blank_tag + content + element;
+				CKEDITOR.instances.editHtml.setData(replaceContent);
+			} //답장시 맨 하단 서명 입력
+			else{
+				replaceContent = blank_tag + element + content;
+				CKEDITOR.instances.editHtml.setData(replaceContent);
+			}	
+			
+		}
+	
+	}
+	
+	
+	/**
+	 * 서명 선택
+	 */
+	,sign:function( sign ){
+		$("#sign").val( sign );
+	}
+	/**
+	 * 메일 발송 후 주소록에 없는 메일주소 추가기능
+	 * 이름이 있어야지만 추가를 한다.
+	 */
+	,addAddress:function(){		
+		// 보낸메일함 키 추출
+		var url = app.contextPath +"/mail/popup/address/receiver/add.do?chkFlag=send";
+		window.open(url,'receiverAdd','toolbar=no,width=1000,height=600,top=0,left=0;directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no');		
+	},
+	/**
+	 * 수신자 선택 창 호출 
+	 */
+	selReceiver:function(){	    
+	    //if( $("#tome").is(":checked") ){
+	    //    jAlert( message.M0189 );
+	    //    return;
+	    //}
+		window.open(app.contextPath + '/people/popup/mail/people.do','receiverSelect','toolbar=no,width=1000,height=600,top=0,left=0;directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no');
+	},	
+	
+	/**
+	 * 자주 사용하는 주소 설정 창 호출 
+	 */
+	setQuickAddr:function(){		
+	    //if( $("#tome").is(":checked") ){
+	    //    jAlert( message.M0189 );
+	    //    return;
+	    //}
+		window.open(app.contextPath + '/mail/popup/quick_addr.do','quickAddr','toolbar=no,width=1200,height=600,top=0,left=0;directories=no,status=no,scrollbars=yes,resizable=yes,menubar=no');
+	}, 
+	
+	selectQuickAddr:function(target){
+		var data = $("#"+target+"_quick_address").val();
+		data = $.trim(data);
+		
+		if(data == '0'){
+
+		} else if( data == '-1'){
+			writeform.setQuickAddr();
+		} else {
+			var target_value = $("#"+target).val();
+			target_value = $.trim(target_value);
+						
+			if(target_value != ""){								
+				// 포함 여부 확인
+				if(target_value.indexOf(data) < 0){
+					data = target_value + ", "+data;
+				} else {
+					data = target_value;
+				}
+			}
+			// trigger 추가(수신자 입력방식 변경에 따른)
+			$("#"+target).val(data).trigger('change');
+		}
+	},
+	/**
+	 * 미리보기
+	 */
+	preview:function(){ 
+		var f = document.editForm;
+		$("#preview_subject").text( f.subject.value );
+		var from = f.fromaddr.value;
+		if( f.fromname.value != '' ){
+			from = f.fromname.value + "<"+ f.fromaddr.value +">";
+		}		
+		$("#preview_from").text( from );
+		$("#preview_to").text( f.to.value );
+		$("#preview_cc").text( f.cc.value );
+		$("#preview_bcc").text( f.bcc.value );
+		
+		// 첨부파일 정보를 가져온다.
+		var attachList = uploadComponent.getFileList();
+		var attachSize = attachList.length;		
+		var attachHtml = [],n=-1;
+		
+		attachHtml[++n] = "<ol>";
+		
+		if( attachSize == 0 ){
+			attachHtml[++n] = "<li><span class=\"txt green strong\">"+ message.M0205 +"</span></li>";
+		}		
+		for(var i = 0 ; i < attachSize ; i++ ){			
+			var attach = attachList[i];
+			var isLink = attach.islink == 0 ? false : true;
+			var className = "attach_file txt orange";
+			if( isLink ){
+				className = "attach_bigfile txt blue";
+			}			
+			attachHtml[++n] = "<li><span class=\""+ className +"\">"+ attach.name +"("+ attach.size.byteFormat(2) +")</span></li>";			
+		}
+		attachHtml[++n] = "</ol>";
+		
+		
+		$("#preview_attach").html( attachHtml.join('') );
+		
+		// 옵션 항목을 가져온다.
+		
+		// 보낸 메일 저장히기
+		if( $("#is_save").is(":checked") ){
+			$("#preview_issave").show();
+		}else{
+			$("#preview_issave").hide();
+		}
+		
+		// 수신인 개별발송
+		if( $("#is_each").is(":checked") ){
+			$("#preview_each").show();
+		}else{
+			$("#preview_each").hide();
+		}
+		
+		// 수신확인
+		if( $("#is_receipt").is(":checked") ){
+			$("#preview_receipt").show();
+		}else{
+			$("#preview_receipt").hide();
+		}
+		
+		// 수신확인 요청메일
+		if( $("#is_receiptmail").is(":checked") ){
+			$("#preview_isreceiptmail").show();
+		}else{
+			$("#preview_isreceiptmail").hide();
+		}
+		
+		// 중요메일
+		if( $("#important").is(":checked") ){
+			$("#preview_important").show();
+		}else{
+			$("#preview_important").hide();
+		}
+		
+		// 보안메일
+		if( $("#is_secure").is(":checked") ){
+			$("#preview_issecure").show();
+		}else{
+			$("#preview_issecure").hide();
+		}
+		
+		// 예약발송 현황
+		var reserv_str = "-";
+		
+		if( $("#sendmode").is(":checked") ){
+			//예약메일로 설정된 데이트를 가져온다.
+			var getDate = $("#reserveTime").val();
+			getDate = getDate.replace(/([\d]{4})([\d]{2})([\d]{2})/,"$1-$2-$3");
+			reserv_str = getDate.substring(0,4) + cmessage.CM0072 + " "+ getDate.substring(5,7)+ cmessage.CM0073 +" "+ getDate.substring(8,10)+ cmessage.CM0074 ; 
+			reserv_str += $("select[name='hour']").val()+cmessage.CM0075 +" "+$("select[name='minute']").val() + cmessage.CM0076;
+		}
+		$("#preview_reserve").html( reserv_str );
+		
+		
+		// 서명이 들어가는 본문을 만든다.
+		// 서명에 필요한 항목,서명 선택항목
+		var body = editor.getHtml();		
+		body = body.replace(/<(no)?script[^>]*>(.|\r|\n)*?<\/(no)?script>/igm, "");
+        body = body.replace(/<style[^>]*>(.|\r|\n)*<\/style>/igm, "");
+        
+		var param = {
+			"body": body,
+			"sign": f.sign.value
+		};
+		$.post( app.contextPath + "/mail/json/write/preview.do", param , function(response){
+			$("#preview_content").html( response.content );
+		}, 'json');
+		$("#sensupload_component").block({message:null});
+		$("#modal_preview").show();
+		
+	},
+	/**
+	 * 미리보기 설정을 변경한다. 
+	 * @param mode
+	 * 0 : 사용안함
+	 * 1 : 모든메일
+	 * 2 : 중요메일
+	 */
+	changePreviewMode:function(mode){
+		var param = {
+			"mode":mode
+		};
+		$.get( app.contextPath + "/mail/json/write/preview/mode/change.do", param , function(){
+			writeform.use_preview = mode;
+		});
+	},
+	preview_close:function(){
+		$("#sensupload_component").unblock();
+		$("#modal_preview").hide();
+	},
+    setSign:function(){
+        var bool = $("#use_sign").is(":checked");
+        writeform.useSign(bool);
+        if( bool ){
+        	// 다시입력시에 서명을 하단으로 변경 시킨다.
+        	$("#sign_position").val(1);
+            writeform.signSelect( $("#sign").val() );
+        }else{
+            writeform.signSelect("0");
+        }
+    },
+    useSign:function(bool){
+        $("#use_sign").attr("checked",bool);
+        if( bool ){
+            $("#sign_select_area").show();
+        }else{
+            $("#sign_select_area").hide();
+        }
+    }
+};
+
+/**
+ * 자주 사용하는 주소
+ */
+var quick_addr = {
+    selectedGkey:-1,
+    /**
+     * 파라미터 정보 객체
+     */
+    param:{},
+    /**
+     * 파라미터 정보를 초기화한다.
+     */
+    resetParam:function(){
+        quick_addr.param = {};
+        // 기존 설정들
+        quick_addr.param.gkey = quick_addr.selectedGkey;
+        quick_addr.param.cpage = 1;
+
+        quick_addr.ganada_sel(''); // 가나다 선택을 전체로 변경
+    },
+    /**
+     * 수신자 대상에 추가
+     */
+    add:function( target ){
+        var checked_count = 0;
+        var checked_group_count = 0;
+        $("#group_list input[type='checkbox']:checked").each(function(){
+
+            var gname = $(this).attr("nm");
+
+            var text = "*"+gname;
+            var value = "*"+gname;
+            log.debug("quick_addr.add() - group add :"+ value );
+            if( !quick_addr.hasEmail( value ) ){
+                $("#"+target).appendItemCheckbox( text , value );
+            }
+            checked_group_count++;
+            checked_count++;
+
+        });
+
+        if( checked_group_count == 0 ){
+            $("#addressList input[type='checkbox']:checked").each(function(){
+                // 받는사람,참조,숨은참조에 해당 메일주소가 포함되어있는지 체크하여 없을 경우에만 추가한다.
+                var email = $(this).val();
+                log.debug( "address.add() - selcted email : "+ email );
+                if( !quick_addr.hasEmail( email ) ){
+                    $("#"+target).appendItemCheckbox( email, email );
+                }
+                checked_count++;
+            });
+        }
+        if( checked_count == 0 ){
+            jAlert( message.M0176);
+        }
+
+        $("#addressList input[type='checkbox']:checked").each(function(){
+            $(this).attr("checked",false);
+            $(this).removeClass("selected");
+        });
+
+        // 변경된 항목의 수를 화면에 반영한다.
+        quick_addr.options_count( target );
+    },
+    /**
+     * 수신자로 이미 등록되어있는지 체크한다.
+     */
+    hasEmail:function( email ){
+        var hasEmail = false;
+        $(".target input[type='checkbox']").each(function(){
+            log.debug( $(this).val()+":"+email);
+            if( $(this).val() == email ){
+                hasEmail = true;
+                return false;
+            }
+        });
+        return hasEmail;
+    },
+
+    /**
+     * 추가된 수신자 및 사용자를 제거(^_^) 한다.
+     */
+    del:function( target ){
+        var deleted_count = 0;
+        $("#"+target+" input[type='checkbox']:checked").each(function(){
+            $(this).parent().remove();
+            deleted_count++;
+        });
+
+        if( deleted_count == 0 ){
+            jAlert( cmessage.CM0004 );//삭제할대상을 선택하십시요.
+        }
+        // 변경된 항목의 수를 화면에 반영한다.
+        quick_addr.options_count( target );
+    },
+
+    /**
+     * 타겟에 들어있는 OPTION 수를 구하여 각 타겟의 건수를 업데이트한다.
+     */
+    options_count:function(target){
+        // 변경된 항목의 수를 화면에 반영한다.
+        var selected_count = 0;
+        $("#"+target+" li").each(function(){
+            selected_count++;
+        });
+        log.debug("selected_count:"+selected_count);
+        $("#"+target+"_count").html( selected_count );
+    },
+    /**
+     * 선택한 항목을 화면에 표시한다.
+     */
+    confirm:function(){
+        var to = quick_addr.toString("target_to");
+
+        var data = {
+            "addr":to
+        };
+
+        log.debug("receiver.confirm() - data:"+ data);
+        try{
+            opener.quick_addr.set( data );
+        }catch(e){}
+        self.close();
+    },
+    /**
+     * 설정된 사용자들을 목록을 , 구분으로 된 한줄기의 물같은 스트링으로 만들어준다.
+     */
+    toString:function( target ){
+        var rcpt = "";
+        var cnt = 0;
+        $("#"+target+" input[type='checkbox']").each(function(){
+            var value = $(this).val();
+            log.debug("quick_addr.toString() - value:"+value);
+            if( cnt > 0 ){
+                rcpt += ",";
+            }
+            rcpt += value;
+            cnt++;
+        });
+        return rcpt;
+    },
+    /**
+     * 넘어온 값을 자주사용하는 주소록에 추가
+     */
+    set:function(data){
+        var param = {
+            "addrs" : data.addr
+        };
+
+        $.ajax({
+            url : "json/set_quick_addr.do",
+            type : "post",
+            cache : false,
+            dataType : "json",
+            data : param,
+            async : false,
+            timeout : 5000,
+            error : function(xhr, txt) {
+                AjaxUtil.error(xhr);
+            },
+            success : function(data) {
+                var result = data.result;
+                if (parseInt(result) > 0) {
+                    // 성공한 경우, 자주 사용하는 주소에 다시 뿌려준다.
+                    var quick_addr_arr = data.quick_addr;
+                    var quick_addr_length = quick_addr_arr.length;
+
+                    var options = "<option value=\"0\">"+message.M0199+"</option>";
+                    for(var i = 0 ; i < quick_addr_length ; i++){
+                        var quick_addr = quick_addr_arr[i];
+
+                        options += "<option value=\""+quick_addr+"\">"+quick_addr+"</option>";
+                    }
+                    options += "<option value=\"-1\" onclick=\"writeform.setQuickAddr();\">["+message.M0200+"]</option>";
+
+                    $("#to_quick_address").html(options);
+                    $("#cc_quick_address").html(options);
+                    $("#bcc_quick_address").html(options);
+                } else {
+                    jAlert(data.message);
+                }
+            }
+        });
+    },
+    /**
+     * 페이지 번호의 데이터를 불러온다.
+     * @param {Object} cpage
+     */
+    list:function(cpage){
+        quick_addr.param.cpage = cpage;
+        quick_addr.loadAddressList( quick_addr.param );
+    },
+    /**
+     * 주소록 데이터를 서버에서 가져온다.
+     *
+     * @param {Object} gkey
+     * @param {Object} cpage
+     */
+    loadAddressList:function(){
+
+        log.debug( quick_addr.param.gkey );
+
+        // 주소록 목록을 가져온다.
+        $.ajax({
+            url : app.contextPath + "json/quick_addr.do",
+            data : quick_addr.param ,
+            type : "POST" ,
+            dataType:"json",
+            async : false,
+            cache:false,
+            error:function(xhr){
+                AjaxUtil.error( xhr );
+            },
+            success:function( json ){
+
+                // 데이터에 그룹목록이 있을 경우 그룹목록도 갱신하다.
+                var groupList = json.groupList;
+                if( groupList ){
+                    log.debug("address.loadAddressList() - refresh group list");
+                    $("#group_list").empty();
+                    for(var i = 0 ; i < groupList.length ; i++ ){
+                        var group = groupList[i];
+                        var isDisabled = false;
+                        // 전체주소록 , 미분류는 체크를 하지 못하도록 한다.
+                        if( group.gkey == "-1" || group.gkey == '0' ){
+                            isDisabled = true;
+                        }
+                        var options = {
+                            "disabled":isDisabled,
+                            "name":group.gname,
+                            "onclick":"quick_addr.selectedGroup();"
+                        };
+                        $("#group_list").appendItemCheckbox( group.gname+"("+group.cnt+")" , group.gkey , options );
+                    }
+                }
+
+                var addressList = json.list;
+                var page = json.pageInfo;
+
+                // 페이징 기능 그리기
+                var pageHtml = pageInfo( page.cpage , page.pageSize , page.total , '' , 'quick_addr.list(');
+                $("#address_nav").html( pageHtml );
+
+                // 목록 그리기
+                $("#addressList").empty();
+                for(var i = 0 ; i < addressList.length ; i++ ){
+                    var address = addressList[i];
+                    var value;
+                    var option = {
+                        "off":false
+                    };
+
+                    text = "\""+ address.name +"\"<"+ address.email +">";
+                    value = "\""+ address.name +"\"<"+ address.email +">";
+
+                    log.debug( value );
+                    value = util.html2ascii( value );
+                    $("#addressList").appendItemCheckbox( text , value , option );
+                }
+
+                // 주소록 검색 건수를 표시
+                $("#address_list_count").html( page.total );
+            },
+            complete:function(){
+                // 메일목록 가져오는 데이터를 메일주소만 가져오도록 수정
+                quick_addr.param.request_type = "ADDRESS";
+            }
+        });
+    },
+
+    /**
+     * 검색
+     */
+    search:function(){
+        var srchKeyword = $("#address_search_form input[name='srchKeyword']").val();
+        if( $.trim( srchKeyword ).length == 0 ){
+            jAlert(message.M0068);
+            return false;
+        }
+        quick_addr.resetParam();
+
+        var srchSelect = $("#address_search_form select[name='srchSelect']").val();
+        quick_addr.param.srchSelect = srchSelect;
+        quick_addr.param.srchKeyword = srchKeyword;
+        quick_addr.loadAddressList();
+
+        // 전체목록 버튼을 보이게 한다.
+        $("#btn_address_search_all_list").show();
+
+        return false;
+    },
+    /**
+     * 검색 후 전체목록
+     */
+    all_list:function(){
+        document.address_search_form.reset();
+        quick_addr.resetParam();
+        quick_addr.loadAddressList();
+
+        // 전체목록 버튼을 감춘다.
+        $("#btn_address_search_all_list").hide();
+    },
+    /**
+     * ㄱ ㄴ ㄷ 자음 별로 보기
+     * @param {Object} idx
+     */
+    ganada:function( idx ){
+        quick_addr.ganada_sel(idx);
+        quick_addr.param.ganada_key = idx;
+        quick_addr.loadAddressList();
+    },
+    /**
+     * 모든 LI 에서 sel 클래스를 제거하고 선택한 li 에 sel 클래스를 추가한다.
+     * @param {Object} idx
+     */
+    ganada_sel:function(idx){
+        $(".index_list li").removeClass("sel");
+        $("#ganada_"+ idx ).addClass("sel");
+    },
+    /**
+     * 그룹 선택을 하면 주소록 데이터를 리로딩한다.
+     */
+    selectedGroup:function(gkey){
+//			var gkey = $("#group_list li.selected").val();
+        log.debug("selected group key - "+ gkey );
+
+        quick_addr.selectedGkey = gkey;
+
+        quick_addr.param.gkey = gkey;
+        quick_addr.param.cpage = 1;
+        quick_addr.loadAddressList();
+    }
+
+};
+
+/**
+ * 사람 선택 창하고 데이터 송수신 
+ */
+var people = {
+	/**
+	 * PEOPLE 에게 현재 데이터를 던짐 
+	 */
+	get:function(){
+		var to = $("#to").val();
+		var cc = $("#cc").val();
+		var bcc = $("#bcc").val();
+		var data = {
+			"to":to,
+			"cc":cc,
+			"bcc":bcc
+		};
+		return data;
+	},
+	/**
+	 * PEOPLE 에서 데이터를 받음 
+	 */
+	set:function( data ){		
+		// trigger 추가(수신자 입력방식 변경에 따른)
+		$("#to").val( data.to ).trigger('change');
+		$("#cc").val( data.cc ).trigger('change');
+		$("#bcc").val( data.bcc ).trigger('change');
+		
+		// 참조 또는 숨은참조 데이터가 있을 경우에는 참조란을 보여주도록 한다.
+		if( ( data.cc && data.cc.length > 0 ) || ( data.bcc && data.bcc.length > 0 ) ){
+			writeform.showCc();
+		}
+	}
+};
+
+
+function doUnload(){
+	if(onbeforeunload_flag && isEditDataDirty()){
+		event.returnValue = message.M0124;
+	}
+	onbeforeunload_flag = true;
+}
+
+function viewSign(){
+	var sid = document.editForm.sign.value;
+	if( sid == "" ) return;
+	var url = "?act=MAIL_SIGN_VIEW&sid="+sid;
+	var addrWin = window.open(url,'signWin','toolbar=no,width=750,height=400,directories=no,status=yes,scrollbars=yes,resizable=yes,menubar=no');
+}
+
+// attach
+function showDiv(name){ 
+	var obj = document.getElementById(name);
+	if(obj.style.display =="none"){ 
+		obj.style.display=""; 
+	}
+} 
+
+var first=0;
+
+function trimArray( str ){
+	var retString = '';
+	var arr = str.split(",");
+	for(var i = 0 ; i < arr.length ; i++ ){
+		var addr = $.trim(arr[i]);				
+		if( addr.length == 0 ) continue;
+		if( i > 0 ) retString += ",";
+		retString += addr;
+	}
+	return retString;
+}
+
+/**
+ * 메일 주소 array 를 가지고 치환한다.
+ * @param addr_array
+ * @param type 0 : 검색되지 않은 사용자 , 1 : 검색결과 1명 , 2: 검색결과 2명 이상
+ * @return
+ */
+function replaceEmailAddress( addr_array , list_type ){
+	for(var i = 0 ; i < addr_array.length ; i++ ){
+		var addr = addr_array[i];
+		var before_addr = addr.before_addr;
+		var sel_addr;
+		if( list_type == 1 ){
+			sel_addr = addr.after_addr;
+		}else if( list_type == 2){
+			sel_addr = $("input[name='"+i+"_"+before_addr+"']:radio:checked").val();
+		}
+		var target_str = $("#"+addr.target).val();
+		
+		var i_addr = target_str.split(",");
+		for(var j = 0 ; j < i_addr.length ; j++){
+			var email = i_addr[j];		
+			if( email == before_addr ){
+				i_addr[j] = sel_addr;
+				break;
+			}			
+		}
+		var replace_str = "";
+		for(var j = 0 ; j < i_addr.length ; j++){
+			if( $.trim(i_addr[j]).length == 0 ) continue;
+			if( j > 0 && replace_str.length > 0 ){
+				replace_str += ",";
+			}
+			replace_str += i_addr[j]; 
+		}
+		// trigger 추가(수신자 입력방식 변경에 따른)
+		$("#"+addr.target).val( replace_str ).trigger('change');
+	}	
+}
+/**
+ * 유효성 체크
+ * @param receiver
+ * @return
+ */
+function user_check(){
+	
+	var result = 1;
+	
+	// Data 초기화.
+	change_addr = [];
+	error_addr = [];
+	exist_addr = [];
+	
+	var param = {
+		"to" : $("#to").val(),
+		"cc" : $("#cc").val(),
+		"bcc" : $("#bcc").val(),
+		"attach_size" : uploadComponent.nfile_size 
+	};
+	
+	$.ajax({
+		url : app.contextPath +"/mail/json/receiverCheck.do",
+		data : param ,
+		type : "POST" ,
+		dataType:"json",
+		async : false,
+		cache:false,
+		error:function(xhr){
+			AjaxUtil.error( xhr );
+		},
+		success:function( json ){
+			
+			var max_receiver_count = json.max_receiver_count;
+			var receiver_count = json.receiver_count;
+			
+			var linkattach_filesize = json.linkattach_filesize;
+			var linkattach_downterm = json.linkattach_downterm;
+			
+			var bigfile_downterm = json.bigfile_downterm;
+			var error = json.error;
+			if( error ){
+				jAlert( message.M0186 );
+				result = 2;
+				return;
+			}
+			if( max_receiver_count < receiver_count ){
+				jAlert( msg.get( message.M0187 , max_receiver_count ) );
+				result = 2;
+				return;
+			}
+						
+			//$("#receiver_count").val( receiver_count );
+			
+			//$("#islinkattach").val("0");
+			
+			if( json.switch_linkattach ){
+				alert( msg.get( message.M0188, linkattach_filesize , linkattach_downterm ) );
+				result = 2;
+				return;
+			}
+			
+			var addrlist = json.result;
+			for(var i = 0 ; i < addrlist.length ; i++ ){
+				var addr = addrlist[i];
+				/**
+				 * runcheck : 주소에 대해서 검색을 했는지 true/false
+				 * resultcount : 검색된 사용자 수
+				 * before_addr : 입력된 주소
+				 * after_addr : 유효성체크로 인해 변경된 주소
+				 * target : 주소가 입력된 곳 to ,cc ,bcc
+				 * isGroup : 그룹 여부. true 이면 아니고 false 이면 일반 메일주소
+				 */
+				if( !addr.runcheck ){
+					continue;
+				}
+				
+				if ( !addr.isGroup ){
+					if( addr.resultcount == 0 ){ // 해당 이름으로 검색된 사용자가 없을 때
+						error_addr[error_addr.length] = addr; // 에러 주소 리스트에 등록한다.
+						result = 0;
+					}else if( addr.resultcount == 1){ // 검색 결과가 하나밖에 없을 경우 바로 주소를 변경한다.						
+						//str = str.replace( addr.before_addr , addr.after_addr ); // 이전 주소를 검색된 주소로 변경한다.
+						change_addr[change_addr.length] = addr;						
+					}else{ // 검색 결과가 2개이상 검색된 경우
+						exist_addr[ exist_addr.length ] = addr;
+						result = 0;
+					}
+				}else{ //그룹일 경우 validate 가 false 이면 그룹명이 없는것으로 판단하여 에러 모달창을 띄운다.
+					if( !addr.validate ){						
+						error_addr[error_addr.length] = addr;
+						result = 0;
+					}
+				}
+			}	
+		}		
+	});	
+	return result;
+}
+
+// onbeforeunload event
+function isEditDataDirty(){
+    /*
+	if($.trim( getText()).length > 0){
+		return true;
+	}
+	return false;
+	*/
+}
+
+function clearUnload(){
+    /*
+	try {	
+		onbeforeunload_flag = false;
+	} catch(e){}
+	*/
+}
+
+/**
+ * 자동저장
+ */
+function autosave(){
+	log.debug("autosave..s");
+	if( !writeform.run_autosave ){
+		return;
+	}
+	log.debug("autosave..");
+	
+	var f = document.editForm;
+	var body = editor.getHtml();
+	// text를 받아서 trim한다.
+	var body_src = $.trim( editor.getText() );
+
+	var subject = f.subject.value;	
+	if( subject.length == 0 ){
+		subject = "[Empty Subject]";
+	}
+	// 본문의 text 값이 0이면 저장하지 않는다.
+	if( body_src.length == 0 ) return;
+	
+	$("#MailWriteForm input[name='body']").val( body );
+	$("#MailWriteForm input[name='body_src']").val( body_src );
+	
+	var param = $("#MailWriteForm").serialize();
+	
+	log.debug( "autosave....");
+		
+	try{
+		var url = app.contextPath +"/mail/json/autosave.do";
+		$.ajax({
+			url: url ,
+			type : "POST" ,
+			data : param ,
+			cache : false,
+			dataType:"json",
+			async:false,	
+			error:function(xhr,status){
+			    // 한번 에러가 나면 더이상 자동저장을 하지 않도록 한다.
+			    $("#autosave_complete").html("자동저장 중 오류 발생");
+			    if( autosave_check ){
+                    clearInterval( autosave_check );
+                }
+			},
+			success:function( jsonResult ){
+			    if( jsonResult.code == JSONResult.SUCCESS ){
+			        try{
+                        var now = new Date();
+                        var savetime = now.format("hh:nn:ss");
+                        var complete_info = msg.get( message.M0178 , savetime );
+                        $("#autosave_complete").html( complete_info );
+                        // 새로 저장한 자동저장키를 반영한다.
+                        $("#MailWriteForm input[name='tempKey']").val( jsonResult.data.autoSaveKey );
+                    }catch(e){}                
+                    if( autosave_check ){
+                        clearInterval( autosave_check );
+                    }
+                    autosave_check = setInterval( autosave , writeform.autosave_interval  );    
+			    }else{
+			        $("#autosave_complete").html( message.M0177 );
+                    if( autosave_check ){
+                        clearInterval( autosave_check );
+                    }
+			    }
+			}
+		});
+	}catch(e){}
+}
+
+var write_modal = {
+	init:function(){
+		$("#modal_sendcheck").dialog({
+			bgiframe: true,
+			autoOpen: false,
+			height: 250,
+			width: 450,
+			modal: true,
+			position:["center",150],
+			buttons:[
+			{
+			    text : message.M0064,
+			    click:function(){
+			        writeform.usercheck_send();
+                }
+            },
+			{
+				text: message.M0065,
+				click:function(){
+					$("#modal_sendcheck").dialog("close");
+				}
+			}			
+			]
+		});
+		$("#modal_sendcheck_err").dialog({
+			bgiframe: true,
+			autoOpen: false,
+			height: 250,
+			width: 450,
+			modal: true,
+			position:["center",150],
+			buttons: [
+				{
+					text : message.M0064,
+					click:function(){
+						$("#modal_sendcheck_err").dialog("close");
+					}
+				}
+		    ]
+		});	
+		
+		//링크첨부 변환 안내
+		$("#linkattach_info").dialog({
+			title: message.M0181,
+			bgiframe: true,
+			autoOpen: false,
+			resizable: false,
+			draggable : true,
+			height: 'auto',
+			width: 'auto',
+			modal: true,	
+			position:["center",150],
+			buttons:[
+				{
+					text: message.M0065,
+					click:function(){
+						$(this).dialog("close");
+					}
+				},
+				{
+					text : message.M0064,
+					click:function(){					
+					}
+				}			
+			]		
+		});
+		
+		//최대 수신자 수 초과
+		$("#receiver_over").dialog({
+			title: message.M0180,
+			bgiframe: true,
+			autoOpen: false,
+			resizable: false,
+			draggable : true,
+			height: 'auto',
+			width: 'auto',
+			modal: true,	
+			position:["center",150],
+			buttons:[			
+				{
+					text : message.M0064,
+					click:function(){
+					}
+				}			
+			]		
+		});
+		
+		/* 발송 취소 시간 카운트 */
+		$("#modal_countdown").dialog({
+			title: message.M0122,
+			bgiframe: true,
+			autoOpen: false,
+			height: 150,
+			width: 300,
+			modal: true,
+			resizable : false,
+			closeOnEscape : false,
+			draggable : false,
+			buttons:[
+				{
+					text: message.M0179,
+					click:function(){
+						$("#modal_countdown").dialog("close");					
+						writeform.countdownStop();
+						writeform.startUpload();
+					}
+				},
+				{
+					text : message.M0065,
+					click:function(){
+						writeform.countdownStop();
+						$("#modal_countdown").dialog("close");
+					}
+				}			
+			]
+		});
+		
+		/**
+		 * 첨부파일 업로드 프로그레스 
+		 */
+		$("#modal_upload").dialog({
+            title: message.M0201,
+            bgiframe: true,
+            autoOpen: false,
+            height: 400,
+            width: 500,
+            modal: true,
+            resizable : false,
+            closeOnEscape : false,
+            draggable : false,
+            buttons:[
+                {
+                    text : message.M0065,
+                    click:function(){                        
+                        $("#modal_upload").dialog("close");
+                        uploadComponent.stop();
+                    }
+                }
+            ]
+        });
+		/**
+		 * 미리보기 모달창
+		 */
+		/*
+		$("#modal_preview").dialog({
+            title: message.M0169,
+            bgiframe: true,
+            autoOpen: true,
+            position: "center",
+            width: 800,
+            modal: true,
+            resizable : true,
+            closeOnEscape : false,
+            draggable : true,
+            buttons:[
+				{
+					text : "보내기",
+				    click:function(){                        
+				        $("#modal_preview").dialog("close"); 
+				        writeform.startUpload();
+				    }
+				},
+                {
+                    text : "취소",
+                    click:function(){                        
+                        $("#modal_preview").dialog("close");                        
+                    }                    
+                },
+                
+            ]
+        });
+        */
+	},
+	/**
+	 * 업로드 진행상황 모달창을 띄운다. 
+	 */
+	openUploadModal:function(){
+	    $("#modal_upload").dialog("open");
+	},
+	closeUploadModal:function(){
+	    $("#modal_upload").dialog("close");
+	}
+}; 
+
+/**
+ * 메일 발송 결과
+ */
+var SendResult = {
+	SUCCESS:1,
+	DRAFT:2,
+	TOME:3,
+	THREAD:5,
+	FILTERING:6,
+	FAIL:-1,
+	BADREQUEST:-2,	
+	SERVERERROR:-3,
+	DENY:-4,
+	NORECEIVER:-5
+};
+
+�9�a      UH��UH��;#��UIy?   F:http://email.koreatech.ac.kr/sens-static/js/mail/write.js?dummy=58413 necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:49:04 GMT
+Server: Apache
+Last-Modified: Tue, 28 Apr 2015 13:18:28 GMT
+Etag: "11c54-514c8b2b9c2ce"
+Accept-Ranges: bytes
+Content-Length: 72788
+Content-Type: application/javascript
+ uncompressed-len 0  T

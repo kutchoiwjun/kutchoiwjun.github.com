@@ -1,0 +1,1489 @@
+/* ------------ 좌측 콘텐츠 -------------- */
+
+/* ----개인정보 ---- */
+#piInfor{
+
+	float:left;
+	width:228px;
+	height:230px;
+	padding:8px 5px 5px 5px;
+	background-color:#ffffff;
+	border:1px solid #2976ba;
+	margin-bottom:10px;
+}
+#piInfor .name{
+
+	float:left;
+	color:#767676;
+	font:bold 1em dotum;
+	width:228px;
+	height:21px;
+	vertical-align:bottom;
+	padding-left:19px;
+}
+
+#piInfor .name .password {
+	color:#245eb2;
+}
+
+#piInfor .name ul{
+	display:inline;
+}
+#piInfor .name li{
+	float:left;
+	display:inline;
+}
+#piInfor .name a{
+	color:#fff;
+	font:normal 1em dotum;
+}
+#piInfor .name a:hover{
+	color:#fff;
+	font:normal 1em dotum;
+	text-decoration:underline;
+}
+#piInfor .infor01{
+	clear:both;
+	width:228px;
+	height:78px;
+	border-bottom:1px solid #7da1b9;	
+	border-top:1px solid #7da1b9;
+}
+#piInfor .infor01 .major {
+	color:#898989;
+	font:normal 1em dotum;
+	padding:7px 0 0 9px;
+	line-height:16px;
+	width:228px;	
+} 
+#piInfor .infor01 .major li {
+/*	background:url(/images/A/kut/kor/pt/icon_pinfor_sbullet.gif) no-repeat 0 0; */
+}
+#piInfor .infor01 .m{
+	float:left;
+	padding:8px 0 0 9px;
+	width:220px;
+	height:30px;
+}
+#piInfor .infor01 .m ul{
+	display:inline;
+}
+#piInfor .infor01 .m li{
+	float:left;
+	display:inline;
+	height:22px;
+}
+#piInfor .infor01 .mail{
+	width:98px;
+	height:22px;
+	padding:5px 10px 0 0;
+	background:url(/images/A/kut/kor/pt/mail_bg.gif) no-repeat top left;
+	text-align:center;
+}
+#piInfor .infor01 .message{
+	width:98px;
+	height:22px;
+	padding:5px 10px 0 0;
+	background:url(/images/A/kut/kor/pt/message_bg.gif) no-repeat top left;
+	text-align:center;
+}
+#piInfor .infor01 .approve{
+	width:98px;
+	height:22px;
+	padding:5px 10px 0 0;
+	background:url(/images/A/kut/kor/pt/approve_bg.gif) no-repeat top left;
+	text-align:center;
+}
+#piInfor .infor01 .counsel{
+	width:98px;
+	height:22px;
+	padding:5px 10px 0 0;
+	background:url(/images/A/kut/kor/pt/counsel_bg.gif) no-repeat top left;
+	text-align:center;
+}
+#piInforST .infor01 .stumemo{
+	width:98px;
+	height:22px;
+	padding:5px 10px 0 0;
+	background:url(/images/A/kut/kor/pt/request_bg.gif) no-repeat top left;
+	text-align:center;
+}
+#piInforST .infor01 .counsel{
+	width:98px;
+	height:22px;
+	padding:5px 10px 0 0;
+	background:url(/images/A/kut/kor/pt/counsel_bg.gif) no-repeat top left;
+	text-align:center;
+}
+#piInfor .infor01 a, a:hover{
+	width:98px;
+	font:normal 9pt dotum;
+	color:#255db4;
+}
+#piInfor .infor01 a strong{
+	font:bold 9pt dotum;
+	color:#255db4;
+}
+#piInfor .infor01 .text{
+	font:normal 9pt dotum;
+	color:#000;
+}
+#piInfor .infor02{
+	width:220px;
+	height:36px;
+	float:left;
+	margin:10px 0 13px 5px;
+}
+#piInfor .infor02 li{
+	text-align:center;
+	width:100px;
+	font:bold 9pt dotum;
+	color:#898989;
+	height:36px;
+	line-height:18px;
+	float:left;
+	display:inline;
+	letter-spacing:-1px;
+	padding:0 1px 0 1px;
+	border-right:1px solid #d7d7d7;
+}
+#piInfor .infor02 li.end{
+	border:none;
+}	
+#piInfor .infor02 .num{
+	font:bold 9pt dotum;
+	color:#245eb2;
+}
+#piInfor .infor02 .num a{
+	font:bold 9pt dotum;
+	color:#245eb2;
+}
+#piInfor .infor02 .num a:hover{
+	font:bold 9pt dotum;
+	color:#245eb2;
+	text-decoration:underline;
+}
+
+/*2010 10 06 Sue 직원 대기 문서 갯수 */
+#piInfor .inforEM02{
+	width:220px;
+	height:36px;
+	float:left;
+	margin:10px 0 13px 5px;
+}
+#piInfor .inforEM02 li{
+	text-align:center;
+	width:52px;
+	font:bold 9pt dotum;
+	color:#898989;
+	height:36px;
+	line-height:18px;
+	float:left;
+	display:inline;
+	letter-spacing:-1px;
+	padding:0 1px 0 1px;
+	border-right:1px solid #7da1b9;
+}
+#piInfor .inforEM02 li.end{
+	border:none;
+}	
+#piInfor .inforEM02 .num{
+	font:bold 9pt dotum;
+	color:#265eb5;
+}
+#piInfor .inforEM02 .num a{
+	font:bold 9pt dotum;
+	color:#265eb5;
+}
+#piInfor .inforEM02 .num a:hover{
+	font:bold 9pt dotum;
+	color:#265eb5;
+	text-decoration:underline;
+}
+
+/*직원 대기 문서 갯수  끝  */
+
+#piInfor .infor03{
+	width:212px;
+	height:62px;
+	float:left;
+	margin:0 9px 0 9px;
+	padding-top:10px;
+	border-top:1px dotted #7da1b9;
+	vertical-align:middle;
+}
+#piInfor .infor03 img{
+	vertical-align:top;
+}
+
+#piInfor .infor03 .l{
+	font:normal 9pt dotum;
+	color:#245eb2;
+	display:inline;
+	width:130px;
+	height:62px;
+	float:left;
+}
+#piInfor .infor03 .li{
+	display:inline;
+	width:130px;
+	height:18px;
+	float:left;
+}
+#piInfor .infor03 .r{
+	font:normal 9pt dotum;
+	color:#245eb2;
+	width:78px;
+	height:62px;
+	float:right;
+}
+#piInfor .infor03 .r li{
+	width:78px;
+	height:18px;
+	float:left;
+}
+#piInfor .infor03 .r li a{
+	font:normal 9pt dotum;
+	color:#afd3eb;
+}
+#piInfor .infor03 .r li a:hover{
+	font:normal 9pt dotum;
+	color:#afd3eb;
+	text-decoration:underline;
+}
+
+
+/*2010 10 06 Sue 사용자정보 학생용*/
+#piInforST{
+	float:left;
+	width:228px;
+	height:168px;
+	padding:8px 5px 5px 5px;
+	background-color:#ffffff;
+	border:1px solid #2976ba;
+	margin-bottom:10px;
+}
+
+#piInforST .name{
+	float:left;
+	color:#767676;
+	font:bold 1em dotum;
+	width:228px;
+	height:21px;
+	vertical-align:bottom;
+	padding-left:19px;
+}
+
+#piInforST .name .password {
+	color:#245eb2;
+}
+
+#piInforST .name ul{
+	display:inline;
+}
+#piInforST .name li{
+	float:left;
+	display:inline;
+}
+#piInforST .name a{
+	color:#fff;
+	font:normal 1em dotum;
+}
+#piInforST .name a:hover{
+	color:#fff;
+	font:normal 1em dotum;
+	text-decoration:underline;
+}
+#piInforST .infor01{
+	clear:both;
+	width:228px;
+	height:78px;
+	border-bottom:1px solid #7da1b9;	
+	border-top:1px solid #7da1b9;	
+}
+#piInforST .infor01 .major {
+	color:#898989;
+	font:normal 1em dotum;
+	padding:7px 0 0 9px;
+	line-height:16px;
+	width:228px;	
+} 
+#piInforST .infor01 .major li {
+/*	background:url(/images/A/kut/kor/pt/icon_pinfor_sbullet.gif) no-repeat 0 0; */
+}
+#piInforST .infor01 .m{
+	float:left;
+	padding:8px 0 0 9px;
+	width:220px;
+	height:30px;
+}
+#piInforST .infor01 .m ul{
+	display:inline;
+}
+#piInforST .infor01 .m li{
+	float:left;
+	display:inline;
+	height:22px;
+}
+#piInforST .infor01 .mail{
+	width:98px;
+	height:22px;
+	padding:5px 10px 0 0;
+	background:url(/images/A/kut/kor/pt/mail_bg.gif) no-repeat top left;
+	text-align:center;
+}
+#piInforST .infor01 .message{
+	width:98px;
+	height:22px;
+	padding:5px 10px 0 0;
+	background:url(/images/A/kut/kor/pt/message_bg.gif) no-repeat top left;
+	text-align:center;
+}
+#piInforST .infor01 a, a:hover{
+	width:98px;
+	font:normal 9pt dotum;
+	color:#255db4;
+}
+#piInforST .infor01 a strong{
+	font:bold 9pt dotum;
+	color:#255db4;
+}
+#piInforST .infor01 .text{
+	font:normal 9pt dotum;
+	color:#000;
+}
+
+#piInforST .infor04{
+	width:212px;
+	height:36px;
+	float:left;
+	margin:0 9px 0 9px;
+	padding-top:12px;
+
+	vertical-align:middle;
+}
+#piInforST .infor04 img{
+	vertical-align:top;
+}
+
+#piInforST .infor04 .l{
+	font:normal 9pt dotum;
+	color:#898989;
+	display:inline;
+	width:118px;
+	height:36px;
+	float:left;
+}
+#piInforST .infor04 .li{
+	display:inline;
+	width:118px;
+	height:18px;
+	float:left;
+	padding-top:10px;
+}
+#piInforST .infor04 .r{
+	font:normal 9pt dotum;
+	color:#898989;
+	width:94px;
+	height:36px;
+	float:right;
+}
+#piInforST .infor04 .r li{
+	width:94px;
+	height:18px;
+	float:left;
+}
+#piInforST .infor04 .r li a{
+	font:normal 9pt dotum;
+	color:#afd3eb;
+}
+#piInforST .infor04 .r li a:hover{
+	font:normal 9pt dotum;
+	color:#afd3eb;
+	text-decoration:underline;
+}
+/*사용자정보 학생용*/
+
+/*사용자 정보 :: 졸업생 */
+#piInforGD{
+	
+	float:left;
+	width:228px;
+	height:80px;
+	padding:8px 5px 5px 5px;
+	background-color:#467598;
+	border:1px solid #3c698b;
+	margin-bottom:10px;
+}
+#piInforGD .GDname{
+	
+	float:left;
+	color:#d9f0ff;
+	font:bold 1em dotum;
+	width:228px;
+	height:21px;
+	vertical-align:bottom;
+	padding-left:19px;
+}
+#piInforGD .GDname ul{
+	display:inline;
+}
+#piInforGD .GDname li{
+	float:left;
+	display:inline;
+}
+#piInforGD .GDname a{
+	color:#fff;
+	font:normal 1em dotum;
+}
+#piInforGD .GDname a:hover{
+	color:#fff;
+	font:normal 1em dotum;
+	text-decoration:underline;
+}
+#piInforGD .infor01GD{
+	clear:both;
+	width:228px;
+	height:78px;
+	border-top:1px solid #7da1bb;	
+}
+#piInforGD .infor01GD .majorGD {
+	color:#fff;
+	font:normal 1em dotum;
+	padding:7px 0 0 9px;
+	line-height:16px;
+	width:228px;	
+} 
+#piInforGD .infor01GD .majorGD li {
+	background:url(/images/A/kut/kor/pt/icon_pinfor_sbullet.gif) no-repeat 0 0;
+}
+#piInforGD .infor01GD .mGD{
+	float:left;
+	padding:8px 0 0 9px;
+	width:220px;
+	height:30px;
+}
+#piInforGD .infor01GD .mGD ul{
+	display:inline;
+}
+#piInforGD .infor01GD .mGD li{
+	float:left;
+	display:inline;
+	height:22px;
+}
+#piInforGD .infor01GD .mailGD{
+	width:98px;
+	height:22px;
+	padding:5px 10px 0 0;
+	background:url(/images/A/kut/kor/pt/mail_bg.gif) no-repeat top left;
+	text-align:center;
+}
+
+#piInforGD .infor01GD .messageGD{
+	width:98px;
+	height:22px;
+	padding:5px 10px 0 0;
+	background:url(/images/A/kut/kor/pt/message_bg.gif) no-repeat top left;
+	text-align:center;
+}
+#piInforGD .infor01GD a, a:hover{
+	width:98px;
+	font:normal 9pt dotum;
+	color:#255db4;
+}
+#piInforGD .infor01GD a strong{
+	font:bold 9pt dotum;
+	color:#255db4;
+}
+#piInforGD .infor01GD .textGD{
+	font:normal 9pt dotum;
+	color:#000;
+}
+/*사용자 정보 ::졸업생 끝*/
+
+/* ---포트폴리오---- */
+#piSchedule{
+	clear:both;
+	width:228px;
+	height:66px;
+	padding:5px;
+	background-color:#f1f5fe;
+	border:1px solid #bcd3f5;
+}
+
+/*개인일정*/
+#piSchedulePerson{
+	clear:both;
+	width:238px;
+	background-color:#c0d4df;
+	border:1px solid #d8d8d8;
+}
+#piLink{
+	font:normal 9pt dotum;
+	color:#333;
+	width:220px;
+	height:66px;
+	margin:0px 5px 12px 5px;
+}
+#piLinkblog{
+	width:214px;
+	height:49px;
+	padding:5px 0px 2px 7px;
+}
+#piLinkblog #piLinktitle{
+	width:214px;
+	height:15px;
+}
+#piLinkblog #piLinklist ul{
+	margin-top:5px;
+	height:36px;
+}
+#piLinkblog #piLinklist li{
+	padding-left:10px;
+	height:16px;
+	background:url(/images/A/kut/kor/pt/icon_link_sbullet.gif) no-repeat 0 0;
+}
+#piLinkcafe ul{
+	display:inline;
+	float:left;
+}
+#piLinkcafe li{
+	width:213px;
+	height:20px;
+	display:inline;
+}
+#piLinkcafe .cafelist{
+	font:normal 1em dotum;
+	color:#595959;
+	float:right;
+	width:100px;
+	padding:2px 0 1px 0;
+	margin-left:5px;
+	margin:-18px 0px 0px 0px;
+}
+#piLinkmajor{
+	clear:both;
+	width:213px;
+	height:25px;
+	padding:0px 0 0 7px;
+}
+#piCal{
+	width:230px;
+	height:205px;
+}
+.piLine{
+	width:219px;
+	height:2px;
+	background-image:url(/images/A/kut/kor/pt/icon_link_line.gif);
+	background-repeat:repeat-x;
+	background-position:left top;	
+}
+
+/*학과 바로가기*/
+#piMajor{
+	clear:both;
+	width:238px;
+	height:35px;
+	background-color:#f1f5fe;
+	border:1px solid #bcd3f5;
+}
+#piLinkMajor{
+	clear:both;
+	width:238px;
+	height:20px;
+	padding:2px 0px 4px 12px;
+}
+.piMLine{
+	margin-left:5px;
+	width:219px;
+	height:2px;
+	background-image:url(/images/A/kut/kor/pt/icon_link_line.gif);
+	background-repeat:repeat-x;
+	background-position:left top;
+}
+
+/*cafe*/
+#piCafe{
+	clear:both;
+	width:238px;
+	height:35px;
+	background-color:#f1f5fe;
+	border:1px solid #bcd3f5;
+}
+#piLinkcafe{
+	width:228px;
+	height:23px;
+	padding:0px 0px 0px 12px;
+	margin-top:3px;
+	margin-bottom:1px;
+}
+#piLinkcafe ul{
+	display:inline;
+	float:left;
+}
+#piLinkcafe li{
+	width:213px;
+	height:20px;
+	float:left;
+	display:inline;
+}
+#piLinkcafe .cafelist{
+	font:normal 1em dotum;
+	color:#595959;
+	float:right;
+	width:120px;
+	padding:2px 0 1px 0;
+	margin-left:5px;
+	margin:-18px 0 0 0;
+}
+.piCafeLine{
+	margin-left:5px;
+	width:219px;
+	height:2px;
+	background-image:url(/images/A/kut/kor/pt/icon_link_line.gif);
+	background-repeat:repeat-x;
+	background-position:left top;
+}
+
+/*학사일정*/
+#piClassSchedule{
+	clear:both;
+	width:238px;
+/*	height:56px;*/
+	height:100%;
+	background-color:#f1f5fe;
+	border:1px solid #bcd3f5;
+}
+#piLinkClassSchedule{
+	width:228px;
+	height:20px;
+	padding:1px 0px 0px 12px;
+}
+.piClassScheduleContent{
+	padding:0px 0px 0px 4px;
+}
+.piClassScheduleLine{
+	margin:4px 0px 0px 5px;
+	width:219px;
+	height:2px;
+	background-image:url(/images/A/kut/kor/pt/icon_link_line.gif);
+	background-repeat:repeat-x;
+	background-position:left top;
+}
+
+
+
+/* ------------ 중앙 콘텐츠 -------------- */
+#notice{
+	width:514px;
+}
+#class{
+	width:514px;
+	margin-top:14px;
+}
+#tab{
+	width:514px;	
+	margin-top:14px;
+}
+#aprv{
+	width:514px;
+	margin-top:14px;
+}
+#tab2{
+	width:250px;	
+	margin-top:14px;
+}
+#tab3{
+	width:250px;
+	margin-top:14px;
+}
+
+
+.boardLine{
+	width:514px;
+	height:2px;
+	background-image:url(/images/A/kut/kor/pt/icon_bbs_line.gif);
+	background-repeat:repeat-x;
+	background-position:left top;
+	margin:0px 0px 0px 0px;
+}
+.boardTitle{
+	width:512px;
+	height:26px;
+	background-color:#f7f7f7;
+	border:1px solid #d8d8d8;
+	margin-bottom:2px;
+}
+.boardTitle .ralign{
+	float:right;
+	width:45px;
+	padding:6px 19px 0 0;
+}
+.boardTitle .lalign 
+{
+	width:159px;
+	padding:6px 0 0 13px;
+	float:left;
+}
+.boardTitle .calign{
+	text-align:center;
+	padding-top:5px;
+	float:left;
+	width:165px;
+	height:21px;
+	font:normal 9pt dotum;
+	color:#262626;
+	background-color:#e5e5e5;
+}
+.board td {
+	font:normal 9pt dotum;
+ 	line-height:18px;
+	color:#494949;
+ 	vertical-align:middle;
+	padding:2px 0 2px 0;	 
+}
+.board td a{
+	color:#494949;
+}
+.board td a:hover{
+	color:#305d7f;
+	text-decoration:underline;
+}
+.boardTabtitle{
+	width:512px;
+	height:27px;
+	border-bottom:1px solid #d8d8d8;
+	margin-bottom:2px;
+}
+.boardTabtitle .ralign{
+	float:right;
+	width:45px;
+	padding:6px 19px 0 0;
+}
+/*opera와 그이외의 브라우저 구분 적용*/
+.boardTabtitle .lalign{
+	width:513px;
+	padding:0;
+	float:left;
+}
+.boardTabtitle .lalignOpera{
+	width:450px;
+	padding:0;
+	float:left;
+}
+/*opera와 그이외의 브라우저 구분 적용 끝*/
+
+
+/*2010 10 07 Sue 교수 담당강좌*/
+.boardTitlePF{
+	width:514px;
+	height:26px;
+	background-color:#f7f7f7;
+	border:1px solid #d8d8d8;
+	margin-bottom:2px;
+}
+.boardTitlePF .ralignPF{
+	float:right;
+	width:45px;
+	padding:6px 19px 0 0;
+}
+.boardTitlePF .lalignPF{
+	width:159px;
+	padding:6px 0 0 13px;
+	float:left;
+}
+.boardTitlePF .calignPF{
+	text-align:center;
+	padding-top:5px;
+	float:left;
+	width:165px;
+	height:21px;
+	font:normal 9pt dotum;
+	color:#262626;
+	background-color:#e5e5e5;
+}
+
+
+/*2010 10 06 Sue */
+.boardLine3{
+	width:250px;
+	height:2px;
+	background-image:url(/images/A/kut/kor/pt/icon_bbs_line.gif);
+	background-repeat:repeat-x;
+	background-position:left top;
+	margin:2px 0 0 0;
+}
+.boardTitle3{
+	width:248px;
+	height:26px;
+	background-color:#f7f7f7;
+	border:1px solid #d8d8d8;
+	margin-bottom:2px;
+}
+.boardTitle3 .ralign{
+	float:right;
+	width:45px;
+	padding:6px 19px 0 0;
+}
+.boardTitle3 .lalign 
+{
+	width:250px;
+	padding:6px 0 0 13px;
+	float:left;
+}
+.boardTitle3 .calign{
+	text-align:center;
+	padding-top:5px;
+	float:left;
+	width:165px;
+	height:21px;
+	font:normal 9pt dotum;
+	color:#262626;
+	background-color:#e5e5e5;
+}
+
+
+
+/*
+.board td {
+	font:normal 9pt dotum;
+ 	line-height:18px;
+	color:#494949;
+ 	vertical-align:middle;
+	padding:2px 0 2px 0;	 
+}
+.board td a{
+	color:#494949;
+}
+.board td a:hover{
+	color:#305d7f;
+	text-decoration:underline;
+}
+*/
+
+/*2010 10 06 Sue 교수,학생용 상담,민원 */
+.boardTabtitle2{
+	width:248px;
+	height:27px;
+	border-bottom:1px solid #d8d8d8;
+	margin-bottom:2px;
+}
+.boardTabtitle2 .ralign{
+	float:right;
+	width:45px;
+	padding:6px 19px 0 0;
+}
+.boardTabtitle2 .lalign 
+{
+	width:165px;
+	padding:0;
+	float:left;
+}
+.boardLine2{
+	width:250px;
+	height:2px;
+	background-image:url(/images/A/kut/kor/pt/icon_bbs_line.gif);
+	background-repeat:repeat-x;
+	background-position:left top;
+	margin:2px 0 0 0;
+}
+
+
+/*2010 10 06 Duck 전자결재, 메일, 쪽지 CSS */
+.boardTabtitle .multitab_left {
+	width:420px;
+	padding:0;
+	float:left;
+}
+.boardTabtitle .multitab_right {
+	float:right;
+	width:67px;
+	padding:6px 3px 0 0;
+}
+
+.board th {
+	text-align:center;
+	font:normal 9pt dotum;
+ 	height:25px;
+	color:#000;
+	border-bottom:1px solid #255db4;
+	background:url(/images/A/kut/kor/pt/bbs_titleline.gif) no-repeat right top;
+}
+.board th.end{
+	background-image:none;
+}
+.tbody_top { 
+ 	height:3px;
+}
+.boardList .bbstitle{
+	width:420px;
+}
+.board .num {
+	padding-left:7px;
+	width:12px;
+}
+.board .date {
+	width:60px;
+}
+.board .subject {
+	width:148px;
+}
+.board .class {
+  text-align:center;
+	width:30px;
+}
+.board .division {
+  text-align:center;
+	width:81px;
+}
+.board .sc {
+	text-align:center;
+	width:71px;
+}
+.board .room {
+  text-align:center;
+	width:75px;
+}
+.board .plan {
+	text-align:center;
+	width:61px;
+}
+
+
+.board .num_h {
+ 	padding-top:5px;
+	padding-left:7px;
+	width:12px;
+}
+.board .date_h {
+  padding-top:5px;
+	width:60px;
+}
+.board .subject_h {
+  padding-top:5px;
+	width:130px;
+}
+.board .class_h {
+  padding-top:5px;
+  text-align:center;
+	width:30px;
+}
+.board .division_h {
+ 	padding-top:5px;
+  text-align:center;
+	width:81px;
+}
+.board .sc_h {
+  padding-top:5px;
+	text-align:center;
+	width:100px;
+}
+.board .room_h {
+ 	padding-top:5px;
+  text-align:center;
+	width:75px;
+}
+.board .plan_h {
+ 	padding-top:5px;
+	text-align:center;
+	width:61px;
+}
+
+/* ------------ 우측 콘텐츠 -------------- */
+
+/*2010 10 06 Duck 우리학과현황 삭제버튼으로 인해 수정 */
+#st{
+	width:238px;
+	height:133px;
+	margin-bottom:10px;
+	background-color:#f7f9f9;
+	border:1px solid #cdcdcd;	
+}
+#stBox{
+	width:200px;
+	height:119px;
+	padding:7px 0 0 19px;
+}
+.stTitlebox{
+	height:17px;
+	margin-bottom:14px;
+}
+.stTitle{
+	width:92px;
+	float:left;
+}
+.stTitlebn{
+	width:60px;
+	float:right;
+}
+.stTitlebn ul{
+	display:inline;
+}
+.stTitlebn li{
+	display:inline;
+	width:30px;
+}
+.stCon01{
+	width:200px;
+	height:37px;
+	margin-bottom:6px;
+}
+.stCon01 ul{
+	width:195px;
+	float:left;
+	display:inline;
+}
+.stCon01 li.ti{
+	text-align:center;
+	float:left;
+	display:inline;
+	width:65px;
+	height:19px;
+	padding-top:3px;
+	background-image:url(/images/A/kut/kor/pt/st_bg.gif);
+	background-repeat:no-repeat;
+	background-position:left top;
+}
+.stCon01 li.num{
+	text-align:center;
+	float:left;
+	display:inline;
+	width:65px;
+	height:19px;
+	background-image:url(/images/A/kut/kor/pt/st_line.gif);
+	background-repeat:no-repeat;
+	background-position:right top;
+	font:normal 9pt dotum;
+	color:#255db4;
+	margin-top:3px;
+}
+.stCon01 li.num strong{
+	font:bold 9pt dotum;
+	color:#255db4;
+	margin-top:3px;
+}
+.stCon01 #end{
+	background-image:none;
+}
+.stCon02{
+	width:210px;
+	height:37px;
+	margin-top:7px;
+	padding-top:5px;
+	border-top:1px dotted #c8c8c8;
+}
+.stCon02 ul{
+	width:210px;
+	float:left;
+	display:inline;
+}
+.stCon02 li.ti1{
+	text-align:center;
+	float:left;
+	display:inline;
+	width:120px;
+	height:19px;
+	padding-top:2px;
+	letter-spacing:-1px;
+	background-image:url(/images/A/kut/kor/pt/st_bg1.gif);
+	background-repeat:no-repeat;
+	background-position:2px 0;
+}
+.stCon02 li.ti{
+	text-align:center;
+	float:left;
+	display:inline;
+	width:80px;
+	height:19px;
+	padding-top:3px;
+	letter-spacing:-1px;
+	background-image:url(/images/A/kut/kor/pt/st_bg.gif);
+	background-repeat:no-repeat;
+	background-position:8px 0;
+}
+.stCon02 li.num{
+	text-align:center;
+	float:left;
+	display:inline;
+	width:95px;
+	height:19px;
+	background-image:url(/images/A/kut/kor/pt/st_line.gif);
+	background-repeat:no-repeat;
+	background-position:right top;
+	font:normal 9pt dotum;
+	color:#255db4;
+	margin-top:3px;
+}
+.stCon02 li.num1{
+	text-align:center;
+	float:left;
+	display:inline;
+	width:123px;
+	height:19px;
+	background-image:url(/images/A/kut/kor/pt/st_line.gif);
+	background-repeat:no-repeat;
+	background-position:right top;
+	font:normal 9pt dotum;
+	color:#255db4;
+	margin-top:3px;
+}
+.stCon02 li.num2{
+	text-align:center;
+	float:left;
+	display:inline;
+	width:80px;
+	height:19px;
+	background-image:url(/images/A/kut/kor/pt/st_line.gif);
+	background-repeat:no-repeat;
+	background-position:right top;
+	font:normal 9pt dotum;
+	color:#255db4;
+	margin-top:3px;
+}
+.stCon02 li.num strong{
+	font:bold 9pt dotum;
+	color:#255db4;
+	margin-top:3px;
+}
+.stCon02 li.num1 strong{
+	font:bold 9pt dotum;
+	color:#255db4;
+	margin-top:3px;
+}
+.stCon02 li.num2 strong{
+	font:bold 9pt dotum;
+	color:#255db4;
+	margin-top:3px;
+}
+.stCon02 #end{
+	background-image:none;
+}
+
+
+/* ----학사정보(학생)2010.10.07 min---- */
+#stinfo{
+	width:238px;
+	height:200px;
+	margin-bottom:10px;
+	background-color:#f6f6f6;
+	border:1px solid #cdcdcd;	
+}
+#stBoxinfo{
+	width:215px;
+	height:175px;
+	padding:7px 0 0 19px;
+}
+.stTitleboxinfo{
+	height:10px;
+	margin-bottom:14px;
+}
+.stTitleinfo{
+	width:92px;
+	float:left;
+}
+.stTitlebninfo{
+	width:45px;
+	float:right;
+}
+.stTitlebninfo ul{
+	display:inline;
+}
+.stTitlebninfo li{
+	display:inline;
+	width:20px;
+}
+.stCon01info{
+	width:200px;
+	height:30px;
+	margin-bottom:6px;
+}
+.stCon01info ul{
+	width:195px;
+	float:left;
+	display:inline;
+}
+.stCon01info li.ti{
+	text-align:center;
+	float:left;
+	display:inline;
+	width:115px;
+	height:19px;
+	padding-top:3px;
+	margin-bottom:3px;
+	border: 1px solid #bdd4f6;
+	background-color: #f1f5fe;
+}
+.stCon01info li.num{
+	text-align:center;
+	float:left;
+	display:inline;
+	width:65px;
+	height:19px;
+	background-image:url(/images/A/kut/kor/pt/st_line.gif);
+	background-repeat:no-repeat;
+	background-position:right top;
+	font:normal 9pt dotum;
+	color:#255db4;
+	margin-top:3px;
+	margin-left:5px;
+}
+.stCon01info li.num1{
+	text-align:center;
+	float:left;
+	display:inline;
+	width:70px;
+	height:19px;
+	background-image:url(/images/A/kut/kor/pt/st_line.gif);
+	background-repeat:no-repeat;
+	background-position:right top;
+	font:normal 9pt dotum;
+	color:#255db4;
+	margin-top:3px;
+	margin-left:5px;
+}
+.stCon01info li.num strong{
+	font:bold 9pt dotum;
+	color:#255db4;
+	margin-top:3px;
+}
+.stCon01info #end{
+	background-image:none;
+}
+.stCon02info{
+	width:200px;
+	height:37px;
+	margin-top:7px;
+	padding-top:5px;
+	border-top:1px dotted #c8c8c8;
+}
+.stCon02info ul{
+	width:195px;
+	float:left;
+	display:inline;
+}
+.stCon02info li.ti{
+	text-align:center;
+	float:left;
+	display:inline;
+	width:95px;
+	height:19px;
+	padding-top:3px;
+	letter-spacing:-1px;
+	background-image:url(/images/A/kut/kor/pt/st_bg.gif);
+	background-repeat:no-repeat;
+	background-position:16px 0;
+}
+.stCon02info li.num{
+	text-align:center;
+	float:left;
+	display:inline;
+	width:95px;
+	height:19px;
+	background-image:url(/images/A/kut/kor/pt/st_line.gif);
+	background-repeat:no-repeat;
+	background-position:right top;
+	font:normal 9pt dotum;
+	color:#265eb5;
+	margin-top:3px;
+}
+.stCon02info li.num strong{
+	font:bold 9pt dotum;
+	color:#255db4;
+	margin-top:3px;
+}
+.stCon02info #end{
+	background-image:none;
+}
+
+
+/* ---- 사람찾기 ---- */
+#pSearch{
+	width:238px;
+	height:57px;
+	margin-bottom:10px;
+	background-color:#dae2e4;
+	border:1px solid #95b0bb;	
+}
+#pSearchBox{
+	width:220px;
+	height:45px;
+	margin:8px 0 0 10px;
+}
+.pSearchtitle{
+	font:normal 9pt dotum;
+	color:#494949;
+	float:left;
+	width:201px;
+	height:15px;
+	padding:0 0 3px 15px; 
+}
+.pSearchcon{
+	float:left;
+	width:210px;
+	height:26px;
+}
+.pSearchcon li{
+	float:left;
+	display:inline;
+}
+#pSearch input{
+	float:left;
+	vertical-align:top;
+	width:90px;
+	font:normal 1em dotum;
+	color:#595959;
+	height:26px;
+	border:none;
+	margin-left:3px;
+	padding-left:5px;
+	padding-top:5px;
+	/*vertical-align:top;*/
+	background:url(/images/A/kut/kor/pt/psearch_input_bg.gif) no-repeat;
+	background-position:left top;
+}
+#pSearch .st{
+	float:left;
+	width:70px;
+	font:normal 1em dotum;
+	font:normal 1.1em dotum;
+	color:#595959;
+	padding:3px 0 2px 0;
+	padding:5px 0 4px 0;
+	margin-top:2px;
+}
+/* ---- 학내서비스 ---- */
+#service{
+	width:238px;
+	height:258px;
+	margin-bottom:10px;
+	background-color:#fff;
+	border:1px solid #cdcdcd;
+}
+#serviceBox{
+	width:208px;
+	height:212px;
+/*	margin:9px 9px 9px 13px;*/
+	margin: 7px 0px 0px 10px;
+
+}
+.serviceTitle{
+	float:left;
+	/*width:199px;*/
+	width:208px;
+	height:15px;
+	padding:0px 0px 9px 9px; 
+}
+.serviceBn{
+	width:208px;
+	height:189px;
+
+}
+
+/* ---- 학내서비스  학생용 2010 10 07 Sue---- */
+/*
+#serviceST{
+	width:238px;
+	height:150px;
+	margin-bottom:10px;
+	background-color:#dae2e4;
+	border:1px solid #95b0bb;
+}
+#serviceSTBox{
+	width:208px;
+	height:212px;
+	margin:9px 15px 9px 13px;
+}
+.serviceTitle{
+	float:left;
+	width:208px;
+	height:15px;
+	padding:0 0 8px 9px; 
+}
+.serviceBn{
+	width:208px;
+	height:108px;
+}
+
+*/
+/* ---- 오늘의 메뉴 ---- */
+#menu{
+	width:238px;
+	height:242px;
+	background-color:#fff;
+	border:1px solid #cdcdcd;	
+}
+#menuBox{
+	width:197px;
+	padding:0px 0px 0px 19px;
+}
+.menuTitle{
+/*	width:197px;*/
+	width:210px;
+	padding:7px 0px 12px 0px;
+}
+.menuCon{
+	width:197px;
+}
+.menuTab{
+	width:197px;
+	height:19px;
+	margin-bottom:10px;
+}
+.menuTab ul{
+	display:inline;
+	float:left;
+}
+.menuTab li{
+	display:inline;
+	float:left;
+}
+.menuListbox{
+	width:197px;
+}
+.menuListtab{
+	float:left;
+	width:50px;
+}
+.menuListtab li{
+	margin-bottom:3px;
+}
+.menuList{
+	float:right;
+	width:123px;
+	font:normal 8pt dotum;
+	color:#0a0a0a;
+	line-height:18px;
+}
+/* KUT 정보광장 */
+#kutInfoSpace{
+	width:238px;
+	height:150px;
+	margin-bottom:10px;
+	background-color:#fff;
+	border:1px solid #cdcdcd;
+}
+#kutInfoSpaceBox{
+	width:208px;
+	height:126px;
+	margin: 7px 0px 0px 10px;
+}
+.kutInfoSpaceTitle{
+	float:left;
+	width:208px;
+	height:15px;
+	padding:0px 0px 5px 9px; 
+}
+.kutInfoSpaceBn{
+	width:208px;
+	height:111px;
+}H�@�J�      UH��UH��;#��UH��   5:http://portal.koreatech.ac.kr/css/A/kut/kor/main.css necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:48:07 GMT
+Server: IBM_HTTP_Server
+Last-Modified: Tue, 12 Mar 2013 05:21:39 GMT
+Etag: "680d7-5ffb-76cb5ec0"
+Accept-Ranges: bytes
+Content-Length: 24571
+Cache-Control: max-age=3600
+Expires: Tue, 05 May 2015 10:48:07 GMT
+Content-Type: text/css
+ uncompressed-len 0   _�

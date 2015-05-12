@@ -1,0 +1,573 @@
+var editor_cfg = {
+	language : "ko",
+	extraPlugins : 'tableresize,template,googletranslate,paper',
+	removePlugins : 'magicline,elementspath,pastefromword',
+	contentsCss : app.static_server + '/sens-static/css/editor/content.css',
+	//resize_enabled : false,
+	width:'100%',
+	height:'400px',
+	enterMode:CKEDITOR.ENTER_P,
+	resize_enabled : false,
+	entities : false,
+	allowedContent : true,
+	font_names : '굴림/gulim;굴림체/굴림체;돋움/dotum;돋움체/돋움체;바탕/batang;바탕체/바탕체;궁서/궁서;맑은고딕/맑은 고딕;Arial/arial;Courier New/courier new;Georgia/georgia;Tahoma/tahoma;Times New Roman/times new roman;Verdana/verdana;メイリオUI/Meiryo UI;ＭＳ Ｐゴシック/ＭＳ Ｐゴシック;ＭＳ Ｐ明朝/ＭＳ Ｐ明朝;MS UI Gothic/MS UI Gothic;ＭＳ ゴシック/ＭＳ ゴシック;ＭＳ 明朝/ＭＳ 明朝;宋体/Simsun;宋体-18030/宋体-18030;仿宋体/Simfang;黑体/Simhei;楷体/Simhei;隶书/Simli',
+	font_defaultLabel : '돋움',
+	fontSize_defaultLabel : '10pt',
+	fontSize_sizes : '8/8pt;9/9pt;10/10pt;11/11pt;12/12pt;14/14pt;18/18pt;24/24pt;36/36pt',
+	filebrowserImageUploadUrl : null,
+	/*toolbarGroups : [
+        { name: 'font',   items: [ 'Font','FontSize' ] },
+        { name: 'editing',     items: [ 'Bold','Italic','Underline','Strike','-','TextColor','BGColor' ] },
+        { name: 'style', 	items: ['NumberedList','BulletedList','-','Outdent','Indent','-','HorizontalRule','SpecialChar'] },
+        { name: 'align',    items: [ ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'] ] },
+        { name: 'inserts', 	items: [ 'Link','Unlink', 'Image', 'Smiley','Table','template','clipimage'] },
+        { name: 'source', items: ['ShowBlocks','-','Source'] }
+        
+    ],*/
+    toolbar_Full :     //Note that our plugin will be the first button in the toolbar
+		[
+		['Font','FontSize'],
+		['Bold','Italic','Underline','Strike','-','TextColor','BGColor'],
+		['NumberedList','BulletedList','-','Outdent','Indent','-','HorizontalRule','SpecialChar'],
+		['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+		['Link','Unlink', 'Image', 'Smiley','Table','googletranslate'],
+		['Source','-','Template','Paper']
+	],
+	toolbar : 'Full',
+	toolbarCanCollapse:false, 
+	uiColor : '#FFFFFF'
+	
+};
+
+var editor = {
+	paperBody:'',
+	paperTop:'',
+	paperBottom:'',
+	paperWidth:'600',
+	init:function(){
+	    log.debug("ckeditor init");
+	    
+	    editor_cfg.language = cfg.language;
+	    editor_cfg.filebrowserImageUploadUrl = cfg.imageupload_url;	    	
+
+	    var ckeditor = CKEDITOR.replace( 'editHtml', editor_cfg );
+		
+		ckeditor.on('load', function(){
+			// 기본 폰트 적용
+			CKEDITOR.addCss('p,td,div {font-family:'+editor_cfg.font_defaultLabel+' !important; font-size:'+editor_cfg.fontSize_defaultLabel+'pt;line-height:1.5;margin:0;}');
+			editor.loadContent();
+		});
+				
+		/* 소스/에디터 모드 변환 시
+		 * 백그라운드 유지를 위한 방안
+		 */
+		ckeditor.on('mode', function() {
+			if(ckeditor.mode == 'source') return;
+			if(editor.paperBody){
+				ckeditor.document.getBody().setStyle('background', editor.paperBody);
+			}
+			// IE8 호환성보기에서 소스<->에디터 이동간에 <p>&nbsp;</p> 가 <p></p> 로 변경됨
+			// <p></p>로 변경되면 에디터 화면에서 해당 코드가 보이지 않아 줄바뀜어 없어져보여 다음과 같이 처리함.
+			var content = ckeditor.document.getBody().getHtml();
+			content = content.replace(/<p><\/p>/ig,"<p>&nbsp;</p>");
+			content = content.replace(/<p> <\/p>/ig,"<p>&nbsp;</p>");
+			ckeditor.document.getBody().setHtml(content);
+		});
+		
+		/*ckeditor.on('instanceReady', function( ev ) {	// &shy; &#173;
+			if($.browser.safari){
+				ev.editor.setData('<span style="font-family:맑은 고딕;">&nbsp;</span>');
+			} else {
+		     	ev.editor.setData('<span style="font-family:맑은 고딕;">&shy;</span>');
+			}
+			log.debug('instanceReady ok');
+		});*/
+		
+		editor.paperBody = '';
+		editor.paperTop = '';
+		editor.paperBottom = '';
+		
+		ckeditor.fire( 'load' );
+		
+		// 편지지, 템플릿 불러오기(해당 div가 show 될때 작동하도록 - common/common.fn.js 파일의 $.fn.show 참조 )
+		$('#send_paper').bind('beforeShow', function () {
+			editor.showInnerPaper();
+	    });
+		$('#send_template').on('beforeShow',function(){
+			editor.showInnerTemplate();
+		});		
+	},
+	destory:function(){
+	    log.debug("editor destory");
+	    try{
+	       CKEDITOR.instances.editHtml.destroy();
+        }catch(e){            
+        }
+	}
+	,getHtml:function() {
+	    		
+		var sel_sign = $("#MailWriteForm input[name='sign']").val();
+		var sign_space = sel_sign != '' ? "<!-- $+[SIGN]+$ -->" : "";
+		
+		var color = "#000";
+		// 에디터의 기본폰트 설정 내용을 메일 보낼때 div 로 감싸서 적용함
+		var fontSize = editor_cfg.fontSize_defaultLabel+"pt";
+		var fontFamily = editor_cfg.font_defaultLabel;
+		
+		var body = "";
+		body += "<div style=\"color:"+ color+";font-size:"+ fontSize +";font-family:"+ fontFamily +" !important;background-color: transparent;\">\n";
+			
+		// 편지지
+		if(editor.paperTop != '' || editor.paperBody != '' || editor.paperBottom != ''){
+			body += '<table width="'+editor.paperWidth+'" border="0" cellspacing="0" cellpadding="0">';
+			body += '<tbody>';
+			if(editor.paperTop != ''){
+				body += '<tr><td valign="top">';
+				body += '<img src="'+editor.paperTop+'" border="0">';
+				body += '</td></tr>';
+			}
+			body += '<tr>';
+			body += '<td style="min-height:300px; _height:300px; background:'+editor.paperBody+'">';
+		}
+		
+		var content = CKEDITOR.instances.editHtml.getData();
+		// 에디터에선 <p></p> 가 한칸 띄어쓰기로 보이지만 실제 메일을 읽을 때에는 줄간격이 떨어지지 않는다.
+		// 그래더 <p></p> 사이에 &nbsp; 를 추가한다.
+		content = content.replace(/<p><\/p>/g,"<p>&nbsp;</p>");
+		content = content.replace(/<p> <\/p>/g,"<p>&nbsp;</p>");
+		
+		body += content;
+		
+		// 재발송일때는 추가하지 않고 그 외의 경우에는 서명표시부분이 삭제되었을 수 있으므로 없으면 추가한다.
+		if(typeof(first) != 'undefined' && first != 7){ // 재발송		
+			if ( body.indexOf("<!-- $+[SIGN]+$ -->") < 0 ) {
+				body += sign_space;
+			}
+		}
+		
+		body += "\n";
+		// 편지지
+		if(editor.paperTop != '' || editor.paperBody != '' || editor.paperBottom != ''){
+			body += '</td></tr>';
+			if(editor.paperBottom != ''){
+				body += '<tr><td><img src="'+editor.paperBottom+'" border="0"><td></tr>';
+			}
+			body += '</tbody></table>';
+		}
+		body += "</div>";	
+		return body;
+	}
+	/**
+	 * 편지지 배경이나 기타 가공을 하지 않은 상태의 html
+	 */
+	,getSimpleHtml:function() {
+	    var content = CKEDITOR.instances.editHtml.getData();
+		/*// 에디터에선 <p></p> 가 한칸 띄어쓰기로 보이지만 실제 메일을 읽을 때에는 줄간격이 떨어지지 않는다.
+		// 그래더 <p></p> 사이에 &nbsp; 를 추가한다.
+		content = content.replace(/<p><\/p>/g,"<p>&nbsp;</p>");
+		content = content.replace(/<p> <\/p>/g,"<p>&nbsp;</p>");*/
+		
+		return content;
+	}
+	,getText:function(){		
+		var content = CKEDITOR.instances.editHtml.getSnapshot();
+		var dom = document.getElementById("div_Text");
+		
+		dom.innerHTML = content;
+		
+		// 본문의 content에 스타일을 제거하기 위한 작업 추가 by sunggyu		
+		$(dom).find("head").remove();
+		$(dom).find("script").remove();
+		$(dom).find("style").remove();
+		$(dom).find("iframe").remove();
+		$(dom).find("object").remove();
+	    $(dom).find("bgsound").remove();
+	    $(dom).find("base").remove();
+	    $(dom).find("background").remove();	    
+		return (dom.innerText || dom.textContent);
+	}
+	/**
+	 * 본문안에 HTML 소스를 넣는다.(템플릿 선택)
+	 */
+	,setContent:function( content ){
+		CKEDITOR.instances.editHtml.setData(content);
+	}
+	/**
+	 * 답장 시 원본 메세지를 에디터에 넣는다.
+	 */
+	,loadContent:function(){ 
+		try {
+	    	// 본문 삽입
+	    	var contents = $.trim($("#prevHtml").val());
+	    			
+	    	/*if(contents !=''){
+	    		contents = '<p>&nbsp;</p><p><span>&nbsp;</span></p>\n'+contents;
+	    	}	*/
+	    	
+	    	// 폰트
+//	    	if($.browser.safari){
+//	    		contents = '<p style="font-family:'+editor_cfg.userFont+';"><span style="font-family:'+editor_cfg.userFont+';">&nbsp;</span></p>\n' + contents;
+//			} else {
+//				contents = '<p style="font-family:'+editor_cfg.userFont+';"><span style="font-family:'+editor_cfg.userFont+';">&shy;</span></p>\n' + contents;
+//			}
+	    	
+	    	CKEDITOR.instances.editHtml.setData(contents);
+	    	
+	    	log.debug("loadContent ok");
+	    } catch(e){}
+	},
+	/**
+	 * 포커스를 에디터영역으로 이동 
+	 */
+	moveNextFocusAfterSubject:function(){
+        try {
+            CKEDITOR.instances.editHtml.focus();            
+        } catch(e){}
+    },
+    
+    /**
+	 * 본문안에 HTML 소스를 넣는다.(템플릿 선택)
+	 */
+	setTemplateContent:function( ukey ){
+    	
+		if(CKEDITOR.instances.editHtml.mode == 'source') return;
+		
+		var url = app.contextPath + "/mail/json/template/content.do";
+    	var param = {
+				"ukey" : ukey,
+				"templateCategory" : $("#selectTemplate").val()
+			};
+		$.ajax( {
+			url : url,
+			data : param,
+			type : "POST",
+			dataType : "json",
+			async : false,
+			success : function(jsonData) {
+				var content = jsonData.data.content;
+				CKEDITOR.instances.editHtml.setData(content);
+				$("#template_ukey").val(ukey);
+				
+				if($("#selectTemplate").val() == '1'){
+					$("#myTemplateKey").val(ukey);
+					
+					if(document.editForm.subject.value == ''){
+						document.editForm.subject.value = jsonData.data.subject;
+					}
+				}
+				
+			},
+			error:function(xhr, txt){			
+				AjaxUtil.error( xhr );							
+			}
+		});
+		
+		// 편지지 배경이 있으면 유지
+		if(editor.paperBody){
+			CKEDITOR.instances.editHtml.document.getBody().setStyle('background', editor.paperBody);
+		}
+	},
+    /**
+     * 편지지 본문에 반영
+     */
+    applyPaper:function(topUrl,middleUrl,bottomUrl,repeat){
+    	// 소스모드에서는 동작안함
+    	if(CKEDITOR.instances.editHtml.mode != 'wysiwyg') return;
+    	
+    	// 편지지의 모든 이미지가 존재하지 않을 경우
+    	if(topUrl == '' && middleUrl == '' && bottomUrl == ''){
+    		jAlert(message.M0209);
+    		return;
+    	}
+    	
+    	//편지지 초기화
+    	editor.paperRemove();
+    	
+    	if(topUrl != ''){
+    		editor.paperPasteTopContent(topUrl);
+    	}
+    	
+    	if(middleUrl != ''){
+    		editor.paperPasteMiddleContent(middleUrl,repeat);
+    	}
+    	
+    	if(bottomUrl != ''){
+    		editor.paperPasteBottomContent(bottomUrl);
+    	}
+    	
+    	// 본문에 아무 내용이 없을때
+    	var content = CKEDITOR.instances.editHtml.getData();
+    	if($.trim(content) == ''){
+    		CKEDITOR.instances.editHtml.insertHtml("Enter your message here.");
+    	}
+    	
+    },
+    executePaper:function(){
+    	$("#send_template").hide();
+		if($("#send_paper").is(':visible')){
+			$("#send_paper").hide();
+		} else {
+			$("#send_paper").show();
+		}
+    },
+    showInnerPaper_paging:function(num){
+    	$("#paper_cpage").val(num);
+    	editor.showInnerPaper();
+    },
+    change_categoryPaper:function(){    	
+    	$("#paper_cpage").val('1');
+    	editor.showInnerPaper();
+    },
+    showInnerPaper:function(){
+    	// paper_inner_div에 이미 불러온 paper가 있는지 확인해서 없으면 불러온다.
+    	var url = app.contextPath + "/mail/json/paperList.do";
+    	
+    	var param = {
+				"paperCategory" : $("#selectPaper").val(),
+				"currentPage" : $("#paper_cpage").val()
+			};    	
+    	
+		$.ajax( {
+			url : url,
+			data : param,
+			type : "POST",
+			dataType : "json",
+			async : false,
+			success : function(encoded) {
+				var paperList = encoded.paperList;
+				var imPage = encoded.imPage;
+				
+				var pageHtml = pageInfoForPrevNext(imPage.cpage,imPage.pageSize,
+						imPage.total, '', 'editor.showInnerPaper_paging(');
+				$("#paper_cpage").val(imPage.cpage);
+				$("#pageInfo_paper").html(pageHtml); // 페이징 들어감
+				
+				var strList = [], n = -1;
+				strList[++n] = "<ul>";
+				if(paperList.length == 0){
+					strList[++n] = "<li>";
+					strList[++n] = message.M0207;
+					strList[++n] = "</li>";
+				}
+				for ( var i = 0; i < paperList.length; i++) {
+					var img_type = paperList[i].img_type;
+					var ukey = paperList[i].ukey;
+					var preview_img = paperList[i].preview_img;
+					var top_img = "";
+					var body_img = "";
+					var bottom_img = "";
+					
+					if(img_type == '0'){
+						if(paperList[i].top_img != ''){
+							top_img = app.contextPath + "/image/paper.do?ukey=" + ukey + "&type=top" ;
+						}
+						
+						if(paperList[i].body_img != ''){
+							body_img = app.contextPath + "/image/paper.do?ukey=" + ukey + "&type=body" ;
+						}
+						
+						if(paperList[i].bottom_img != ''){
+							bottom_img = app.contextPath + "/image/paper.do?ukey=" + ukey + "&type=bottom" ;
+						}
+					}else{
+						top_img = paperList[i].top_img;
+						body_img = paperList[i].body_img;
+						bottom_img = paperList[i].bottom_img;
+					}
+					
+					strList[++n] = "<li>";
+					strList[++n] = "<a onclick=\"editor.applyPaper(";
+					strList[++n] = "'"+top_img+"'";
+					strList[++n] = ",";
+					strList[++n] = "'"+body_img+"'";
+					strList[++n] = ",";
+					strList[++n] = "'"+bottom_img+"'";
+					strList[++n] = ",";
+					strList[++n] = "'"+paperList[i].repeat+"'";
+					strList[++n] = ");return false;\" href=\"#\">";
+					if(preview_img == ''){
+						strList[++n] = "<img src=\""+app.static_server+"/sens-static/images/"+sensmail.language+"/none_img.gif\" style=\"width:63px;height:78px;border:1px solid black;\" title=\""+paperList[i].paper_name+"\"/>";
+					}else{
+						strList[++n] = "<img src=\""+app.contextPath+"/image/paper.do?ukey="+ ukey +"&type=preview\" style=\"width:63px;height:78px;border:1px solid black;\" title=\""+paperList[i].paper_name+"\"/>";
+					}
+					strList[++n] = "</a>";
+					strList[++n] = "</li>";
+				}
+				
+				strList[++n] = "</ul>";
+				$("#paperList").html(strList.join(''));
+			},
+			error:function(xhr, txt){			
+				AjaxUtil.error( xhr );							
+			}
+		});
+    },
+    showInnerTemplate_paging:function(num){
+    	$("#template_cpage").val(num);
+    	editor.showInnerTemplate();
+    },
+    change_categoryTemplate:function(){
+    	$("#template_cpage").val('1');
+    	editor.showInnerTemplate();
+    },
+    showInnerTemplate:function(){
+    	var url = app.contextPath + "/mail/json/templateList.do";
+    	var param = {
+				"templateCategory" : $("#selectTemplate").val(),
+				"currentPage" : $("#template_cpage").val()
+			};
+		$.ajax( {
+			url : url,
+			data : param,
+			type : "POST",
+			dataType : "json",
+			async : false,
+			success : function(encoded) {
+				var templateList = encoded.templateList;
+				var imPage = encoded.imPage;
+				
+				var pageHtml = pageInfoForPrevNext(imPage.cpage,imPage.pageSize,
+						imPage.total, '', 'editor.showInnerTemplate_paging(');
+				$("#template_cpage").val(imPage.cpage);
+				$("#pageInfo_template").html(pageHtml); // 페이징 들어감
+			
+				
+				var strList = [], n = -1;
+				strList[++n] = "<ul>";
+				if(templateList.length == 0){
+					strList[++n] = "<li>";
+					strList[++n] = message.M0206;
+					strList[++n] = "</li>";
+				}
+				for ( var i = 0; i < templateList.length; i++) {
+					var ukey = templateList[i].ukey;
+					var preview_img = templateList[i].imageKey;
+					
+					strList[++n] = "<li>";
+					strList[++n] = "<a onclick=\"editor.setTemplateContent(";
+					strList[++n] = "'"+ukey+"'";								
+					strList[++n] = ");return false;\" href=\"javascript:;\">";
+					if(preview_img == ''){
+						strList[++n] = "<img src=\""+app.static_server+"/sens-static/images/"+sensmail.language+"/none_img.gif\" style=\"width:63px;height:78px;border:1px solid black;\" title=\""+templateList[i].subject+"\"/>";
+					}else{
+						strList[++n] = "<img src=\""+app.contextPath+"/image/template.do?ukey="+ ukey +"\" style=\"width:63px;height:78px;border:1px solid black;\" title=\""+templateList[i].subject+"\"/>";
+					}
+					strList[++n] = "</a>";
+					strList[++n] = "</li>";
+				}
+				
+				strList[++n] = "</ul>";
+				$("#templateList").html(strList.join(''));
+			},
+			error:function(xhr, txt){			
+				AjaxUtil.error( xhr );							
+			}
+		});
+    },
+    /*
+     * 편지지 상단 이미지
+     * (아래 편지지 부분은 향후 사용 가능에 대비하여 추가해 놓은 기능임)
+     */
+    paperPasteTopContent:function(src){
+    	try {
+    		if(src.toLowerCase().indexOf('http') < 0){
+    			var hostname = document.location.protocol + '//' + document.location.host;
+    			if(src.indexOf('/') == 0) src = hostname + src;
+    			else src = hostname + '/' + src;
+    		}
+    		var $img = $('<img src="'+src+'" style="border:0"/>');
+    		var topHtml = "<span id='paper_top' style='height:auto;width:auto;margin:0;padding:0;' />";
+    		//topHtml += "<img src='"+src+"' id='paper_top_image' border='0'/></span>";
+    		
+    		$("#paper_top_image").remove();
+    		$("#paper_top").empty().remove();
+    		
+    		$(".cke_top").after(topHtml);
+    		$("#paper_top").css("display", "block").append($img);
+    		
+    		//$("#paper_top").css("height", $("#paper_top_image").css("height"));
+    		// 본문 작성영역 넓이도 줄인다.
+    		//$(".cke_contents").css("width",$("#paper_top_image").css("width"));
+    		editor.paperTop = src;
+    		
+    		$("#paper_top").css("height", $("#paper_top_image").css("height"));
+			$(".cke_contents").css("width", $("#paper_top_image").css("width"));
+			
+    		$img.bind('load', function(){
+    			$("#paper_top").css("height", $("#paper_top_image").css("height"));
+    			$(".cke_contents").css("width", $("#paper_top_image").css("width"));
+    			log.debug("bind 2222");
+    		});
+    		
+    	}catch(e){}
+    },
+    paperPasteMiddleContent:function(src,repeat){
+    	try {
+    		if(src.toLowerCase().indexOf('http') < 0){
+    			var hostname = document.location.protocol + '//' + document.location.host;
+    			if(src.indexOf('/') == 0) src = hostname + src;
+    			else src = hostname + '/' + src;
+    		}
+    		repeat =  repeat == "1" ? "repeat" : "no-repeat";
+    		src = "url('"+src+"') " + repeat;
+    		CKEDITOR.instances.editHtml.document.getBody().setStyle("background", src);
+	    	editor.paperBody = src;
+    		
+    	}catch(e){}
+    },
+    /*
+     * 편지지 하단 이미지
+     */
+    paperPasteBottomContent:function(src){
+    	try {
+    		if(src.toLowerCase().indexOf('http') < 0){
+    			var hostname = document.location.protocol + '//' + document.location.host;
+    			if(src.indexOf('/') == 0) src = hostname + src;
+    			else src = hostname + '/' + src;
+    		}
+    		var $img = $('<img src="'+src+'" style="border:0"/>');
+    		var botHtml = "<span id='paper_bottom' style='height:auto;width:auto'/>";
+    		//botHtml += "<img src='"+src+"' id='paper_bot_image' border='0'/></span>";
+    		
+    		$("#paper_bot_image").remove();
+    		$("#paper_bottom").empty().remove();
+    		
+    		$(".cke_contents").after(botHtml);
+    		$("#paper_bottom").css("display", "block").append($img);
+    		
+    		editor.paperBottom = src;
+    		
+    		$("#paper_bottom").css("height", $("#paper_bot_image").css("height"));
+    		$img.bind('load', function(){
+    			$("#paper_bottom").css("height", $("#paper_bot_image").css("height"));
+    		});
+    		
+    	}catch(e){}
+    },
+    /*
+     * 편지지 제거
+     */
+    paperRemove:function(){
+    	try {
+    		$("#paper_top_image").remove();
+    		$("#paper_bot_image").remove();
+    		$("#paper_top").empty().remove();
+    		$("#paper_bottom").empty().remove();
+    		$(".cke_contents").css("width", "auto");
+    		CKEDITOR.instances.editHtml.document.getBody().setStyle('background','');
+    		
+    		editor.paperTop = '';
+    		editor.paperBody = '';
+    		editor.paperBottom = '';
+    	}catch(e){}
+    }
+	
+};�7�X      UH��UH��;/-UIy>   K:http://email.koreatech.ac.kr/sens-static/js/editor/ckeditor.js?dummy=58413 necko:classified 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 05 May 2015 09:49:04 GMT
+Server: Apache
+Last-Modified: Tue, 28 Apr 2015 13:18:28 GMT
+Etag: "4f9a-514c8b2b922a6"
+Accept-Ranges: bytes
+Content-Length: 20378
+Content-Type: application/javascript
+ uncompressed-len 0   O�
